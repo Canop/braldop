@@ -13,13 +13,35 @@ Map.prototype.initTiles = function() {
 	(this.placeImg[7] = new Image()).src=baseTilesUrl+"batiments/banque.png";
 	(this.placeImg[8] = new Image()).src=baseTilesUrl+"batiments/joaillier.png";
 	(this.placeImg[9] = new Image()).src=baseTilesUrl+"batiments/auberge.png";
+    (this.placeImg[10] = new Image()).src=baseTilesUrl+"batiments/bbois.png";
+    (this.placeImg[11] = new Image()).src=baseTilesUrl+"batiments/bpartieplantes.png";
+    (this.placeImg[12] = new Image()).src=baseTilesUrl+"batiments/bminerais.png";
 	(this.placeImg[13] = new Image()).src=baseTilesUrl+"batiments/tabatiere.png";
 	(this.placeImg[14] = new Image()).src=baseTilesUrl+"batiments/notaire.png";
 	(this.placeImg[15] = new Image()).src=baseTilesUrl+"batiments/quete.png";
+    (this.placeImg[16] = new Image()).src=baseTilesUrl+"batiments/echangeurrune.png";
 	(this.placeImg[17] = new Image()).src=baseTilesUrl+"batiments/assembleur.png";
+    (this.placeImg[18] = new Image()).src=baseTilesUrl+"batiments/bpeaux.png";
 	(this.placeImg[19] = new Image()).src=baseTilesUrl+"batiments/hotel.png";
+    (this.placeImg[20] = new Image()).src=baseTilesUrl+"batiments/postedegarde.png";
+    (this.placeImg[21] = new Image()).src=baseTilesUrl+"batiments/entreegrotte.png";
+    (this.placeImg[22] = new Image()).src=baseTilesUrl+"batiments/escaliers.png";
 	(this.placeImg[23] = new Image()).src=baseTilesUrl+"batiments/lieumythique.png";
+    (this.placeImg[24] = new Image()).src=baseTilesUrl+"batiments/ruine.png";
 	(this.placeImg[25] = new Image()).src=baseTilesUrl+"batiments/tribunal.png";
+    (this.placeImg[26] = new Image()).src=baseTilesUrl+"batiments/contrat.png";
+    (this.placeImg[27] = new Image()).src=baseTilesUrl+"batiments/maisonpnj.png";
+    (this.placeImg[28] = new Image()).src=baseTilesUrl+"batiments/mine.png";
+    (this.placeImg[29] = new Image()).src=baseTilesUrl+"batiments/puit.png";
+    (this.placeImg[30] = new Image()).src=baseTilesUrl+"batiments/hall.png";
+    (this.placeImg[31] = new Image()).src=baseTilesUrl+"batiments/grenier.png";
+    (this.placeImg[32] = new Image()).src=baseTilesUrl+"batiments/temple.png";
+    (this.placeImg[33] = new Image()).src=baseTilesUrl+"batiments/marche.png";
+    (this.placeImg[34] = new Image()).src=baseTilesUrl+"batiments/infirmerie.png";
+    (this.placeImg[35] = new Image()).src=baseTilesUrl+"batiments/baraquement.png";
+    (this.placeImg[36] = new Image()).src=baseTilesUrl+"batiments/tribune.png";
+    (this.placeImg[37] = new Image()).src=baseTilesUrl+"batiments/atelier.png";
+    (this.placeImg[38] = new Image()).src=baseTilesUrl+"batiments/haltegare.png";
 	
 	this.placeOutlinedImg = [];
 

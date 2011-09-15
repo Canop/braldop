@@ -1,0 +1,7 @@
+
+
+# le script de déployement sur canop.org
+deploy.sh
+
+# les paramètres locaux
+config.sh

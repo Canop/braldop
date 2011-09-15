@@ -1,0 +1,135 @@
+<html>
+<head>
+	<title>Carte Braldop</title>
+	<meta http-equiv=content-type content="text/html; charset=UTF8"> 
+	<script src="jquery-1.6.3.min.js"></script>
+	<script src="util.js"></script>
+	<script src="graphic_utils.js"></script>
+	<script src="Point.js"></script>
+	<script src="Rect.js"></script>
+	<script src="Map.js"></script>
+	<script src="Map_bubble.js"></script>
+	<script src="Map_env.js"></script>
+	
+	<style type="text/css">
+	body {
+		background-color: #3A3;
+		font-size: 12px;
+		font-family: Verdana, Geneva, sans-serif;
+		padding:0;
+		margin:0;
+	}
+	#layer_list {
+		position: fixed;
+		background-color : white;
+		box-shadow: 0 3px 6px #666;
+		padding: 0;
+		left: 10px;
+		top: 10px;
+		bottom: 10px;
+		width:200px;
+		border-style: solid;
+		border-width: 1px;
+		border-color: black;
+		overflow: auto;
+	}
+	#map {
+		position: fixed;
+		background-color : white;
+		box-shadow: 0 3px 6px #666;
+		padding: 0px;
+		left: 220px;
+		top: 10px;
+		bottom: 10px;
+		right:10px;
+		border-style: solid;
+		border-width: 1px;
+		border-color: black;
+		-moz-user-select: none;
+		user-select: none;
+		-webkit-user-select: none;
+	}
+	a.layer {
+		display: block;
+		cursor: pointer;
+		padding:2px;
+	}
+	a.layer:hover {
+		background-color: #F3F6FF;
+	}
+	a.layer[selected] {
+		background-color: #E6F4FF;
+	}
+	#map_canvas {
+		width:100%;
+		height:100%;
+		cursor:move;
+	}
+	#posmark {
+		padding: 3px;
+		background-color: rgba(250, 250, 250, 0.6);
+		z-index:10;
+		position:fixed;
+		bottom:20;
+		left:240;	
+	}
+	.error {
+		color: red;
+	}
+	</style>
+</head>
+<body>
+
+<div id=layer_list>
+	<input type=checkbox id=layer_satellite><label for=layer_satellite>Photo Satellite</label>
+	<br><input type=checkbox id=layer_nomsLieux><label for=layer_nomsLieux>Noms des lieux</label>
+	<br><input type=checkbox id=layer_régions><label for=layer_régions>Régions</label>
+</div>
+<div id=map><canvas id=map_canvas></canvas></div>
+<div id=posmark>-</div>
+
+
+<script type="text/javascript">
+	
+var map = null
+
+function fetchMap(callback) {
+	var httpRequest = new XMLHttpRequest();
+	httpRequest.onreadystatechange = function() {
+		if (httpRequest.readyState === 4) {
+			if (httpRequest.status === 200) {
+				var msg = eval('('+httpRequest.responseText+')');
+				console.log("reçu : ");
+				console.log(msg);
+				if (callback) callback(msg);
+			}
+		}
+	};
+	httpRequest.open('GET', 'carte.json?time='+(new Date().getTime()));
+	httpRequest.send();	
+}
+
+$(document).ready(function() {
+	map = new Map("map_canvas", "posmark");
+	fetchMap(function(msg){
+		map.setData(msg);
+		map.redraw();
+		setTimeout(function(){map.redraw();}, 1000); // contournement de bug pas compris
+	});
+	$('#layer_satellite').prop('checked', map.displayPhotoSatellite).change(function(){
+		map.displayPhotoSatellite=this.checked;
+		map.redraw();
+	});
+	$('#layer_nomsLieux').prop('checked', map.displayTownPlaceNames).change(function(){
+		map.displayTownPlaceNames=this.checked;
+		map.redraw();
+	});
+	$('#layer_régions').prop('checked', map.displayRégions).change(function(){
+		map.displayRégions=this.checked;
+		map.redraw();
+	});
+});
+</script>
+
+</body>
+</html>

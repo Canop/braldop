@@ -20,8 +20,15 @@ Map.prototype.initTiles = function() {
 	(this.placeImg[19] = new Image()).src=baseTilesUrl+"batiments/hotel.png";
 	(this.placeImg[23] = new Image()).src=baseTilesUrl+"batiments/lieumythique.png";
 	(this.placeImg[25] = new Image()).src=baseTilesUrl+"batiments/tribunal.png";
-	
 	this.placeOutlinedImg = [];
+	
+	this.echoppeImg = []; // tableau des images des échoppes en fonction de leur métier
+	(this.echoppeImg["apothicaire"] = new Image()).src=baseTilesUrl+"echoppes/apothicaire.png";
+	(this.echoppeImg["cuisinier"] = new Image()).src=baseTilesUrl+"echoppes/cuisinier.png";
+	(this.echoppeImg["forgeron"] = new Image()).src=baseTilesUrl+"echoppes/forgeron.png";
+	(this.echoppeImg["menuisier"] = new Image()).src=baseTilesUrl+"echoppes/menuisier.png";
+	(this.echoppeImg["tanneur"] = new Image()).src=baseTilesUrl+"echoppes/tanneur.png";
+	this.echoppeOutlinedImg = [];
 
 	this.envTiles = {}; // map
 	(this.envTiles["plaine"] = new Image()).src=baseTilesUrl+"environnement/plaine.png";
@@ -49,6 +56,53 @@ Map.prototype.drawCell = function(cell) {
 	} else {
 		screenRect.fill(this.context, "red");
 	}
+}
+
+// dessine une échoppe
+Map.prototype.drawEchoppe = function(e) {
+	var screenRect = new Rect();
+	screenRect.w = this.zoom/2;
+	screenRect.h = screenRect.w;
+	screenRect.x = this.zoom*(this.originX+e.X)+screenRect.w;
+	screenRect.y = this.zoom*(this.originY-e.Y);
+	if (!Rect_intersect(screenRect, this.screenRect)) {
+		return;
+	}
+	var c = this.context;
+	c.save();
+	var img = this.echoppeImg[e.Métier];
+	if (img) {
+		if (this.hoverObject==e) {
+			var outlinedImg = this.echoppeOutlinedImg[e.Métier];
+			if (!outlinedImg) {
+				// cette méthode est imparfaite : elle ne crée pas réellement un contour
+				outlinedImg = document.createElement('canvas');
+				var ow = img.width+4;
+				var oh = img.height+4;
+				outlinedImg.width = ow;
+				outlinedImg.height = oh;
+				oc = outlinedImg.getContext('2d');
+				oc.drawImage(img, 0, 0, ow, oh);
+				oc.globalCompositeOperation="source-in";
+				oc.fillStyle="Gold";//"DarkGoldenRod";
+				oc.fillRect(0, 0, ow, oh);
+				this.placeOutlinedImg[e.Métier]=outlinedImg;
+			}
+			c.shadowOffsetX = 0;
+			c.shadowOffsetY = 0;
+			c.shadowBlur = 5;
+			c.shadowColor = "black";
+			var d = 3;
+			c.drawImage(outlinedImg, screenRect.x-d, screenRect.y-d, screenRect.w+2*d, screenRect.h+2*d);
+			c.shadowBlur = 0;
+			this.bubbleText.push(e.Nom);
+			this.bubbleText.push('('+e.Métier+')');
+			this.bubbleText.push(' en ' + e.X + ',' + e.Y);
+		}
+		screenRect.drawImage(c, img);			
+	} else {
+		console.log("pas d'image pour " + e.Métier);
+	}	c.restore();
 }
 
 // dessine un lieu de ville

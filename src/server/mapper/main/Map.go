@@ -4,10 +4,6 @@ package main
 carte compilée, exportable en json par exemple.
 */
 
-import (
-//~ "fmt"
-)
-
 type Case struct {
 	X    int16
 	Y    int16
@@ -16,6 +12,7 @@ type Case struct {
 
 type Map struct {
 	Cases       []*Case
+	Echoppes    []*VueEchoppe
 	Villes      []*Ville
 	LieuxVilles []*LieuVille
 	Régions     []*Région
@@ -24,5 +21,6 @@ type Map struct {
 func NewMap() (m *Map) {
 	m = new(Map)
 	m.Cases = make([]*Case, 0, 40)
+	m.Echoppes = make([]*VueEchoppe, 0, 40)
 	return m
 }

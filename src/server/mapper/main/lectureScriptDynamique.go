@@ -15,6 +15,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, date uint) {
 		return
 	}
 	switch cells[0] {
+	case "ECHOPPE":
+		o := new(VueEchoppe)
+		if err := o.readCsv(cells); err != nil {
+			fmt.Printf(" Erreur lecture VueEchoppe : %+v \n cellules : %+v", err, cells)
+		} else {
+			//~ fmt.Printf(" VueEchoppe : %+v\n", o)
+			ls.MemMap.StoreEchoppe(o)
+		}
 	case "ENVIRONNEMENT":
 		o := new(VueEnvironnement)
 		if err := o.readCsv(cells); err != nil {

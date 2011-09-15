@@ -17,3 +17,4 @@ gomake
 ./mapper $CHEMIN_REPERTOIRE_DONNEES
 
 rsync -avz --stats $CHEMIN_REPERTOIRE_DONNEES/carte.json $CHEMIN_BRALDOP/src/web
+

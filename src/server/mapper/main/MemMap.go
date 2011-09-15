@@ -4,11 +4,8 @@ package main
 carte stockée en mémoire
 */
 
-import (
-//~ "fmt"
-)
-
 type MemMap struct {
+	EchoppesParXY       map[int32]*VueEchoppe
 	EnvironnementsParXY map[int32]*VueEnvironnement
 	RoutesParXY         map[int32]*VueRoute
 	Villes              []*Ville
@@ -18,6 +15,7 @@ type MemMap struct {
 
 func NewMemMap() (mm *MemMap) {
 	mm = new(MemMap)
+	mm.EchoppesParXY = make(map[int32]*VueEchoppe)
 	mm.EnvironnementsParXY = make(map[int32]*VueEnvironnement)
 	mm.RoutesParXY = make(map[int32]*VueRoute)
 	mm.Villes = make([]*Ville, 0, 10)
@@ -26,6 +24,9 @@ func NewMemMap() (mm *MemMap) {
 	return mm
 }
 
+func (mm *MemMap) StoreEchoppe(o *VueEchoppe) {
+	mm.EchoppesParXY[PosKey(o.X, o.Y)] = o
+}
 func (mm *MemMap) StoreEnvironnement(o *VueEnvironnement) {
 	mm.EnvironnementsParXY[PosKey(o.X, o.Y)] = o
 }
@@ -76,11 +77,15 @@ func (mm *MemMap) Compile() (m *Map) {
 			c.Fond = "pavé"
 		}
 	}
+	for _, e := range mm.EchoppesParXY {
+		m.Echoppes = append(m.Echoppes, e)
+	}
 	for _, c := range cases {
 		m.Cases = append(m.Cases, c)
 	}
 	m.Villes = mm.Villes           // pour l'instant pour les villes c'est simple...
 	m.LieuxVilles = mm.LieuxVilles // et pour leurs lieux aussi
 	m.Régions = mm.Régions         // et les régions itou
+
 	return m
 }

@@ -98,6 +98,12 @@ Map.prototype.objectOn = function(x, y) {
 			if (lv.X==x && lv.Y==y) return lv;
 		}
 	}
+	if (this.mapData.Echoppes && this.zoom>25) {
+		for (var i=this.mapData.Echoppes.length; i-->0;) {
+			var o = this.mapData.Echoppes[i];
+			if (o.X==x && o.Y==y) return o;
+		}
+	}
 	return null;
 }
 
@@ -121,6 +127,11 @@ Map.prototype.redraw = function() {
 			if (this.mapData.Cases) {
 				for (var i=this.mapData.Cases.length; i-->0;) {
 					this.drawCell(this.mapData.Cases[i]);
+				}
+			}
+			if (this.mapData.Echoppes && this.zoom>10) {
+				for (var i=this.mapData.Echoppes.length; i-->0;) {
+					this.drawEchoppe(this.mapData.Echoppes[i]);
 				}
 			}
 			if (this.mapData.LieuxVilles && this.zoom>10) {

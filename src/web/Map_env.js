@@ -46,8 +46,23 @@ Map.prototype.initTiles = function() {
 	this.placeOutlinedImg = [];
 
 	this.envTiles = {}; // map
-	(this.envTiles["plaine"] = new Image()).src=baseTilesUrl+"environnement/plaine.png";
-	(this.envTiles["plaine-gr"] = new Image()).src=baseTilesUrl+"environnement/plaine-gr.png";
+    (this.envTiles["caverne-crevasse"] = new Image()).src=baseTilesUrl+"environnement/caverne-crevasse.png";
+    (this.envTiles["caverne-gr-crevasse"] = new Image()).src=baseTilesUrl+"environnement/caverne-gr-crevasse.png";
+    (this.envTiles["caverne-gr"] = new Image()).src=baseTilesUrl+"environnement/caverne-gr.png";
+    (this.envTiles["caverne"] = new Image()).src=baseTilesUrl+"environnement/caverne.png";
+    (this.envTiles["gazon-gr"] = new Image()).src=baseTilesUrl+"environnement/gazon-gr.png";
+    (this.envTiles["gazon"] = new Image()).src=baseTilesUrl+"environnement/gazon.png";
+    (this.envTiles["marais-gr"] = new Image()).src=baseTilesUrl+"environnement/marais-gr.png";
+    (this.envTiles["marais"] = new Image()).src=baseTilesUrl+"environnement/marais.png";
+    (this.envTiles["mine-gr"] = new Image()).src=baseTilesUrl+"environnement/mine-gr.png";
+    (this.envTiles["mine"] = new Image()).src=baseTilesUrl+"environnement/mine.png";
+    (this.envTiles["montagne-gr"] = new Image()).src=baseTilesUrl+"environnement/montagne-gr.png";
+    (this.envTiles["montagne"] = new Image()).src=baseTilesUrl+"environnement/montagne.png";
+    (this.envTiles["plaine"] = new Image()).src=baseTilesUrl+"environnement/plaine.png";
+    (this.envTiles["plaine-gr"] = new Image()).src=baseTilesUrl+"environnement/plaine-gr.png";
+    (this.envTiles["tunnel-gr"] = new Image()).src=baseTilesUrl+"environnement/tunnel-gr.png";
+    (this.envTiles["tunnel"] = new Image()).src=baseTilesUrl+"environnement/tunnel.png";
+
 	(this.envTiles["route"] = new Image()).src=baseTilesUrl+"route.png";
 	(this.envTiles["pave"] = new Image()).src=baseTilesUrl+"pave.png";
 	for (tile in this.envTiles) {

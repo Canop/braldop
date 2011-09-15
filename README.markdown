@@ -3,6 +3,8 @@ Présentation :
 
 Braldop est un système cartographique pour les joueurs de [Braldahim](http://www.braldahim.com)
 
+Vous pouvez consulter [la vue de Canopée](http://canop.org/braldop/map.html).
+
 Il s'agit également d'un prototype pour une version future de la vue dans ce jeu.
 
 Le projet est géré par cano.petrole@gmail.com. N'hésitez pas à appeler au secours si nécessaire.

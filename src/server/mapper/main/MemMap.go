@@ -67,13 +67,15 @@ func (mm *MemMap) Compile() (m *Map) {
 		}
 		switch r.TypeRoute {
 		case "balise":
-			c.Fond = "plaine-gr"
+			c.Fond = c.Fond + "-gr"
 		case "echoppe":
-			c.Fond = "pavé"
+			c.Fond = "pave"
 		case "route":
 			c.Fond = "route"
 		case "ville":
-			c.Fond = "pavé"
+			c.Fond = "pave"
+		case "ruine":
+			c.Fond = "pave"
 		}
 	}
 	for _, c := range cases {

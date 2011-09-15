@@ -36,5 +36,4 @@ Cas 2 :
 
 Vous disposez d'une part d'une machine linux sur laquelle vous pouvez installer des choses et d'autre part d'un hébergement de fichiers sur internet (on trouve ça gratuitement).
 
-Dans ce cas vous procédez comme dans le cas 1 sauf qu'au lieu de servir en http le contenu de votre répertoire de déploiement, vous envoyez (par exemple via rsync ou ftp) ce répertoire sur la zone publique de votre hébergeur.
-	
+Dans ce cas vous procédez comme dans le cas 1 sauf que vous configurez dans config.sh comme répertoire de dev le répertoire de votre serveur.

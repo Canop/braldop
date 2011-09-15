@@ -74,7 +74,7 @@ func (mm *MemMap) Compile() (m *Map) {
 			c.Fond = "route"
 		case "ville":
 			c.Fond = "pavé"
-        case "ruine":
+		case "ruine":
 			c.Fond = "pavé"
 		}
 	}

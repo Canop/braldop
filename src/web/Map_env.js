@@ -49,7 +49,7 @@ Map.prototype.initTiles = function() {
 	(this.envTiles["plaine"] = new Image()).src=baseTilesUrl+"environnement/plaine.png";
 	(this.envTiles["plaine-gr"] = new Image()).src=baseTilesUrl+"environnement/plaine-gr.png";
 	(this.envTiles["route"] = new Image()).src=baseTilesUrl+"route.png";
-	(this.envTiles["pavé"] = new Image()).src=baseTilesUrl+"pave.png";
+	(this.envTiles["pave"] = new Image()).src=baseTilesUrl+"pave.png";
 	for (tile in this.envTiles) {
 		tile.onload = function() {_this.redraw();}; // on dirait que ça ne marche pas
 	}

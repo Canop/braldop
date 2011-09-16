@@ -44,7 +44,7 @@ Map.prototype.initTiles = function() {
     (this.placeImg[38] = new Image()).src=baseTilesUrl+"batiments/haltegare.png";
 
 	this.placeOutlinedImg = [];
-	
+
 	this.echoppeImg = []; // tableau des images des échoppes en fonction de leur métier
 	(this.echoppeImg["apothicaire"] = new Image()).src=baseTilesUrl+"echoppes/apothicaire.png";
 	(this.echoppeImg["cuisinier"] = new Image()).src=baseTilesUrl+"echoppes/cuisinier.png";
@@ -54,25 +54,15 @@ Map.prototype.initTiles = function() {
 	this.echoppeOutlinedImg = [];
 
 	this.envTiles = {}; // map
-    (this.envTiles["caverne-crevasse"] = new Image()).src=baseTilesUrl+"environnement/caverne-crevasse.png";
-    (this.envTiles["caverne-gr-crevasse"] = new Image()).src=baseTilesUrl+"environnement/caverne-gr-crevasse.png";
-    (this.envTiles["caverne-gr"] = new Image()).src=baseTilesUrl+"environnement/caverne-gr.png";
-    (this.envTiles["caverne"] = new Image()).src=baseTilesUrl+"environnement/caverne.png";
-    (this.envTiles["gazon-gr"] = new Image()).src=baseTilesUrl+"environnement/gazon-gr.png";
-    (this.envTiles["gazon"] = new Image()).src=baseTilesUrl+"environnement/gazon.png";
-    (this.envTiles["marais-gr"] = new Image()).src=baseTilesUrl+"environnement/marais-gr.png";
-    (this.envTiles["marais"] = new Image()).src=baseTilesUrl+"environnement/marais.png";
-    (this.envTiles["mine-gr"] = new Image()).src=baseTilesUrl+"environnement/mine-gr.png";
-    (this.envTiles["mine"] = new Image()).src=baseTilesUrl+"environnement/mine.png";
-    (this.envTiles["montagne-gr"] = new Image()).src=baseTilesUrl+"environnement/montagne-gr.png";
-    (this.envTiles["montagne"] = new Image()).src=baseTilesUrl+"environnement/montagne.png";
-    (this.envTiles["plaine"] = new Image()).src=baseTilesUrl+"environnement/plaine.png";
-    (this.envTiles["plaine-gr"] = new Image()).src=baseTilesUrl+"environnement/plaine-gr.png";
-    (this.envTiles["tunnel-gr"] = new Image()).src=baseTilesUrl+"environnement/tunnel-gr.png";
-    (this.envTiles["tunnel"] = new Image()).src=baseTilesUrl+"environnement/tunnel.png";
+    var environnements = new Array(
+        "caverne-crevasse", "caverne-gr-crevasse",
+        "caverne-crevasse", "caverne-gr", "caverne", "gazon-gr", "gazon", "marais-gr","marais",
+        "mine-gr","mine","montagne-gr","montagne","plaine","plaine-gr","tunnel-gr", "tunnel", "route", "pave");
 
-	(this.envTiles["route"] = new Image()).src=baseTilesUrl+"route.png";
-	(this.envTiles["pave"] = new Image()).src=baseTilesUrl+"pave.png";
+    for (env in environnements) {
+        (this.envTiles[environnements[env]] = new Image()).src=baseTilesUrl+"environnement/"+environnements[env]+".png";
+    }
+
 	for (tile in this.envTiles) {
 		tile.onload = function() {_this.redraw();}; // on dirait que ça ne marche pas
 	}
@@ -137,7 +127,7 @@ Map.prototype.drawEchoppe = function(e) {
 			this.bubbleText.push('('+e.Métier+')');
 			this.bubbleText.push(' en ' + e.X + ',' + e.Y);
 		}
-		screenRect.drawImage(c, img);			
+		screenRect.drawImage(c, img);
 	} else {
 		console.log("pas d'image pour " + e.Métier);
 	}	c.restore();
@@ -183,7 +173,7 @@ Map.prototype.drawTownPlace = function(lieu) {
 			this.bubbleText.push(lieu.Nom);
 			this.bubbleText.push(" en " + lieu.X + "," + lieu.Y);
 		}
-		screenRect.drawImage(c, img);			
+		screenRect.drawImage(c, img);
 	} else {
 		console.log("pas d'image pour " + lieu.Nom);
 	}

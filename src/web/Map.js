@@ -186,6 +186,7 @@ Map.prototype.mouseWheel = function(e) {
 	}
 	this.originX += (mouseX-this.canvas_position_x)*zr; 
 	this.originY += (mouseY-this.canvas_position_y)*zr;
+	this.posmarkdiv.innerHTML='Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY;
 	this.hoverObject = null;
 	//console.log('scaleIndex after = '+this.scaleIndex);
 	this.redraw();

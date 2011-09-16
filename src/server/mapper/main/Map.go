@@ -12,6 +12,7 @@ type Case struct {
 
 type Map struct {
 	Cases       []*Case
+	Champs      []*VueChamp
 	Echoppes    []*VueEchoppe
 	Villes      []*Ville
 	LieuxVilles []*LieuVille

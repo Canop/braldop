@@ -7,12 +7,12 @@ import (
 )
 
 type VueEchoppe struct {
-	X          int16
-	Y          int16
-	Id         uint
-	Nom        string
-	Métier     string
-	IdBraldrun uint
+	X         int16
+	Y         int16
+	Id        uint
+	Nom       string
+	Métier    string
+	IdBraldun uint
 }
 
 func (o *VueEchoppe) readCsv(cells []string) (err os.Error) {
@@ -31,7 +31,7 @@ func (o *VueEchoppe) readCsv(cells []string) (err os.Error) {
 	}
 	o.Nom = cells[5]
 	o.Métier = cells[6]
-	if o.IdBraldrun, err = strconv.Atoui(cells[8]); err != nil {
+	if o.IdBraldun, err = strconv.Atoui(cells[8]); err != nil {
 		return
 	}
 	return

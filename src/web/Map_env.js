@@ -52,6 +52,8 @@ Map.prototype.initTiles = function() {
 	(this.echoppeImg["menuisier"] = new Image()).src = baseTilesUrl + "echoppes/menuisier.png";
 	(this.echoppeImg["tanneur"] = new Image()).src = baseTilesUrl + "echoppes/tanneur.png";
 	this.echoppeOutlinedImg = [];
+	
+	(this.champImg = new Image()).src = baseTilesUrl + "champ.png";
 
 	this.envTiles = {}; // map
 	var environnements = new Array(
@@ -66,6 +68,21 @@ Map.prototype.initTiles = function() {
 	for (tile in this.envTiles) {
 		tile.onload = function() { 	_this.redraw(); }; // on dirait que ça ne marche pas
 	}
+}
+
+// cette méthode est imparfaite : elle ne crée pas réellement un contour
+Map.prototype.makeOutlineImg = function(img) {
+	outlinedImg = document.createElement('canvas');
+	var ow = img.width+4;
+	var oh = img.height+4;
+	outlinedImg.width = ow;
+	outlinedImg.height = oh;
+	oc = outlinedImg.getContext('2d');
+	oc.drawImage(img, 0, 0, ow, oh);
+	oc.globalCompositeOperation="source-in";
+	oc.fillStyle="Gold";//"DarkGoldenRod";
+	oc.fillRect(0, 0, ow, oh);
+	return outlinedImg;
 }
 
 // dessine une case d'environnement
@@ -86,6 +103,36 @@ Map.prototype.drawCell = function(cell) {
 	}
 }
 
+// dessine un champ
+Map.prototype.drawChamp = function(e) {
+	var screenRect = new Rect();
+	screenRect.w = this.zoom/2;
+	screenRect.h = screenRect.w*(29/32); // ajustement manuel parce que je suis fatigué des dimensions de l'image du champ
+	screenRect.x = this.zoom*(this.originX+e.X)+screenRect.w;
+	screenRect.y = this.zoom*(this.originY-e.Y);
+	if (!Rect_intersect(screenRect, this.screenRect)) {
+		return;
+	}
+	var c = this.context;
+	c.save();
+	if (this.hoverObject==e) {
+		if (!this.champOutlineImg) {
+			this.champOutlineImg = this.makeOutlineImg(this.champImg);
+		}
+		c.shadowOffsetX = 0;
+		c.shadowOffsetY = 0;
+		c.shadowBlur = 5;
+		c.shadowColor = "black";
+		var d = 3;
+		c.drawImage(this.champOutlineImg, screenRect.x-d, screenRect.y-d, screenRect.w+2*d, screenRect.h+2*d);
+		c.shadowBlur = 0;
+		this.bubbleText.push("Champ du Braldûn " + e.IdBraldun);
+		this.bubbleText.push(' en ' + e.X + ',' + e.Y);
+	}
+	screenRect.drawImage(c, this.champImg);
+	c.restore();
+}
+
 // dessine une échoppe
 Map.prototype.drawEchoppe = function(e) {
 	var screenRect = new Rect();
@@ -103,17 +150,7 @@ Map.prototype.drawEchoppe = function(e) {
 		if (this.hoverObject==e) {
 			var outlinedImg = this.echoppeOutlinedImg[e.Métier];
 			if (!outlinedImg) {
-				// cette méthode est imparfaite : elle ne crée pas réellement un contour
-				outlinedImg = document.createElement('canvas');
-				var ow = img.width+4;
-				var oh = img.height+4;
-				outlinedImg.width = ow;
-				outlinedImg.height = oh;
-				oc = outlinedImg.getContext('2d');
-				oc.drawImage(img, 0, 0, ow, oh);
-				oc.globalCompositeOperation="source-in";
-				oc.fillStyle="Gold";//"DarkGoldenRod";
-				oc.fillRect(0, 0, ow, oh);
+				outlinedImg = this.makeOutlineImg(img);
 				this.placeOutlinedImg[e.Métier]=outlinedImg;
 			}
 			c.shadowOffsetX = 0;
@@ -150,17 +187,7 @@ Map.prototype.drawTownPlace = function(lieu) {
 		if (this.hoverObject==lieu) {
 			var outlinedImg = this.placeOutlinedImg[lieu.IdTypeLieu];
 			if (!outlinedImg) {
-				// cette méthode est imparfaite : elle ne crée pas réellement un contour
-				outlinedImg = document.createElement('canvas');
-				var ow = img.width+4;
-				var oh = img.height+4;
-				outlinedImg.width = ow;
-				outlinedImg.height = oh;
-				oc = outlinedImg.getContext('2d');
-				oc.drawImage(img, 0, 0, ow, oh);
-				oc.globalCompositeOperation="source-in";
-				oc.fillStyle="Gold";//"DarkGoldenRod";
-				oc.fillRect(0, 0, ow, oh);
+				outlinedImg = this.makeOutlineImg(img);
 				this.placeOutlinedImg[lieu.IdTypeLieu]=outlinedImg;
 			}
 			c.shadowOffsetX = 0;

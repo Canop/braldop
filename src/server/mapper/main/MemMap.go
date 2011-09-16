@@ -5,6 +5,7 @@ carte stockée en mémoire
 */
 
 type MemMap struct {
+	ChampsParXY         map[int32]*VueChamp
 	EchoppesParXY       map[int32]*VueEchoppe
 	EnvironnementsParXY map[int32]*VueEnvironnement
 	RoutesParXY         map[int32]*VueRoute
@@ -15,6 +16,7 @@ type MemMap struct {
 
 func NewMemMap() (mm *MemMap) {
 	mm = new(MemMap)
+	mm.ChampsParXY = make(map[int32]*VueChamp)
 	mm.EchoppesParXY = make(map[int32]*VueEchoppe)
 	mm.EnvironnementsParXY = make(map[int32]*VueEnvironnement)
 	mm.RoutesParXY = make(map[int32]*VueRoute)
@@ -24,6 +26,9 @@ func NewMemMap() (mm *MemMap) {
 	return mm
 }
 
+func (mm *MemMap) StoreChamp(o *VueChamp) {
+	mm.ChampsParXY[PosKey(o.X, o.Y)] = o
+}
 func (mm *MemMap) StoreEchoppe(o *VueEchoppe) {
 	mm.EchoppesParXY[PosKey(o.X, o.Y)] = o
 }
@@ -81,6 +86,9 @@ func (mm *MemMap) Compile() (m *Map) {
 	}
 	for _, e := range mm.EchoppesParXY {
 		m.Echoppes = append(m.Echoppes, e)
+	}
+	for _, e := range mm.ChampsParXY {
+		m.Champs = append(m.Champs, e)
 	}
 	for _, c := range cases {
 		m.Cases = append(m.Cases, c)

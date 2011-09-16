@@ -26,7 +26,7 @@ Cas 1 :
 
 Vous disposez d'une machine linux visible sur internet et sur laquelle vous pouvez installer des logiciels.
 
-* vous installez le [go](http://golang.org)
+* vous installez le [go](http://golang.org) (branche *weekly*)
 * vous récupérez le présent machin via git
 * vous configurez scripts/config.sh
 * vous lancez scripts/update.sh

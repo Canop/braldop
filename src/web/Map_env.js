@@ -54,17 +54,19 @@ Map.prototype.initTiles = function() {
 	this.echoppeOutlinedImg = [];
 
 	this.envTiles = {}; // map
-    var environnements = new Array(
-        "caverne-crevasse", "caverne-gr-crevasse",
-        "caverne-crevasse", "caverne-gr", "caverne", "gazon-gr", "gazon", "marais-gr","marais",
-        "mine-gr","mine","montagne-gr","montagne","plaine","plaine-gr","tunnel-gr", "tunnel", "route", "pave");
+	var environnements = new Array(
+		"caverne-crevasse", "caverne-gr-crevasse",
+		"caverne-crevasse", "caverne-gr", "caverne", "gazon-gr", "gazon", "marais-gr", "marais",
+		"mine-gr", "mine", "montagne-gr", "montagne", "plaine", "plaine-gr", "tunnel-gr", "tunnel", "route", "pave");
 
-    for (env in environnements) {
-        (this.envTiles[environnements[env]] = new Image()).src=baseTilesUrl+"environnement/"+environnements[env]+".png";
-    }
+	for (env in environnements) {
+		(this.envTiles[environnements[env]] = new Image()).src = baseTilesUrl + "environnement/" + environnements[env] + ".png";
+	}
 
 	for (tile in this.envTiles) {
-		tile.onload = function() {_this.redraw();}; // on dirait que ça ne marche pas
+		tile.onload = function() {
+			_this.redraw();
+		}; // on dirait que ça ne marche pas
 	}
 }
 

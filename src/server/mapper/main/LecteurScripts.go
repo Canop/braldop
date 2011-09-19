@@ -44,6 +44,34 @@ func readLine(r *bufio.Reader) (line string, err os.Error) {
 	return
 }
 
+// renvoie le nombre de secondes depuis 1970 caché dans le chemin vers le fichier : année/mois/jour/truc-heurehminutes.csv
+// Le parsage des dates est pour moi le gros WTF du go... si quelqu'un arrive à faire plus propre...
+func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
+	l := len(path)
+	if l < 4 {
+		return 0
+	}
+	s := path[l-4] + "-" + path[l-3] + "-" + path[l-2] // année-mois-jour
+	name := path[l-1]
+	i1 := strings.LastIndex(name, "-")
+	i2 := strings.LastIndex(name, "h")
+	i3 := strings.LastIndex(name, ".")
+	if i3 > i2 && i2 > i1 && i1 > 0 {
+		s += "-" + name[i1+1:i2] + "-" + name[i2+1:i3]
+		if i3 == i2+1 {
+			// cas où on n'a pas les minutes
+			s += "00"
+		}
+		fmt.Println("  date formatée : ", s)
+		t, err := time.Parse("2006-01-02-15-04", s)
+		if err != nil {
+			fmt.Printf("Erreur parsing date : %+v\n", err)
+		}
+		return t.Seconds()
+	}
+	return 0
+}
+
 // fichier ou répertoire
 func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 	childs, err := f.Readdir(-1)
@@ -69,7 +97,17 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 			case "villes.csv":
 				return ls.parseFichierStatique(f, func() Visible { return new(Ville) })
 			default:
-				return ls.parseFichierDynamique(f)
+				vue, err := ls.parseFichierDynamique(f, ls.readTimeFromFilePath(path))
+				if vue.Voyeur > 0 && vue.Time > 0 {
+					fmt.Println("vue ok")
+					if ls.MemMap.DernièresVues[vue.Voyeur] == nil || vue.Time > ls.MemMap.DernièresVues[vue.Voyeur].Time {
+						ls.MemMap.DernièresVues[vue.Voyeur] = vue
+					}
+				}
+				if err != nil {
+					fmt.Printf("erreur parsing fichier dynamique : %+v\n", err)
+				}
+				return err
 			}
 		} else {
 			fmt.Println("   ignored file : " + f.Name())
@@ -104,7 +142,7 @@ func main() {
 	ls := NewLecteurScripts()
 	err := ls.traiteNomFichier(cheminRacine)
 	if err != nil {
-		fmt.Printf("Erreur à la lecture des événements : %v", err)
+		fmt.Printf("Erreur à la lecture des fichiers : %v", err)
 		return
 	}
 

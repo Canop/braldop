@@ -17,11 +17,13 @@ type Map struct {
 	Villes      []*Ville
 	LieuxVilles []*LieuVille
 	Régions     []*Région
+	Vues        []*Vue
 }
 
 func NewMap() (m *Map) {
 	m = new(Map)
 	m.Cases = make([]*Case, 0, 40)
 	m.Echoppes = make([]*VueEchoppe, 0, 40)
+	m.Vues = make([]*Vue, 0, 1)
 	return m
 }

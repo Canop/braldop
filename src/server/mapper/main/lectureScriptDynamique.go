@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (ls *LecteurScripts) parseLigneFichierDynamique(line string, date uint) {
+func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 	cells := strings.Split(line, ";")
 	//fmt.Println(" cells : " + strings.Join(cells, "#"))
 	if len(cells) < 3 {
@@ -45,6 +45,11 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, date uint) {
 			fmt.Printf(" Erreur lecture position : %+v \n cellules : %+v", err, cells)
 		} else {
 			//fmt.Printf(" Position : %+v\n", o)
+			vue.Voyeur = o.IdBraldun
+			vue.XMin = o.XMin
+			vue.XMax = o.XMax
+			vue.YMin = o.YMin
+			vue.YMax = o.YMax
 		}
 	case "ROUTE":
 		o := new(VueRoute)
@@ -58,18 +63,20 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, date uint) {
 	//fmt.Printf("  %s\n", line)
 }
 
-func (ls *LecteurScripts) parseFichierDynamique(file *os.File) os.Error {
+func (ls *LecteurScripts) parseFichierDynamique(file *os.File, time int64) (vue *Vue, err os.Error) {
 	r := bufio.NewReader(file)
+	vue = NewVue()
 	line, err := readLine(r)
 	for err == nil {
-		ls.parseLigneFichierDynamique(line, 0) // TODO date à construire
+		ls.parseLigneFichierDynamique(line, vue)
 		line, err = readLine(r)
 	}
 	ls.NbReadFiles++
 	if err != os.EOF {
 		fmt.Println("Error in parsing (parseFichierDynamique) :")
 		fmt.Println(err)
-		return err
+		return
 	}
-	return nil
+	err = nil
+	return
 }

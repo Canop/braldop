@@ -40,6 +40,17 @@ function Map(canvasId, posmarkid) {
 		_this.photoSatelliteOK = true;
 		_this.redraw();
 	};
+
+	// Gestion de la molette, au dessus ou non, de la carte
+	this.mouseOnMap = false;
+	$('#map').mouseover(function() {
+		_this.mouseOnMap = true;
+		document.body.style.overflow = "hidden";
+	}).mouseout(function() {
+		_this.mouseOnMap = false;
+		document.body.style.overflow = "";
+	});
+
 	this.canvas.addEventListener("mousedown", function(e) {_this.mouseDown(e)}, false);
 	this.canvas.addEventListener("mouseup", function(e) {_this.mouseUp(e)}, false);
 	this.canvas.addEventListener("mouseleave", function(e) {_this.mouseLeave(e)}, false);
@@ -171,6 +182,7 @@ Map.prototype.redraw = function() {
 }
 Map.prototype.mouseWheel = function(e) {
 	if (this.mouseIsDown) return;
+	if (!this.mouseOnMap) return;
 	//console.log('scaleIndex before = '+this.scaleIndex);
 	var delta = 0;
 	if (!e) e=window.e;

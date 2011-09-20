@@ -122,7 +122,7 @@ Map.prototype.drawChamp = function(e) {
 	}
 	var c = this.context;
 	c.save();
-	if (this.hoverObject==e) {
+	if (e.X==this.pointerX && e.Y==this.pointerY) {
 		c.shadowOffsetX = 0;
 		c.shadowOffsetY = 0;
 		c.shadowBlur = 5;
@@ -131,7 +131,6 @@ Map.prototype.drawChamp = function(e) {
 		c.drawImage(this.getOutlineImg(this.champImg), screenRect.x-d, screenRect.y-d, screenRect.w+2*d, screenRect.h+2*d);
 		c.shadowBlur = 0;
 		this.bubbleText.push("Champ du Braldûn " + e.IdBraldun);
-		this.bubbleText.push(' en ' + e.X + ',' + e.Y);
 	}
 	screenRect.drawImage(c, this.champImg);
 	c.restore();
@@ -157,11 +156,10 @@ Map.prototype.drawEchoppe = function(e) {
 			c.shadowBlur = 5;
 			c.shadowColor = "black";
 			var d = 3;
-			c.drawImage(this.getOutlineImg(this.echoppeImg[e.Métier]), screenRect.x-d, screenRect.y-d, screenRect.w+2*d, screenRect.h+2*d);
+			c.drawImage(this.getOutlineImg(img), screenRect.x-d, screenRect.y-d, screenRect.w+2*d, screenRect.h+2*d);
 			c.shadowBlur = 0;
 			this.bubbleText.push(e.Nom);
 			this.bubbleText.push('('+e.Métier+')');
-			this.bubbleText.push(' en ' + e.X + ',' + e.Y);
 		}
 		screenRect.drawImage(c, img);
 	} else {
@@ -192,7 +190,6 @@ Map.prototype.drawTownPlace = function(lieu) {
 			c.drawImage(this.getOutlineImg(this.placeImg[lieu.IdTypeLieu]), screenRect.x-d, screenRect.y-d, screenRect.w+2*d, screenRect.h+2*d);
 			c.shadowBlur = 0;
 			this.bubbleText.push(lieu.Nom);
-			//this.bubbleText.push(" en " + lieu.X + "," + lieu.Y);
 		}
 		screenRect.drawImage(c, img);
 	} else {

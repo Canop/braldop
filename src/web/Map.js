@@ -42,7 +42,7 @@ function Map(canvasId, posmarkid) {
 
 	// Gestion de la molette, au dessus ou non, de la carte
 	this.mouseOnMap = false;
-	$('#map').mouseover(function() {
+	$('#'+canvasId).mouseover(function() {
 		_this.mouseOnMap = true;
 		document.body.style.overflow = "hidden";
 	}).mouseout(function() {

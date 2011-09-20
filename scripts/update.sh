@@ -21,6 +21,8 @@ wget -N "http://public.braldahim.com/lieux_villes.csv"
 wget -N "http://public.braldahim.com/regions.csv"
 wget -N "http://public.braldahim.com/villes.csv"
 wget -N "http://public.braldahim.com/zones.csv"
+wget -N "http://public.braldahim.com/bralduns.csv"
+
 
 echo "= récupération des données dynamiques ============================="
 FIN_REPERTOIRE_JOUR=`date +%Y/%m/%d`

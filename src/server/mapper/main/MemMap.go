@@ -4,7 +4,12 @@ package main
 carte stockée en mémoire
 */
 
+import (
+	"fmt"
+)
+
 type MemMap struct {
+	Bralduns            map[uint]*Braldun // il s'agit des bralduns récupérés depuis le fichier statique donc certaines informations sont absentes
 	ChampsParXY         map[int32]*VueChamp
 	EchoppesParXY       map[int32]*VueEchoppe
 	EnvironnementsParXY map[int32]*VueEnvironnement
@@ -18,6 +23,7 @@ type MemMap struct {
 
 func NewMemMap() (mm *MemMap) {
 	mm = new(MemMap)
+	mm.Bralduns = make(map[uint]*Braldun)
 	mm.ChampsParXY = make(map[int32]*VueChamp)
 	mm.EchoppesParXY = make(map[int32]*VueEchoppe)
 	mm.EnvironnementsParXY = make(map[int32]*VueEnvironnement)
@@ -25,6 +31,7 @@ func NewMemMap() (mm *MemMap) {
 	mm.Villes = make([]*Ville, 0, 10)
 	mm.LieuxVilles = make([]*LieuVille, 0, 10)
 	mm.Régions = make([]*Région, 0, 10)
+	mm.DernièresVues = make(map[uint]*Vue)
 	return mm
 }
 
@@ -100,7 +107,17 @@ func (mm *MemMap) Compile() (m *Map) {
 	m.Régions = mm.Régions         // et les régions itou
 	for _, v := range mm.DernièresVues {
 		m.Vues = append(m.Vues, v)
+		// on remplit les champs manquant des bralduns
+		for _, b := range v.Bralduns {
+			if mmb, ok := mm.Bralduns[b.Id]; ok {
+				b.Prénom = mmb.Prénom
+				b.Nom = mmb.Nom
+				b.Niveau = mmb.Niveau
+				b.Sexe = mmb.Sexe
+			} else {
+				fmt.Printf("Braldun introuvable : %d\n", b.Id)
+			}
+		}
 	}
-
 	return m
 }

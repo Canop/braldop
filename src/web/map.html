@@ -4,12 +4,13 @@
 	<meta http-equiv=content-type content="text/html; charset=UTF8"> 
 	<script src="jquery-1.6.3.min.js"></script>
 	<script src="util.js"></script>
-	<script src="graphic_utils.js"></script>
+	<script src="graphic_utils.js?v=2"></script>
 	<script src="Point.js"></script>
-	<script src="Rect.js"></script>
-	<script src="Map.js?v=2"></script>
+	<script src="Rect.js?v=2"></script>
+	<script src="Map.js?v=6"></script>
 	<script src="Map_bubble.js"></script>
-	<script src="Map_env.js?v=2"></script>
+	<script src="Map_env.js?v=5"></script>
+	<script src="Map_vue.js?v=8"></script>
 	
 	<style type="text/css">
 	body {
@@ -19,11 +20,11 @@
 		padding:0;
 		margin:0;
 	}
-	#layer_list {
+	#map_settings {
 		position: fixed;
 		background-color : white;
 		box-shadow: 0 3px 6px #666;
-		padding: 0;
+		padding: 0 0 0 5px;
 		left: 5px;
 		top: 5px;
 		bottom: 5px;
@@ -32,6 +33,9 @@
 		border-width: 1px;
 		border-color: black;
 		overflow: auto;
+	}
+	#map_settings h3 {
+		margin: 5px 0 5px 0px;
 	}
 	#map {
 		position: fixed;
@@ -80,10 +84,17 @@
 </head>
 <body>
 
-<div id=layer_list>
-	<input type=checkbox id=layer_satellite><label for=layer_satellite>Photo Satellite</label>
-	<br><input type=checkbox id=layer_nomsLieux><label for=layer_nomsLieux>Noms des lieux</label>
-	<br><input type=checkbox id=layer_régions><label for=layer_régions>Régions</label>
+<div id=map_settings>
+	<h3>Carte</h3>
+	<div id=layer_list>
+		<input type=checkbox id=layer_satellite><label for=layer_satellite>Photo Satellite</label><br>
+		<input type=checkbox id=layer_nomsLieux><label for=layer_nomsLieux>Noms des lieux</label><br>
+		<input type=checkbox id=layer_régions><label for=layer_régions>Régions</label><br>
+		<br>
+	</div>
+	<h3>Vues</h3>
+	<div id=view_list>
+	</div>
 </div>
 <div id=map><canvas id=map_canvas></canvas></div>
 <div id=posmark>-</div>
@@ -113,6 +124,14 @@ $(document).ready(function() {
 	map = new Map("map_canvas", "posmark");
 	fetchMap(function(msg){
 		map.setData(msg);
+		var html = "";
+		if (msg.Vues) {
+			for (i in msg.Vues) {
+				var v = msg.Vues[i];
+				html += '<input type=checkbox idBraldun='+v.Voyeur+' class=view id=view_'+v.Voyeur+'><label for=view_'+v.Voyeur+'>'+v.Voyeur+' ('+formatDate(1000*v.Time)+')</label><br>';
+			}
+		}
+		$('#view_list').html(html);
 		map.redraw();
 		setTimeout(function(){map.redraw();}, 1000); // contournement de bug pas compris
 	});
@@ -126,6 +145,17 @@ $(document).ready(function() {
 	});
 	$('#layer_régions').prop('checked', map.displayRégions).change(function(){
 		map.displayRégions=this.checked;
+		map.redraw();
+	});
+	$('#view_list').delegate('input.view', 'change', function() {
+		var idBraldun = $(this).attr('idBraldun');
+		for (i in map.mapData.Vues) {
+			var v = map.mapData.Vues[i];
+			if (v.Voyeur==idBraldun) {
+				v.active=this.checked;
+				break;
+			}
+		}
 		map.redraw();
 	});
 });

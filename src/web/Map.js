@@ -9,7 +9,6 @@ function Map(canvasId, posmarkid) {
 	this.originX=0; // coin haut gauche de la grotte au centre de l'écran
 	this.originY=0;
 	this.scales = [0.5, 1, 2, 4, 8, 16, 32, 48, 64, 92];
-	console.log(this.scales);
 	this.scaleIndex = 8; // -> zoom "naturel" de 64
 	this.zoom = this.scales[this.scaleIndex];
 	this.mouseIsDown=false;
@@ -17,7 +16,7 @@ function Map(canvasId, posmarkid) {
 	this.pointerY = 0;
 	this.pointerScreenX = 0; // coordonnées du pointeur dans le référentiel de l'écran
 	this.pointerScreenY = 0;
-	this.hoverObject = null;
+	this.hoverObject = null; // cette notion sera remplacée à terme par une cellule (mais restera null si la cellule ne contient rien d'intéressant)
 	this.photoSatellite = new Image();
 	this.displayPhotoSatellite = true;
 	this.displayTownPlaceNames = false;
@@ -53,23 +52,10 @@ function Map(canvasId, posmarkid) {
 	});
 }
 
-function test() {
-	console.log('hop');
-}
-
-function testScales(e) {
-	console.log(e);
-	this.scales = new Array();
-	this.scales[0]=1;
-	for (var i=1; i<22; i++) {
-		var v = Math.round(e*this.scales[i-1]);
-		if (v==this.scales[i-1]) v++;
-		this.scales.push(v);
-	}
-	console.log(this.scales);
-	
-}
-
+// l'objet passé, reçu en json, devient le fournisseur des données de carte et de vue.
+// Les champs dans le nom commence par une minuscule sont définis localement et
+//  ceux dont le nom commence par une majuscule proviennent du serveur (cette norme
+//  est valable sur toute la hiérarchie des objets de mapData).
 Map.prototype.setData = function(mapData) {
 	this.mapData = mapData;
 }
@@ -90,8 +76,19 @@ Map.prototype.recomputeCanvasPosition = function() {
 }
 
 // renvoie l'objet aux coordonnées (univers Braldahim) x et y.
-// On optimisera ça plus tard via une matrice
+// On optimisera ça plus tard via une matrice (on utilise déjà une matrice pour la partie vue)
 Map.prototype.objectOn = function(x, y) {
+	if (this.mapData.Vues) {
+		for (var i=this.mapData.Vues.length; i-->0;) {
+			var vue = this.mapData.Vues[i];
+			if (vue.active && vue.matrix) {
+				var W = vue.XMax-vue.XMin;
+				var index = ((x-vue.XMin)%W)+(W*(y-vue.YMin));
+				var cell = vue.matrix[index];
+				if (cell) return cell; // la cellule n'est définie que si elle contient quelque chose
+			}
+		}
+	}
 	if (this.mapData.LieuxVilles && this.zoom>25) {
 		for (var i=this.mapData.LieuxVilles.length; i-->0;) {
 			var lv = this.mapData.LieuxVilles[i];
@@ -150,6 +147,12 @@ Map.prototype.redraw = function() {
 					this.drawTownPlace(this.mapData.LieuxVilles[i]);
 				}
 			}
+			if (this.mapData.Vues) {
+				for (var i=this.mapData.Vues.length; i-->0;) {
+					var vue = this.mapData.Vues[i];
+					if (vue.active) this.drawVue(vue);
+				}
+			}
 			if (this.mapData.Villes && this.zoom<=60) {
 				for (var i=this.mapData.Villes.length; i-->0;) {
 					this.drawTown(this.mapData.Villes[i]);
@@ -160,7 +163,10 @@ Map.prototype.redraw = function() {
 					this.drawRégion(this.mapData.Régions[i]);
 				}
 			}
-			if (this.bubbleText.length>0) this.drawBubble();
+			if (this.bubbleText.length>0) {
+				this.bubbleText.splice(0, 0, this.pointerX+','+this.pointerY);
+				this.drawBubble();
+			}
 		}
 	} finally {
 		this.drawInProgress = false;

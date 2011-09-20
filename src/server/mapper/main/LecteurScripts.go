@@ -49,25 +49,28 @@ func readLine(r *bufio.Reader) (line string, err os.Error) {
 func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
 	l := len(path)
 	if l < 4 {
+		//fmt.Printf("readTimeFromFilePath : chemin trop court (l=%d)", l)
 		return 0
 	}
 	s := path[l-4] + "-" + path[l-3] + "-" + path[l-2] // année-mois-jour
 	name := path[l-1]
-	i1 := strings.LastIndex(name, "-")
-	i2 := strings.LastIndex(name, "h")
-	i3 := strings.LastIndex(name, ".")
-	if i3 > i2 && i2 > i1 && i1 > 0 {
-		s += "-" + name[i1+1:i2] + "-" + name[i2+1:i3]
-		if i3 == i2+1 {
+	i1 := strings.LastIndex(name, "h")
+	i2 := strings.LastIndex(name, "-")
+	if i2 > i1 && i1 > 0 {
+		s += "-" + name[0:i1] + "-" + name[i1+1:i2]
+		if i2 == i1+1 {
 			// cas où on n'a pas les minutes
 			s += "00"
 		}
-		fmt.Println("  date formatée : ", s)
+		//~ fmt.Println("  date formatée : ", s)
 		t, err := time.Parse("2006-01-02-15-04", s)
 		if err != nil {
-			fmt.Printf("Erreur parsing date : %+v\n", err)
+			//fmt.Printf("Erreur parsing date \"%s\" : %+v\n", s, err)
+			return 0
 		}
 		return t.Seconds()
+	} else {
+		//fmt.Printf("readTimeFromFilePath : indices non trouvés (i1=%d, i2=%d)", i1, i2)
 	}
 	return 0
 }
@@ -90,6 +93,8 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 		if strings.HasSuffix(filename, ".csv") {
 			fmt.Printf("   parsed file : %s\n", f.Name())
 			switch filename {
+			case "bralduns.csv":
+				return ls.parseFichierStatique(f, func() Visible { return new(Braldun) })
 			case "lieux_villes.csv":
 				return ls.parseFichierStatique(f, func() Visible { return new(LieuVille) })
 			case "regions.csv":
@@ -98,14 +103,15 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 				return ls.parseFichierStatique(f, func() Visible { return new(Ville) })
 			default:
 				vue, err := ls.parseFichierDynamique(f, ls.readTimeFromFilePath(path))
-				if vue.Voyeur > 0 && vue.Time > 0 {
-					fmt.Println("vue ok")
-					if ls.MemMap.DernièresVues[vue.Voyeur] == nil || vue.Time > ls.MemMap.DernièresVues[vue.Voyeur].Time {
-						ls.MemMap.DernièresVues[vue.Voyeur] = vue
-					}
-				}
 				if err != nil {
 					fmt.Printf("erreur parsing fichier dynamique : %+v\n", err)
+				} else {
+					//~ fmt.Printf("    -> vue : %+v\n", vue)
+					if vue.Voyeur > 0 && vue.Time > 0 {
+						if ls.MemMap.DernièresVues[vue.Voyeur] == nil || vue.Time > ls.MemMap.DernièresVues[vue.Voyeur].Time {
+							ls.MemMap.DernièresVues[vue.Voyeur] = vue
+						}
+					}
 				}
 				return err
 			}

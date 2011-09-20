@@ -12,11 +12,11 @@ type Vue struct {
 	XMax     int16
 	YMin     int16
 	YMax     int16
-	Bralduns []*VueBraldun
+	Bralduns []*Braldun
 }
 
 func NewVue() *Vue {
 	vue := new(Vue)
-	vue.Bralduns = make([]*VueBraldun, 0, 5)
+	vue.Bralduns = make([]*Braldun, 0, 5)
 	return vue
 }

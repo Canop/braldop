@@ -15,6 +15,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 		return
 	}
 	switch cells[0] {
+	case "BRALDUN":
+		o := new(Braldun)
+		if err := o.readCsvDynamique(cells); err != nil {
+			fmt.Printf(" Erreur lecture Braldun : %+v \n cellules : %+v\n", err, cells)
+		} else {
+			//~ fmt.Printf(" Braldun : %+v\n", o)
+			vue.Bralduns = append(vue.Bralduns, o)
+		}
 	case "CHAMP":
 		o := new(VueChamp)
 		if err := o.readCsv(cells); err != nil {
@@ -44,7 +52,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 		if err := o.readCsv(cells); err != nil {
 			fmt.Printf(" Erreur lecture position : %+v \n cellules : %+v", err, cells)
 		} else {
-			//fmt.Printf(" Position : %+v\n", o)
+			//~ fmt.Printf(" Position : %+v\n", o)
 			vue.Voyeur = o.IdBraldun
 			vue.XMin = o.XMin
 			vue.XMax = o.XMax
@@ -60,12 +68,12 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 			ls.MemMap.StoreRoute(o)
 		}
 	}
-	//fmt.Printf("  %s\n", line)
 }
 
 func (ls *LecteurScripts) parseFichierDynamique(file *os.File, time int64) (vue *Vue, err os.Error) {
 	r := bufio.NewReader(file)
 	vue = NewVue()
+	vue.Time = time
 	line, err := readLine(r)
 	for err == nil {
 		ls.parseLigneFichierDynamique(line, vue)

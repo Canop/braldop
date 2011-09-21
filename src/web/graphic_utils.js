@@ -76,7 +76,7 @@ function computeAngle(c, a) {
  * Si w et h sont fournis, ils donnent la dimension de l'image.
  * Si h est fourni sans w, w est calculé proportionnellement.
  * Si w est fourni sans h, h est calculé proportionnellement.
- *
+ * Si aucune dimension n'est fournie, alors on dessine à la taille naturelle de l'image.
  */
 function drawCenteredImage(c, img, cx, cy, w, h) {
 	if (!img.width) return; // image non chargée

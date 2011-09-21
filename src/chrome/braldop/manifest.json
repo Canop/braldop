@@ -1,0 +1,29 @@
+{
+	"name": "Braldop",
+	"version": "1.0",
+	"description": "Une extension Chrome open-source pour Braldahim",
+	"homepage_url": "http://canop.org/braldop",
+	"background_page": "extension.html",
+	"content_scripts": [
+		{
+			"matches": ["*://jeu.braldahim.com/*"],
+			"all_frames" : true,
+			"run_at" : "document_end",
+			"js": [
+				"jquery-1.6.3.min.js",
+				"ext_general.js",
+				"ext_login.js",
+				"ext_main.js"
+			]
+		},
+		{
+			"matches": ["http://canop.org/braldop/index.html", "http://canop.org/braldop/"],
+			"run_at" : "document_end",
+			"js": [
+				"jquery-1.6.3.min.js",
+				"ext_general.js",
+				"ext_detect.js"
+			]
+		}
+	]
+}

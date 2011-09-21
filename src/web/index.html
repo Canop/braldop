@@ -2,15 +2,80 @@
 <head>
 	<title>Braldop</title>
 	<meta http-equiv=content-type content="text/html; charset=UTF8"> 
+	<link rel="stylesheet" type="text/css" href="braldop.css"/>
 	<script src="jquery-1.6.3.min.js"></script>
 </head>
 <body>
 
+<div class=column_wrapper id="top_column_wrapper">
+&nbsp;</div>
+
+<div id="title_stripe">
+<a href="/">canop.org</a> &gt; Bradlop
+</div>
+
+<div class=column_wrapper id="content_column_wrapper">
+<div id="content_wrapper">
+
+<p>Braldop est un ensemble de compléments au jeu <a href=http://www.braldahim.com>Braldahim</a>.</p>
+
+<h2>Le système Goût-Gueule</h2>
+<p>
+Tout à la fois système de vue et de cartographie, le développement de Goût-Gueule vise<ul>
+<li>à offrir un système de cartographie,</li>
+<li>à prototyper avec les développeurs et les joueurs de Braldahim la prochaine version de la vue dans le jeu lui-même.</li>
+</ul>
+On parle sur le forum de Braldahim <a href="http://forum.braldahim.com/viewtopic.php?f=30&t=1223">de Goût-Gueule</a> ainsi que de son <a href="http://forum.braldahim.com/viewtopic.php?f=30&t=1236">intégration dans le jeu</a>.
+</p>
+<p>
+Vous pouvez consulter <a href=map.html>la carte de Canopée du Haut-Rac</a>.
+</p>
+
+<h2>L'extension Chrome</h2>
+<p>Cette extension, pour l'instant, ne sert qu'à une chose : désactiver par défaut l'activation du tour au login.
+<br><a href="http://forum.braldahim.com/viewtopic.php?f=30&t=1242">On en parle</a> sur le forum de Braldahim.
+</p>
+<br>
+<p><a href=braldop_1_0.crx class=install>Installer l'extension Braldop</a> Version actuelle : <span id=version>1.0</span></p>
+<br>
+<p id=browserInfos></p>
+
+
+<h2>Discuter</h2>
+<p>
+Un forum a été mis en place : <a href=fofo/>le canofofo</a>. Mais pour tout ce qui peut toucher à l'intégration dans le jeu, ou être d'intérêt général, préférez les liens donnés plus haut vers le forum de Braldahim.
+</p>
+
+
+<h2>Développement</h2>
+<p>
+Bradlop est open-source.<br>
+Vous pouvez participer au développement, signaler des bugs, ou simplement consulter les sources par curiosité via <a href=http://www.github.com/Canop/Braldop>github</a>.
+</p>
+
+</div> <!-- content_wrapper -->
+</div> <!-- content_column_wrapper -->
 
 <br><br>
-<center>
-<a href=map.html>Le monde explorée par Canopée du Haut-Rac</a>
-</center>
+
+<script type="text/javascript">
+
+//> google analytics
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15064357-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  
+//> détection du navigateur
+var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') >= 0;
+if (!is_chrome) $("p#browserInfos").html("<font color=red>Sauf erreur, vous n'êtes pas sous Chrome. Vous devriez revenir sur cette page après avoir changé de navigateur.</font>");
+
+</script>
 
 </body>
 </html>

@@ -6,12 +6,12 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 En cours :
 ==========
 
+* extension chrome pour le décochage de l'activation au login
 * affichage des objets mobiles (Braldûns, etc.) de la dernière vue
 
 P1 :
 ====
 
-* extension chrome pour le décochage de l'activation au login
 * utilisation de la taille naturelle de toutes les icônes (hors terrains) en zoom 64
 * optimisation des affichages de cases et de lieux : tester x et y plutôt que le rectangle (donc calculer xmin et xmax etc.) en début de dessin
 

@@ -56,10 +56,9 @@ function Map(canvasId, posmarkid) {
 	this.canvas.addEventListener("mousemove", function(e) {_this.mouseMove(e)}, false);
 	if (window.addEventListener) window.addEventListener("DOMMouseScroll", function(e) {_this.mouseWheel(e)}, false); // firefox
 	window.onmousewheel = function(e) {_this.mouseWheel(e)}; // chrome
-	Map.activeMap = this;
 	$(window).resize(function(){
-		Map.activeMap.recomputeCanvasPosition();
-		Map.activeMap.redraw();
+		_this.recomputeCanvasPosition();
+		_this.redraw();
 	});
 }
 

@@ -12,6 +12,7 @@ En cours :
 P1 :
 ====
 
+* rédiger sur le fofo ma proposition d'intégration de la vue+carte dans le jeu
 * utilisation de la taille naturelle de toutes les icônes (hors terrains) en zoom 64
 * optimisation des affichages de cases et de lieux : tester x et y plutôt que le rectangle (donc calculer xmin et xmax etc.) en début de dessin
 

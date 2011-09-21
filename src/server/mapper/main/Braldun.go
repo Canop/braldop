@@ -43,11 +43,6 @@ func (o *Braldun) readCsv(cells []string) (err os.Error) {
 	o.Sexe = string(cells[4][0])
 	return
 }
-//~ if cells[4][0]=='f' {
-//~ o.Sexe = 'f'
-//~ } else {
-//~ o.Sexe
-//~ }
 
 // cette méthode est appelée pour le décodage du fichier dynamique
 func (o *Braldun) readCsvDynamique(cells []string) (err os.Error) {

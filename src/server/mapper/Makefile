@@ -8,6 +8,7 @@ GOFILES=\
 	main/VueEnvironnement.go\
 	main/VuePosition.go\
 	main/VueRoute.go\
+	main/VueObjet.go\
 	main/Braldun.go\
 	main/LieuVille.go\
 	main/Ville.go\

@@ -18,7 +18,7 @@ type MemMap struct {
 	LieuxVilles         []*LieuVille
 	Régions             []*Région
 	DernièresVues       map[uint]*Vue // les dernières vues avec pour clé l'id du Braldun voyeur
-
+	Objets              []*VueObjet
 }
 
 func NewMemMap() (mm *MemMap) {
@@ -32,6 +32,7 @@ func NewMemMap() (mm *MemMap) {
 	mm.LieuxVilles = make([]*LieuVille, 0, 10)
 	mm.Régions = make([]*Région, 0, 10)
 	mm.DernièresVues = make(map[uint]*Vue)
+	mm.Objets = make([]*VueObjet, 0, 10)
 	return mm
 }
 
@@ -55,6 +56,9 @@ func (mm *MemMap) StoreLieuVille(o *LieuVille) { // on va supposer qu'on ne lit 
 }
 func (mm *MemMap) StoreRégion(o *Région) {
 	mm.Régions = append(mm.Régions, o)
+}
+func (mm *MemMap) StoreObjet(o *VueObjet) {
+	mm.Objets = append(mm.Objets, o)
 }
 
 func (mm *MemMap) Compile() (m *Map) {

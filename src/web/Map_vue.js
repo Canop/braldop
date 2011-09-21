@@ -21,7 +21,6 @@ Map.prototype.drawVue = function(vue) {
 			for (ib in vue.Bralduns) {
 				var b = vue.Bralduns[ib];
 				var index = ((b.X-vue.XMin)%W)+(W*(b.Y-vue.YMin));
-				//console.log(b.X+" "+b.Y+" -> "+index);
 				var cell = vue.matrix[index];
 				if (!cell) {
 					cell = {};
@@ -40,7 +39,6 @@ Map.prototype.drawVue = function(vue) {
 		var naturalSize = this.zoom==64;
 		var imgh;
 		if (this.zoom!=64) imgh=this.zoom*0.38;
-		console.log("zoom="+this.zoom+"  imgh="+imgh);
 		for (var x=vue.XMin; x<=vue.XMax; x++) {
 			for (var y=vue.YMin; y<=vue.YMax; y++) {
 				var index = ((x-vue.XMin)%W)+(W*(y-vue.YMin));

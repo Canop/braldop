@@ -8,7 +8,7 @@ function Map(canvasId, posmarkid) {
 	this.rect = new Rect(); // le rectangle englobant le contenu que l'on veut montrer
 	this.originX=0; // coin haut gauche de la grotte au centre de l'écran
 	this.originY=0;
-	this.scales = [0.5, 1, 2, 4, 8, 16, 32, 48, 64, 92];
+	this.scales = [0.5, 1, 2, 4, 8, 16, 32, 48, 64]; // éliminé : 92
 	this.scaleIndex = 8; // -> zoom "naturel" de 64
 	this.zoom = this.scales[this.scaleIndex];
 	this.mouseIsDown=false;

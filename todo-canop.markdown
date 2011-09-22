@@ -11,6 +11,8 @@ En cours :
 P1 :
 ====
 
+* corriger l'assombrissement des vues : il disparait quand la zone vue n'intercepte pas l'écran (et de toutes manières il faut cumuler les trous, pas les assombrissements)
+* générer le json et tester à partir des csv de Boule (buissons, bosquets
 * rédiger sur le fofo ma proposition d'intégration de la vue+carte dans le jeu
 * corriger le README de Braldop
 * utilisation de la taille naturelle de toutes les icônes (hors terrains) en zoom 64
@@ -20,3 +22,9 @@ P2 :
 ====
 
 * dans le js : table définie suivant les dimensions actuelles et la résolution (si les lieux sont visibles) permettant l'accès rapide aux dits lieux suivant x,y. Remplie en cours de dessin. Notons qu'on peut aussi envisager une sous liste des objets survolables à l'écran (vide si la résolution ne permet pas le survol)
+
+Questions :
+===========
+
+* comment trouve-t-on l'icône d'un type de monstre ?
+* Charrettes : à quoi correspond le "nom_type_materiel" ? Comment trouve-t-on le propriétaire ?

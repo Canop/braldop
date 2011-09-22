@@ -47,9 +47,10 @@ func readLine(r *bufio.Reader) (line string, err os.Error) {
 // renvoie le nombre de secondes depuis 1970 caché dans le chemin vers le fichier : année/mois/jour/truc-heurehminutes.csv
 // Le parsage des dates est pour moi le gros WTF du go... si quelqu'un arrive à faire plus propre...
 func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
+	//~ fmt.Printf("readTimeFromFilePath : %+v\n", path)
 	l := len(path)
 	if l < 4 {
-		//fmt.Printf("readTimeFromFilePath : chemin trop court (l=%d)", l)
+		//~ fmt.Printf("readTimeFromFilePath : chemin trop court (l=%d)\n", l)
 		return 0
 	}
 	s := path[l-4] + "-" + path[l-3] + "-" + path[l-2] // année-mois-jour
@@ -63,14 +64,14 @@ func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
 			s += "00"
 		}
 		//~ fmt.Println("  date formatée : ", s)
-		t, err := time.Parse("2006-01-02-15-04", s)
+		t, err := time.Parse("2006-1-2-15-04", s)
 		if err != nil {
-			//fmt.Printf("Erreur parsing date \"%s\" : %+v\n", s, err)
+			//~ fmt.Printf("Erreur parsing date \"%s\" : %+v\n", s, err)
 			return 0
 		}
 		return t.Seconds()
 	} else {
-		//fmt.Printf("readTimeFromFilePath : indices non trouvés (i1=%d, i2=%d)", i1, i2)
+		//~ fmt.Printf("readTimeFromFilePath : indices non trouvés (i1=%d, i2=%d)\n", i1, i2)
 	}
 	return 0
 }
@@ -91,7 +92,7 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 		path := strings.Split(f.Name(), "/")
 		filename := path[len(path)-1]
 		if strings.HasSuffix(filename, ".csv") {
-			fmt.Printf("   parsed file : %s\n", f.Name())
+			//~ fmt.Printf("   parsed file : %s\n", f.Name())
 			switch filename {
 			case "bralduns.csv":
 				return ls.parseFichierStatique(f, func() Visible { return new(Braldun) })
@@ -106,7 +107,7 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 				if err != nil {
 					fmt.Printf("erreur parsing fichier dynamique : %+v\n", err)
 				} else {
-					//~ fmt.Printf("    -> vue : %+v\n", vue)
+					fmt.Printf("    -> vue : %+v\n", vue)
 					if vue.Voyeur > 0 && vue.Time > 0 {
 						if ls.MemMap.DernièresVues[vue.Voyeur] == nil || vue.Time > ls.MemMap.DernièresVues[vue.Voyeur].Time {
 							ls.MemMap.DernièresVues[vue.Voyeur] = vue
@@ -116,7 +117,7 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 				return err
 			}
 		} else {
-			fmt.Println("   ignored file : " + f.Name())
+			//~ fmt.Println("   ignored file : " + f.Name())
 		}
 	}
 	return nil

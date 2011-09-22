@@ -71,7 +71,7 @@ Map.prototype.initTiles = function() {
 	(this.img_bralduns_masculin_feminin = new Image()).src = baseTilesUrl + "vue/bralduns_masculin_feminin.png";
 	
 	this.imgObjets = {};
-	(this.imgObjets['charette'] = new Image()).src = baseTilesUrl + "cockpit/charrette.png";
+	(this.imgObjets['charrette'] = new Image()).src = baseTilesUrl + "cockpit/charrette.png";
 	
 	
 	for (tile in this.envTiles) {

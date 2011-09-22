@@ -1,3 +1,19 @@
+// renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
+function getCell(vue, x, y) {
+	var W = vue.XMax-vue.XMin;
+	var index = ((x-vue.XMin)%W)+(W*(y-vue.YMin));
+	var cell = vue.matrix[index];
+	if (!cell) {
+		cell = {};
+		cell.bralduns = [];
+		cell.objets = [];
+		cell.nbBraldunsFéminins=0;
+		cell.nbBraldunsMasculins=0;
+		vue.matrix[index] = cell;
+	}
+	return cell;
+}
+
 // dessine la vue d'un Braldun
 Map.prototype.drawVue = function(vue) {
 	var screenRect = new Rect();
@@ -20,22 +36,19 @@ Map.prototype.drawVue = function(vue) {
 			vue.matrix = [];
 			for (ib in vue.Bralduns) {
 				var b = vue.Bralduns[ib];
-				var index = ((b.X-vue.XMin)%W)+(W*(b.Y-vue.YMin));
-				var cell = vue.matrix[index];
-				if (!cell) {
-					cell = {};
-					cell.bralduns = [];
-					cell.nbBraldunsFéminins=0;
-					cell.nbBraldunsMasculins=0;
-					vue.matrix[index] = cell;
-				}
+				var cell = getCell(vue, b.X, b.Y)
 				cell.bralduns.push(b);
 				if (b.Sexe=='f') cell.nbBraldunsFéminins++;
 				else cell.nbBraldunsMasculins++;
 			}
+			for (io in vue.Objets) {
+				var o = vue.Objets[io];
+				var cell = getCell(vue, o.X, o.Y);
+				cell.objets.push(o);
+			}
 		}
 		
-		//> on dessine les bralduns en vue
+		//> on dessine les trucs en vue
 		var naturalSize = this.zoom==64;
 		var imgh;
 		if (this.zoom!=64) imgh=this.zoom*0.38;
@@ -45,6 +58,7 @@ Map.prototype.drawVue = function(vue) {
 				var cell = vue.matrix[index];
 				if (cell) {
 					var selected = (this.pointerX==x && this.pointerY==y);
+					//> les bralduns
 					var imgb = null;
 					if (cell.nbBraldunsFéminins>0 && cell.nbBraldunsMasculins>0) {
 						imgb = this.img_bralduns_masculin_feminin;					
@@ -69,7 +83,31 @@ Map.prototype.drawVue = function(vue) {
 							drawCenteredImage(c, this.getOutlineImg(imgb), cx, cy, null, imgh?imgh+4:null);
 						}
 						drawCenteredImage(c, imgb, cx, cy, null, imgh);
-					}					
+					}
+					//> les objets 
+					// TODO dans un premier temps pour tester je n'en dessine qu'un
+					if (cell.objets.length>0) {
+						if (selected) {
+							this.bubbleText.push('Objets :');
+							for (var ib in cell.objets) {
+								var o = cell.objets[ib];
+								this.bubbleText.push('  '+o.Type);
+							}
+						}
+						var o = cell.objets[0];
+						var img = this.imgObjets[o.Type];
+						if (img) {
+							var cx = this.zoom*(this.originX+x)+this.zoom*0.75;
+							var cy = this.zoom*(this.originY-y)+this.zoom*0.75;
+							if (selected) {
+								drawCenteredImage(c, this.getOutlineImg(img), cx, cy, null, imgh?imgh+4:null);
+							}
+							drawCenteredImage(c, img, cx, cy, null, imgh);
+						} else {
+							console.log("pas d'image pour l'objet " + o.Type);
+						}
+						
+					}
 				}
 			}
 		}

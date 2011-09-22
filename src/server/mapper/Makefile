@@ -6,9 +6,10 @@ GOFILES=\
 	main/VueChamp.go\
 	main/VueEchoppe.go\
 	main/VueEnvironnement.go\
+	main/VueMonstre.go\
+	main/VueObjet.go\
 	main/VuePosition.go\
 	main/VueRoute.go\
-	main/VueObjet.go\
 	main/Braldun.go\
 	main/LieuVille.go\
 	main/Ville.go\

@@ -31,6 +31,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 			//~ fmt.Printf(" VueChamp : %+v\n", o)
 			ls.MemMap.StoreChamp(o)
 		}
+	case "CHARRETTE":
+		o := new(VueObjet)
+		if err := o.readCsv("charrette", cells); err != nil {
+			fmt.Printf(" Erreur lecture VueObjet : %+v \n cellules : %+v", err, cells)
+		} else {
+			fmt.Printf(" CHARRETTE : %+v\n", o)
+			vue.Objets = append(vue.Objets, o)
+		}
 	case "ECHOPPE":
 		o := new(VueEchoppe)
 		if err := o.readCsv(cells); err != nil {
@@ -46,6 +54,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 		} else {
 			//~ fmt.Printf(" VueEnvironnement : %+v\n", o)
 			ls.MemMap.StoreEnvironnement(o)
+		}
+	case "MONSTRE":
+		o := new(VueMonstre)
+		if err := o.readCsv(cells); err != nil {
+			fmt.Printf(" Erreur lecture VueMonstre : %+v \n cellules : %+v", err, cells)
+		} else {
+			//~ fmt.Printf(" VueMonstre : %+v\n", o)
+			vue.Monstres = append(vue.Monstres, o)
 		}
 	case "POSITION":
 		o := new(VuePosition)

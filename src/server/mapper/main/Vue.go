@@ -13,10 +13,14 @@ type Vue struct {
 	YMin     int16
 	YMax     int16
 	Bralduns []*Braldun
+	Monstres []*VueMonstre
+	Objets []*VueObjet
 }
 
 func NewVue() *Vue {
 	vue := new(Vue)
 	vue.Bralduns = make([]*Braldun, 0, 5)
+	vue.Monstres = make([]*VueMonstre, 0, 0)
+	vue.Objets = make([]*VueObjet, 0, 0)
 	return vue
 }

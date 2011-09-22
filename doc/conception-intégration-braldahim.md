@@ -1,4 +1,3 @@
-
 Voici une description/glossaire pour commencer :
 ================================================
 
@@ -18,7 +17,7 @@ Voici une description/glossaire pour commencer :
     - une crevasse (dans les cavernes uniquement), une crevasse + une balise (cela peut arriver techniquement)
     - un bosquet de type hêtres ou chenes ou peupliers ou erables, bosquet + balise
     - une route / des pavés
-    - une eau de type mer ou peuprofonde ou profonde ou lac, eau + balise (==> change rarement, mais certaines portion de carte peuvent être modifiés pour ajouter ou supprimer une eau)
+    - une eau de type mer ou peuprofonde ou profonde ou lac, eau + balise (==> change rarement, mais certaines portions de carte peuvent être modifiés pour ajouter ou supprimer une eau)
     - inconnu : pour les limites des mines. Il n'y a des mines en z < 0que lorsqu'au niveau 0, c'est de la montagne.
 
 

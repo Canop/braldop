@@ -2,22 +2,22 @@
 Voici une description/glossaire pour commencer :
 ================================================
 
- * Case : correspond à l'un des points (x,y) de la surface, x et y variant actuellement respectivement dans [-800, 800] et [-500, 500] (y positifs au nord)
- * Environnement : il y en a exactement un par case (type d'eau ou de terrain)
- * Fond : il y en a exactement un par case. Il correspond à l'environnement éventuellement modifié par une balise. Il y a au total moins de 255 fonds possibles.
- * Lieu : il y en a 0 ou 1 par case. On distingue les lieux publics et les lieux privés (meilleurs noms bienvenus)
- * Lieu public : lieu connu de tous (lieux des villes) et définis dans le fichier lieux_villes.csv
- * Lieu privé : lieu qui doit être découvert (vu) pour être connu. La connaissance que l'on a du lieu date de la dernière fois que l'on a vu la case qui le contient. Ces "lieux" peuvent être des échoppes, des champs, des palissades.
- * Objet : les objets dont l'existence ou la position sont éphémères : braldûns, gibiers, monstres, charettes, buissons, ingrédients, etc. Leur nombre par case n'est pas limité. On considère que les objets hors vue sont inconnus et ne doivent pas être affichés.
+* Case : correspond à l'un des points (x,y) de la surface, x et y variant actuellement respectivement dans [-800, 800] et [-500, 500], les y positifs au nord
+* Environnement : il y en a exactement un par case (type d'eau ou de terrain)
+* Fond : il y en a exactement un par case. Il correspond à l'environnement éventuellement modifié par une balise. Il y a au total moins de 255 fonds possibles.
+* Lieu : il y en a 0 ou 1 par case. On distingue les lieux publics et les lieux privés (meilleurs noms bienvenus)
+* Lieu public : lieu connu de tous (lieux des villes) et définis dans le fichier lieux_villes.csv
+* Lieu privé : lieu qui doit être découvert (vu) pour être connu. La connaissance que l'on a du lieu date de la dernière fois que l'on a vu la case qui le contient. Ces "lieux" peuvent être des échoppes, des champs, des palissades.
+* Objet : les objets dont l'existence ou la position sont éphémères : braldûns, gibiers, monstres, charettes, buissons, ingrédients, etc. Leur nombre par case n'est pas limité. On considère que les objets hors vue sont inconnus et ne doivent pas être affichés.
 
 Aux objets et lieux peuvent être associées des informations qui dépassent leur type : nom, propriétaire, quantité, etc.
 
 Il n'y a rien d'autre dans la vue ou sur la carte.
 
 Chaque case peut-être :
- - inconnue
- - connue mais non visible (sous le "brouillard de guerre")
- - visible
+* inconnue
+* connue mais non visible (sous le "brouillard de guerre")
+* visible
  
 Le choix a priori est que les fonds et lieux connus mais non visibles soient affichés (avec leurs lieux informations associées) dans l'état dans lequel ils étaient la dernière fois qu'ils ont été vus par le braldûn.
 

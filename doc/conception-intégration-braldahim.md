@@ -22,7 +22,7 @@ Voici une description/glossaire pour commencer :
 
 
 * Lieu : il y en a 0 ou 1 par case. On distingue les lieux liés à une ville et les autres.
-* Lieu publics : lieu connu de tous (lieux de villes) et définis dans le fichier lieux_villes.csv
+* Lieu public : lieu connu de tous (lieux de villes) et définis dans le fichier lieux_villes.csv
 * Lieu privé : lieu qui doit être découvert (vu) pour être connu. La connaissance que l'on a du lieu date de la dernière fois que l'on a vu la case qui le contient. Ces "lieux" peuvent être des échoppes, des champs.
 * Objet : les objets dont l'existence ou la position sont éphémères : braldûns, gibiers, monstres, charettes, buissons, ingrédients, etc. Leur nombre par case n'est pas limité. On considère que les objets hors vue sont inconnus et ne doivent pas être affichés.
 

@@ -120,7 +120,7 @@ Map.prototype.drawCell = function(cell) {
 Map.prototype.drawChamp = function(e) {
 	var screenRect = new Rect();
 	screenRect.w = this.zoom/2;
-	screenRect.h = screenRect.w*(29/32); // ajustement manuel parce que je suis fatigué des dimensions de l'image du champ
+	screenRect.h = this.zoom/2;
 	screenRect.x = this.zoom*(this.originX+e.X)+screenRect.w;
 	screenRect.y = this.zoom*(this.originY-e.Y);
 	if (!Rect_intersect(screenRect, this.screenRect)) {
@@ -128,17 +128,22 @@ Map.prototype.drawChamp = function(e) {
 	}
 	var c = this.context;
 	c.save();
+	var cx = screenRect.x+0.75*screenRect.w;
+	var cy = screenRect.y+0.25*screenRect.h;
+	var imgw;
+	if (this.zoom!=64) imgw=this.zoom*0.45;
 	if (e.X==this.pointerX && e.Y==this.pointerY) {
 		c.shadowOffsetX = 0;
 		c.shadowOffsetY = 0;
 		c.shadowBlur = 5;
 		c.shadowColor = "black";
 		var d = 3;
-		c.drawImage(this.getOutlineImg(this.champImg), screenRect.x-d, screenRect.y-d, screenRect.w+2*d, screenRect.h+2*d);
+		var imgh;
+		drawCenteredImage(c, this.getOutlineImg(this.champImg), cx, cy, imgw?imgw+4:null, null);
 		c.shadowBlur = 0;
 		this.bubbleText.push("Champ du Braldûn " + e.IdBraldun);
 	}
-	screenRect.drawImage(c, this.champImg);
+	drawCenteredImage(c, this.champImg, cx, cy, imgw);
 	c.restore();
 }
 

@@ -31,6 +31,7 @@ Aux objets et lieux peuvent être associées des informations qui dépassent leu
 Il n'y a rien d'autre dans la vue ou sur la carte.
 
 Chaque case peut-être :
+
 * inconnue
 * connue mais non visible (sous le "brouillard de guerre")
 * visible

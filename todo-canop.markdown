@@ -10,13 +10,13 @@ En cours :
 * utilisation de la taille naturelle de toutes les icônes (hors terrains) en zoom 64
 * mode d'affichage "proto vue"
 * montrer les boites de dialogues sur les lieux et objets
+* matrice globale de tout ce qui n'est pas environnement (hors vue)
 
 P1 :
 ====
 
 * corriger l'assombrissement des vues : il disparait quand la zone vue n'intercepte pas l'écran (et de toutes manières il faut cumuler les trous, pas les assombrissements)
 * corriger le README de Braldop
-* optimisation des affichages de cases et de lieux : tester x et y plutôt que le rectangle (donc calculer xmin et xmax etc.) en début de dessin [sera plutôt fait via la matrice]
 
 P2 :
 ====

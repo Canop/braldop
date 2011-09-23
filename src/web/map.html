@@ -7,10 +7,10 @@
 	<script src="graphic_utils.js?v=3"></script>
 	<script src="Point.js"></script>
 	<script src="Rect.js?v=2"></script>
-	<script src="Map.js?v=7"></script>
+	<script src="Map.js?v=8"></script>
 	<script src="Map_bubble.js"></script>
-	<script src="Map_env.js?v=9"></script>
-	<script src="Map_vue.js?v=10"></script>
+	<script src="Map_env.js?v=10"></script>
+	<script src="Map_vue.js?v=11"></script>
 	
 	<style type="text/css">
 	body {
@@ -88,7 +88,6 @@
 	<h3>Carte</h3>
 	<div id=layer_list>
 		<input type=checkbox id=layer_satellite><label for=layer_satellite>Photo Satellite</label><br>
-		<input type=checkbox id=layer_nomsLieux><label for=layer_nomsLieux>Noms des lieux</label><br>
 		<input type=checkbox id=layer_régions><label for=layer_régions>Régions</label><br>
 		<br>
 	</div>
@@ -137,10 +136,6 @@ $(document).ready(function() {
 	});
 	$('#layer_satellite').prop('checked', map.displayPhotoSatellite).change(function(){
 		map.displayPhotoSatellite=this.checked;
-		map.redraw();
-	});
-	$('#layer_nomsLieux').prop('checked', map.displayTownPlaceNames).change(function(){
-		map.displayTownPlaceNames=this.checked;
 		map.redraw();
 	});
 	$('#layer_régions').prop('checked', map.displayRégions).change(function(){

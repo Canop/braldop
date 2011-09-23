@@ -11,6 +11,7 @@ function Map(canvasId, posmarkid) {
 	this.scales = [0.5, 1, 2, 4, 8, 16, 32, 48, 64]; // éliminé : 92
 	this.scaleIndex = 8; // -> zoom "naturel" de 64
 	this.zoom = this.scales[this.scaleIndex];
+	this.W = 900; // simplement un nombre supérieur à la demi-largeur ou demi-hauteur de la carte mais pas trop
 	this.mouseIsDown=false;
 	this.pointerX = 0; // coordonnées du pointeur dans l'univers Braldahim
 	this.pointerY = 0;
@@ -19,7 +20,6 @@ function Map(canvasId, posmarkid) {
 	this.hoverObject = null; // cette notion sera remplacée à terme par une cellule (mais restera null si la cellule ne contient rien d'intéressant)
 	this.photoSatellite = new Image();
 	this.displayPhotoSatellite = true;
-	this.displayTownPlaceNames = false;
 	this.displayRégions = false;
 	this.recomputeCanvasPosition();
 	var _this = this;
@@ -62,12 +62,21 @@ function Map(canvasId, posmarkid) {
 	});
 }
 
-// l'objet passé, reçu en json, devient le fournisseur des données de carte et de vue.
-// Les champs dans le nom commence par une minuscule sont définis localement et
-//  ceux dont le nom commence par une majuscule proviennent du serveur (cette norme
-//  est valable sur toute la hiérarchie des objets de mapData).
-Map.prototype.setData = function(mapData) {
-	this.mapData = mapData;
+// renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
+Map.prototype.getCellCreate = function(x, y) {
+	var index = ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
+	//console.log("("+x+","+y+") -> "+index);
+	var cell = this.matrix[index];
+	if (!cell) {
+		cell = {};
+		this.matrix[index] = cell;
+	}
+	return cell;
+}
+// renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
+Map.prototype.getCell = function(x, y) {
+	var index = ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
+	return this.matrix[index];
 }
 
 Map.prototype.recomputeCanvasPosition = function() {
@@ -119,7 +128,44 @@ Map.prototype.objectOn = function(x, y) {
 	}
 	return null;
 }
-
+// l'objet passé, reçu en json, devient le fournisseur des données de carte et de vue.
+// Les champs dans le nom commence par une minuscule sont définis localement et
+//  ceux dont le nom commence par une majuscule proviennent du serveur (cette norme
+//  est valable sur toute la hiérarchie des objets de mapData).
+Map.prototype.setData = function(mapData) {
+	this.mapData = mapData;
+	console.log("carte reçue");
+	this.matrix = {};//new Array(); // todo benchmarker pour comparer les effets en ram et cpu
+	if (this.mapData.Cases) {
+		for (var i=this.mapData.Cases.length; i-->0;) {
+			var o = this.mapData.Cases[i];
+			var c = this.getCell(o.X, o.Y);
+			if (c) {
+				console.log("doublon!");
+			}
+			this.getCellCreate(o.X, o.Y).fond = o.Fond;
+		}
+	}
+	if (this.mapData.Champs) {
+		for (var i=this.mapData.Champs.length; i-->0;) {
+			var o = this.mapData.Champs[i];
+			this.getCellCreate(o.X, o.Y).champ=o;
+		}
+	}
+	if (this.mapData.Echoppes) {
+		for (var i=this.mapData.Echoppes.length; i-->0;) {
+			var o = this.mapData.Echoppes[i];
+			this.getCellCreate(o.X, o.Y).échoppe=o;
+		}
+	}
+	if (this.mapData.LieuxVilles) {
+		for (var i=this.mapData.LieuxVilles.length; i-->0;) {
+			var o = this.mapData.LieuxVilles[i];
+			this.getCellCreate(o.X, o.Y).lieu=o;
+		}
+	}
+	console.log("carte compilée");
+}
 // redessine la page. Peut-être appelée de n'importe quel contexte, y compris depuis une méthode de dessin (pour par exemple faire une animation)
 Map.prototype.redraw = function() {
 	if (this.drawInProgress) {
@@ -137,24 +183,33 @@ Map.prototype.redraw = function() {
 				this.naturalRectToScreenRect(this.photoSatelliteRect, this.photoSatelliteScreenRect);
 				this.photoSatelliteScreenRect.drawImage(this.context, this.photoSatellite);
 			}
-			if (this.mapData.Cases) {
-				for (var i=this.mapData.Cases.length; i-->0;) {
-					this.drawCell(this.mapData.Cases[i]);
-				}
-			}
-			if (this.mapData.Champs && this.zoom>10) {
-				for (var i=this.mapData.Champs.length; i-->0;) {
-					this.drawChamp(this.mapData.Champs[i]);
-				}
-			}
-			if (this.mapData.Echoppes && this.zoom>10) {
-				for (var i=this.mapData.Echoppes.length; i-->0;) {
-					this.drawEchoppe(this.mapData.Echoppes[i]);
-				}
-			}
-			if (this.mapData.LieuxVilles && this.zoom>10) {
-				for (var i=this.mapData.LieuxVilles.length; i-->0;) {
-					this.drawTownPlace(this.mapData.LieuxVilles[i]);
+			var xMin = Math.floor(-this.originX);
+			var xMax = Math.ceil(this.screenRect.w/this.zoom-this.originX);
+			var yMin = -Math.floor(this.screenRect.h/this.zoom-this.originY);
+			var yMax = Math.ceil(this.originY);
+			
+			//~ console.log("xMin="+xMin);
+			//~ console.log("xMax="+xMax);
+			//~ console.log("yMin="+yMin);
+			//~ console.log("yMax="+yMax);
+			
+			if (this.zoom>1) {
+				var screenRect = new Rect();
+				screenRect.w = this.zoom;
+				screenRect.h = this.zoom;
+				for (var x=xMin; x<=xMax; x++) {
+					for (var y=yMin; y<=yMax; y++) {
+						var cell = this.getCell(x, y);
+						if (cell) {
+							screenRect.x = this.zoom*(this.originX+x);
+							screenRect.y = this.zoom*(this.originY-y);
+							var hover = this.pointerX==x && this.pointerY==y;
+							if (cell.fond) this.drawFond(screenRect, cell.fond);
+							if (cell.champ) this.drawChamp(screenRect, cell.champ, hover);
+							if (cell.échoppe) this.drawEchoppe(screenRect, cell.échoppe, hover);
+							if (cell.lieu) this.drawLieu(screenRect, cell.lieu, hover);
+						}
+					}
 				}
 			}
 			if (this.mapData.Vues) {

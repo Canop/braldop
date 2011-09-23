@@ -99,16 +99,8 @@ Map.prototype.getOutlineImg = function(img) {
 }
 
 // dessine une case d'environnement
-Map.prototype.drawCell = function(cell) {
-	var screenRect = new Rect();
-	screenRect.x = this.zoom*(this.originX+cell.X);
-	screenRect.y = this.zoom*(this.originY-cell.Y);
-	screenRect.w = this.zoom;
-	screenRect.h = this.zoom;
-	if (!Rect_intersect(screenRect, this.screenRect)) {
-		return;
-	}
-	var envTile = this.envTiles[cell.Fond];
+Map.prototype.drawFond = function(screenRect, fond) {
+	var envTile = this.envTiles[fond];
 	if (envTile) {
 		screenRect.drawImage(this.context, envTile);
 	} else {
@@ -117,111 +109,57 @@ Map.prototype.drawCell = function(cell) {
 }
 
 // dessine un champ
-Map.prototype.drawChamp = function(e) {
-	var screenRect = new Rect();
-	screenRect.w = this.zoom/2;
-	screenRect.h = this.zoom/2;
-	screenRect.x = this.zoom*(this.originX+e.X)+screenRect.w;
-	screenRect.y = this.zoom*(this.originY-e.Y);
-	if (!Rect_intersect(screenRect, this.screenRect)) {
-		return;
-	}
+Map.prototype.drawChamp = function(screenRect, champ, hover) {
 	var c = this.context;
-	c.save();
 	var cx = screenRect.x+0.75*screenRect.w;
 	var cy = screenRect.y+0.25*screenRect.h;
 	var imgw;
 	if (this.zoom!=64) imgw=this.zoom*0.45;
-	if (e.X==this.pointerX && e.Y==this.pointerY) {
-		c.shadowOffsetX = 0;
-		c.shadowOffsetY = 0;
-		c.shadowBlur = 5;
-		c.shadowColor = "black";
-		var d = 3;
+	if (hover) {
 		var imgh;
 		drawCenteredImage(c, this.getOutlineImg(this.champImg), cx, cy, imgw?imgw+4:null, null);
-		c.shadowBlur = 0;
-		this.bubbleText.push("Champ du Braldûn " + e.IdBraldun);
+		this.bubbleText.push("Champ du Braldûn " + champ.IdBraldun);
 	}
 	drawCenteredImage(c, this.champImg, cx, cy, imgw);
-	c.restore();
 }
 
 // dessine une échoppe
-Map.prototype.drawEchoppe = function(e) {
-	var screenRect = new Rect();
-	screenRect.w = this.zoom/2;
-	screenRect.h = screenRect.w;
-	screenRect.x = this.zoom*(this.originX+e.X)+screenRect.w;
-	screenRect.y = this.zoom*(this.originY-e.Y);
-	if (!Rect_intersect(screenRect, this.screenRect)) {
-		return;
-	}
+Map.prototype.drawEchoppe = function(screenRect, e, hover) {
 	var c = this.context;
-	c.save();
+	var cx = screenRect.x+0.75*screenRect.w;
+	var cy = screenRect.y+0.25*screenRect.h;
 	var img = this.echoppeImg[e.Métier];
+	var imgw;
+	if (this.zoom!=64) imgw=this.zoom*0.5;
 	if (img) {
-		if (e.X==this.pointerX && e.Y==this.pointerY) {
-			c.shadowOffsetX = 0;
-			c.shadowOffsetY = 0;
-			c.shadowBlur = 5;
-			c.shadowColor = "black";
-			var d = 3;
-			c.drawImage(this.getOutlineImg(img), screenRect.x-d, screenRect.y-d, screenRect.w+2*d, screenRect.h+2*d);
-			c.shadowBlur = 0;
+		if (hover) {
+			drawCenteredImage(c, this.getOutlineImg(img), cx, cy, imgw?imgw+4:null, null);
 			this.bubbleText.push(e.Nom);
 			this.bubbleText.push('('+e.Métier+')');
 		}
-		screenRect.drawImage(c, img);
+		drawCenteredImage(c, img, cx, cy, imgw);
 	} else {
 		console.log("pas d'image pour " + e.Métier);
-	}	c.restore();
+	}
 }
 
 // dessine un lieu de ville
-Map.prototype.drawTownPlace = function(lieu) {
-	var screenRect = new Rect();
-	screenRect.w = this.zoom/2;
-	screenRect.h = screenRect.w;
-	screenRect.x = this.zoom*(this.originX+lieu.X)+screenRect.w;
-	screenRect.y = this.zoom*(this.originY-lieu.Y);
-	if (!Rect_intersect(screenRect, this.screenRect)) {
-		return;
-	}
+Map.prototype.drawLieu = function(screenRect, lieu, hover) {
 	var c = this.context;
-	c.save();
 	var img = this.placeImg[lieu.IdTypeLieu];
+	var cx = screenRect.x+0.75*screenRect.w;
+	var cy = screenRect.y+0.25*screenRect.h;
+	var imgw;
+	if (this.zoom!=64) imgw=this.zoom*0.5;
 	if (img) {
-		if (lieu.X==this.pointerX && lieu.Y==this.pointerY) {
-			c.shadowOffsetX = 0;
-			c.shadowOffsetY = 0;
-			c.shadowBlur = 5;
-			c.shadowColor = "black";
-			var d = 3;
-			c.drawImage(this.getOutlineImg(this.placeImg[lieu.IdTypeLieu]), screenRect.x-d, screenRect.y-d, screenRect.w+2*d, screenRect.h+2*d);
-			c.shadowBlur = 0;
+		if (hover) {
+			drawCenteredImage(c, this.getOutlineImg(img), cx, cy, imgw?imgw+4:null, null);
 			this.bubbleText.push(lieu.Nom);
 		}
-		screenRect.drawImage(c, img);
+		drawCenteredImage(c, img, cx, cy, imgw);
 	} else {
 		console.log("pas d'image pour " + lieu.Nom);
 	}
-	if (this.displayTownPlaceNames && this.zoom>60) {
-		c.fillStyle = "black";
-		var lh = 12;
-		c.font = "bold "+lh+"px Verdana";
-		c.shadowOffsetX = 0;
-		c.shadowOffsetY = 0;
-		c.shadowBlur = 4;
-		c.shadowColor = "white";
-		var textWidth = c.measureText(lieu.Nom).width;
-		var x=screenRect.x+(screenRect.w-textWidth)/2;
-		var y=screenRect.y+(screenRect.h)/2;
-		if (lieu.X%2) y+=lh+7;
-		else y+=4;
-		c.fillText(lieu.Nom, x, y);
-	}
-	c.restore();
 }
 
 // dessine un nom de ville

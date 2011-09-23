@@ -1,5 +1,5 @@
 // renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
-function getCell(vue, x, y) {
+function getCellVue(vue, x, y) {
 	var W = vue.XMax-vue.XMin;
 	var index = ((x-vue.XMin)%W)+(W*(y-vue.YMin));
 	var cell = vue.matrix[index];
@@ -36,14 +36,14 @@ Map.prototype.drawVue = function(vue) {
 			vue.matrix = [];
 			for (ib in vue.Bralduns) {
 				var b = vue.Bralduns[ib];
-				var cell = getCell(vue, b.X, b.Y)
+				var cell = getCellVue(vue, b.X, b.Y)
 				cell.bralduns.push(b);
 				if (b.Sexe=='f') cell.nbBraldunsFéminins++;
 				else cell.nbBraldunsMasculins++;
 			}
 			for (io in vue.Objets) {
 				var o = vue.Objets[io];
-				var cell = getCell(vue, o.X, o.Y);
+				var cell = getCellVue(vue, o.X, o.Y);
 				cell.objets.push(o);
 			}
 		}

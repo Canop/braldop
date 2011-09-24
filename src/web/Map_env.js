@@ -92,7 +92,6 @@ Map.prototype.getOutlineImg = function(img) {
 		oc.globalCompositeOperation="source-in";
 		oc.fillStyle="Gold";//"DarkGoldenRod";
 		oc.fillRect(0, 0, ow, oh);
-		//oc.drawImage(img, 2, 2); TODO ça serait pas mal d'avoir une seule image (cad que l'outline contienne l'original) mais je maitrise pas bien le rendu
 		img.outline = outlinedImg;
 	}
 	return img.outline;
@@ -108,45 +107,9 @@ Map.prototype.drawFond = function(screenRect, fond) {
 	}
 }
 
-// dessine un champ
-Map.prototype.drawChamp = function(screenRect, champ, hover) {
+// dessine un lieu de ville, une échoppe ou un champ
+Map.prototype.drawLieu = function(screenRect, lieu, img, hover) {
 	var c = this.context;
-	var cx = screenRect.x+0.75*screenRect.w;
-	var cy = screenRect.y+0.25*screenRect.h;
-	var imgw;
-	if (this.zoom!=64) imgw=this.zoom*0.45;
-	if (hover) {
-		var imgh;
-		drawCenteredImage(c, this.getOutlineImg(this.champImg), cx, cy, imgw?imgw+4:null, null);
-		this.bubbleText.push("Champ du Braldûn " + champ.IdBraldun);
-	}
-	drawCenteredImage(c, this.champImg, cx, cy, imgw);
-}
-
-// dessine une échoppe
-Map.prototype.drawEchoppe = function(screenRect, e, hover) {
-	var c = this.context;
-	var cx = screenRect.x+0.75*screenRect.w;
-	var cy = screenRect.y+0.25*screenRect.h;
-	var img = this.echoppeImg[e.Métier];
-	var imgw;
-	if (this.zoom!=64) imgw=this.zoom*0.5;
-	if (img) {
-		if (hover) {
-			drawCenteredImage(c, this.getOutlineImg(img), cx, cy, imgw?imgw+4:null, null);
-			this.bubbleText.push(e.Nom);
-			this.bubbleText.push('('+e.Métier+')');
-		}
-		drawCenteredImage(c, img, cx, cy, imgw);
-	} else {
-		console.log("pas d'image pour " + e.Métier);
-	}
-}
-
-// dessine un lieu de ville
-Map.prototype.drawLieu = function(screenRect, lieu, hover) {
-	var c = this.context;
-	var img = this.placeImg[lieu.IdTypeLieu];
 	var cx = screenRect.x+0.75*screenRect.w;
 	var cy = screenRect.y+0.25*screenRect.h;
 	var imgw;
@@ -155,6 +118,7 @@ Map.prototype.drawLieu = function(screenRect, lieu, hover) {
 		if (hover) {
 			drawCenteredImage(c, this.getOutlineImg(img), cx, cy, imgw?imgw+4:null, null);
 			this.bubbleText.push(lieu.Nom);
+			if (lieu.Details) this.bubbleText.push("  "+lieu.Details);
 		}
 		drawCenteredImage(c, img, cx, cy, imgw);
 	} else {

@@ -132,6 +132,7 @@ Map.prototype.objectOn = function(x, y) {
 // Les champs dans le nom commence par une minuscule sont définis localement et
 //  ceux dont le nom commence par une majuscule proviennent du serveur (cette norme
 //  est valable sur toute la hiérarchie des objets de mapData).
+// Les données sont copiées dans une structure qui donne un accès par les coordonnées des cases.
 Map.prototype.setData = function(mapData) {
 	this.mapData = mapData;
 	console.log("carte reçue");
@@ -149,12 +150,15 @@ Map.prototype.setData = function(mapData) {
 	if (this.mapData.Champs) {
 		for (var i=this.mapData.Champs.length; i-->0;) {
 			var o = this.mapData.Champs[i];
+			o.Nom = "Champ";
+			o.Details = "Propriétaire : "+o.IdBraldun;
 			this.getCellCreate(o.X, o.Y).champ=o;
 		}
 	}
 	if (this.mapData.Echoppes) {
 		for (var i=this.mapData.Echoppes.length; i-->0;) {
 			var o = this.mapData.Echoppes[i];
+			o.Details = o.Métier+" : "+o.IdBraldun;
 			this.getCellCreate(o.X, o.Y).échoppe=o;
 		}
 	}
@@ -205,9 +209,9 @@ Map.prototype.redraw = function() {
 							screenRect.y = this.zoom*(this.originY-y);
 							var hover = this.pointerX==x && this.pointerY==y;
 							if (cell.fond) this.drawFond(screenRect, cell.fond);
-							if (cell.champ) this.drawChamp(screenRect, cell.champ, hover);
-							if (cell.échoppe) this.drawEchoppe(screenRect, cell.échoppe, hover);
-							if (cell.lieu) this.drawLieu(screenRect, cell.lieu, hover);
+							if (cell.champ) this.drawLieu(screenRect, cell.champ, this.champImg, hover);
+							else if (cell.échoppe) this.drawLieu(screenRect, cell.échoppe, this.echoppeImg[cell.échoppe.Métier], hover);
+							else if (cell.lieu) this.drawLieu(screenRect, cell.lieu, this.placeImg[cell.lieu.IdTypeLieu], hover);
 						}
 					}
 				}
@@ -271,7 +275,6 @@ Map.prototype.mouseWheel = function(e) {
 	this.originY += (mouseY-this.canvas_position_y)*zr;
 	this.posmarkdiv.innerHTML='Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY;
 	this.hoverObject = null;
-	//console.log('scaleIndex after = '+this.scaleIndex);
 	this.redraw();
 }
 Map.prototype.mouseDown = function(e) {
@@ -329,7 +332,6 @@ Map.prototype.mouseMove = function(e) {
 		}
 	}
 }
-
 
 Map.prototype.naturalToScreen = function(naturalPoint, screenPoint) {
 	screenPoint.x = this.zoom*(this.originX+naturalPoint.x+0.5);

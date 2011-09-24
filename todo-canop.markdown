@@ -7,14 +7,13 @@ En cours :
 ==========
 
 * affichage des objets mobiles (Braldûns, monstres, buissons, éléments, etc.) de la dernière vue
-* utilisation de la taille naturelle de toutes les icônes (hors terrains) en zoom 64
 * mode d'affichage "proto vue"
 * montrer les boites de dialogues sur les lieux et objets
-* matrice globale de tout ce qui n'est pas environnement (hors vue)
 
 P1 :
 ====
 
+* inclure le nom du braldun (champ, échoppe) dans le json et l'afficher
 * corriger l'assombrissement des vues : il disparait quand la zone vue n'intercepte pas l'écran (et de toutes manières il faut cumuler les trous, pas les assombrissements)
 * corriger le README de Braldop
 

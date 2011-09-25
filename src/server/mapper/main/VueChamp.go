@@ -10,6 +10,7 @@ type VueChamp struct {
 	X         int16
 	Y         int16
 	IdBraldun uint
+	NomCompletBraldun string
 }
 
 func (o *VueChamp) readCsv(cells []string) (err os.Error) {

@@ -107,7 +107,7 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 				if err != nil {
 					fmt.Printf("erreur parsing fichier dynamique : %+v\n", err)
 				} else {
-					fmt.Printf("    -> vue : %+v\n", vue)
+					//~ fmt.Printf("    -> vue : %+v\n", vue)
 					if vue.Voyeur > 0 && vue.Time > 0 {
 						if ls.MemMap.DernièresVues[vue.Voyeur] == nil || vue.Time > ls.MemMap.DernièresVues[vue.Voyeur].Time {
 							ls.MemMap.DernièresVues[vue.Voyeur] = vue

@@ -11,7 +11,7 @@ En cours :
 P1 :
 ====
 
-* inclure le nom du braldun (champ, échoppe) dans le json et l'afficher
+* mettre le halo doré sur la case à l'origine du menu
 * corriger l'assombrissement des vues : il disparait quand la zone vue n'intercepte pas l'écran (et de toutes manières il faut cumuler les trous, pas les assombrissements)
 * corriger le README de Braldop
 
@@ -20,6 +20,12 @@ P2 :
 
 * bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent
 * dans le js : table définie suivant les dimensions actuelles et la résolution (si les lieux sont visibles) permettant l'accès rapide aux dits lieux suivant x,y. Remplie en cours de dessin. Notons qu'on peut aussi envisager une sous liste des objets survolables à l'écran (vide si la résolution ne permet pas le survol)
+
+P3 :
+====
+
+* factoriser les données des bralduns, pour ne pas répéter partout leur nom (ne mettre dans les vues, champs, échoppes, que les numéros)
+* intégrer les matrices de vue à la matrice globale (une seule cellule par case) ? 
 
 Questions :
 ===========

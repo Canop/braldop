@@ -44,7 +44,7 @@ Map.prototype.openCellDialog = function(x, y) {
 	var h=0;
 	var empty = false;
 	if (cell.champ) {
-		html[h++] = '<table><tr><td><img src="'+this.champImg.src+'"></td><td> Champ de '+cell.champ.IdBraldun+'</td></tr></table>';
+		html[h++] = '<table><tr><td><img src="'+this.champImg.src+'"></td><td> Champ de '+cell.champ.NomCompletBraldun+'</td></tr></table>';
 	} else if (cell.échoppe) {
 		html[h++] = '<table><tr><td><img src="'+this.echoppeImg[cell.échoppe.Métier].src+'"></td><td> '+cell.échoppe.Nom+'<br>'+cell.échoppe.détails+'</td></tr></table>';
 	} else if (cell.lieu) {

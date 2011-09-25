@@ -120,14 +120,14 @@ Map.prototype.setData = function(mapData) {
 		for (var i=this.mapData.Champs.length; i-->0;) {
 			var o = this.mapData.Champs[i];
 			o.Nom = "Champ";
-			o.détails = "Propriétaire : "+o.IdBraldun;
+			o.détails = "Propriétaire : "+o.NomCompletBraldun;
 			this.getCellCreate(o.X, o.Y).champ=o;
 		}
 	}
 	if (this.mapData.Echoppes) {
 		for (var i=this.mapData.Echoppes.length; i-->0;) {
 			var o = this.mapData.Echoppes[i];
-			o.détails = o.Métier+" : "+o.IdBraldun;
+			o.détails = o.Métier+" : "+o.NomCompletBraldun;
 			this.getCellCreate(o.X, o.Y).échoppe=o;
 		}
 	}
@@ -278,7 +278,6 @@ Map.prototype.mouseUp = function(e) {
 	if (Math.abs(mouseX-this.dragStartPageX)<5 && Math.abs(mouseY-this.dragStartPageY)<5 && this.hoverObject) {
 		this.openCellDialog(this.pointerX, this.pointerY);
 	}
-	this.hoverObject = null;
 	this.redraw();
 }
 

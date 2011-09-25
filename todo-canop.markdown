@@ -29,6 +29,3 @@ P3 :
 
 Questions :
 ===========
-
-* comment trouve-t-on l'icône d'un type de monstre ?
-* Charrettes : à quoi correspond le "nom_type_materiel" ? Comment trouve-t-on le propriétaire ?

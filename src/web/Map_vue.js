@@ -18,7 +18,11 @@ Map.prototype.getBralduns = function(x, y) {
 function getCellVue(vue, x, y) {
 	var W = vue.XMax-vue.XMin;
 	var index = ((x-vue.XMin)%W)+(W*(y-vue.YMin));
-	return vue.matrix[index];
+	if (vue.matrix) {
+		return vue.matrix[index];
+	} else {
+		return null;
+	}
 }
 
 // renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)

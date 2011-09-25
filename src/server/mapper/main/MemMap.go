@@ -98,9 +98,21 @@ func (mm *MemMap) Compile() (m *Map) {
 		}
 	}
 	for _, e := range mm.EchoppesParXY {
+		// on renseigne si possible le nom du braldun
+		if mmb, ok := mm.Bralduns[e.IdBraldun]; ok {
+			e.NomCompletBraldun = mmb.Prénom+" "+mmb.Nom
+		} else {
+			fmt.Printf("Braldun introuvable : %d\n", e.IdBraldun)
+		}
 		m.Echoppes = append(m.Echoppes, e)
 	}
 	for _, e := range mm.ChampsParXY {
+		// on renseigne si possible le nom du braldun
+		if mmb, ok := mm.Bralduns[e.IdBraldun]; ok {
+			e.NomCompletBraldun = mmb.Prénom+" "+mmb.Nom
+		} else {
+			fmt.Printf("Braldun introuvable : %d\n", e.IdBraldun)
+		}
 		m.Champs = append(m.Champs, e)
 	}
 	for _, c := range cases {

@@ -1,4 +1,3 @@
-
 Voici une description/glossaire pour commencer :
 ================================================
 
@@ -18,12 +17,12 @@ Voici une description/glossaire pour commencer :
     - une crevasse (dans les cavernes uniquement), une crevasse + une balise (cela peut arriver techniquement)
     - un bosquet de type hêtres ou chenes ou peupliers ou erables, bosquet + balise
     - une route / des pavés
-    - une eau de type mer ou peuprofonde ou profonde ou lac, eau + balise (==> change rarement, mais certaines portion de carte peuvent être modifiés pour ajouter ou supprimer une eau)
+    - une eau de type mer ou peuprofonde ou profonde ou lac, eau + balise (==> change rarement, mais certaines portions de carte peuvent être modifiés pour ajouter ou supprimer une eau)
     - inconnu : pour les limites des mines. Il n'y a des mines en z < 0que lorsqu'au niveau 0, c'est de la montagne.
 
 
 * Lieu : il y en a 0 ou 1 par case. On distingue les lieux liés à une ville et les autres.
-* Lieu publics : lieu connu de tous (lieux de villes) et définis dans le fichier lieux_villes.csv
+* Lieu public : lieu connu de tous (lieux de villes) et définis dans le fichier lieux_villes.csv
 * Lieu privé : lieu qui doit être découvert (vu) pour être connu. La connaissance que l'on a du lieu date de la dernière fois que l'on a vu la case qui le contient. Ces "lieux" peuvent être des échoppes, des champs.
 * Objet : les objets dont l'existence ou la position sont éphémères : braldûns, gibiers, monstres, charettes, buissons, ingrédients, etc. Leur nombre par case n'est pas limité. On considère que les objets hors vue sont inconnus et ne doivent pas être affichés.
 
@@ -32,6 +31,7 @@ Aux objets et lieux peuvent être associées des informations qui dépassent leu
 Il n'y a rien d'autre dans la vue ou sur la carte.
 
 Chaque case peut-être :
+
 * inconnue
 * connue mais non visible (sous le "brouillard de guerre")
 * visible

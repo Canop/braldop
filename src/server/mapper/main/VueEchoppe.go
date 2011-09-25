@@ -13,6 +13,7 @@ type VueEchoppe struct {
 	Nom       string
 	Métier    string
 	IdBraldun uint
+	NomCompletBraldun string
 }
 
 func (o *VueEchoppe) readCsv(cells []string) (err os.Error) {

@@ -6,22 +6,26 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 En cours :
 ==========
 
-* affichage des objets mobiles (Braldûns, etc.) de la dernière vue
+* affichage des objets mobiles (Braldûns, monstres, buissons, éléments, etc.) de la dernière vue
 
 P1 :
 ====
 
+* mettre le halo doré sur la case à l'origine du menu
 * corriger l'assombrissement des vues : il disparait quand la zone vue n'intercepte pas l'écran (et de toutes manières il faut cumuler les trous, pas les assombrissements)
-* générer le json et tester à partir des csv de Boule (buissons, bosquets
-* rédiger sur le fofo ma proposition d'intégration de la vue+carte dans le jeu
 * corriger le README de Braldop
-* utilisation de la taille naturelle de toutes les icônes (hors terrains) en zoom 64
-* optimisation des affichages de cases et de lieux : tester x et y plutôt que le rectangle (donc calculer xmin et xmax etc.) en début de dessin
 
 P2 :
 ====
 
+* bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent
 * dans le js : table définie suivant les dimensions actuelles et la résolution (si les lieux sont visibles) permettant l'accès rapide aux dits lieux suivant x,y. Remplie en cours de dessin. Notons qu'on peut aussi envisager une sous liste des objets survolables à l'écran (vide si la résolution ne permet pas le survol)
+
+P3 :
+====
+
+* factoriser les données des bralduns, pour ne pas répéter partout leur nom (ne mettre dans les vues, champs, échoppes, que les numéros)
+* intégrer les matrices de vue à la matrice globale (une seule cellule par case) ? 
 
 Questions :
 ===========

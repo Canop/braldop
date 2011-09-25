@@ -72,6 +72,7 @@ Map.prototype.initTiles = function() {
 	
 	this.imgObjets = {};
 	(this.imgObjets['charrette'] = new Image()).src = baseTilesUrl + "cockpit/charrette.png";
+	(this.imgObjets['castar'] = new Image()).src = baseTilesUrl + "vue/castars.png";
 	
 	
 	for (tile in this.envTiles) {

@@ -33,10 +33,10 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 		}
 	case "CHARRETTE":
 		o := new(VueObjet)
-		if err := o.readCsv("charrette", cells); err != nil {
+		if err := o.readCsvCharrette(cells); err != nil {
 			fmt.Printf(" Erreur lecture VueObjet : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" CHARRETTE : %+v\n", o)
+			//~ fmt.Printf(" CHARRETTE : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	case "ECHOPPE":
@@ -46,6 +46,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 		} else {
 			//~ fmt.Printf(" VueEchoppe : %+v\n", o)
 			ls.MemMap.StoreEchoppe(o)
+		}
+	case "ELEMENT":
+		o := new(VueObjet)
+		if err := o.readCsvElement(cells); err != nil {
+			fmt.Printf(" Erreur lecture VueObjet : %+v \n cellules : %+v", err, cells)
+		} else {
+			fmt.Printf(" ELEMENT : %+v\n", o)
+			vue.Objets = append(vue.Objets, o)
 		}
 	case "ENVIRONNEMENT":
 		o := new(VueEnvironnement)

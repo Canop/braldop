@@ -11,7 +11,7 @@ En cours :
 P1 :
 ====
 
-* mettre le halo doré sur la case à l'origine du menu
+* lecture et affichage monstres (faut déjà que j'en voie...)
 * corriger l'assombrissement des vues : il disparait quand la zone vue n'intercepte pas l'écran (et de toutes manières il faut cumuler les trous, pas les assombrissements)
 * corriger le README de Braldop
 
@@ -19,7 +19,6 @@ P2 :
 ====
 
 * bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent
-* dans le js : table définie suivant les dimensions actuelles et la résolution (si les lieux sont visibles) permettant l'accès rapide aux dits lieux suivant x,y. Remplie en cours de dessin. Notons qu'on peut aussi envisager une sous liste des objets survolables à l'écran (vide si la résolution ne permet pas le survol)
 
 P3 :
 ====

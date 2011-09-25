@@ -1,5 +1,5 @@
 
-function Map(canvasId, posmarkid) {
+function Map(canvasId, posmarkid, dialogId) {
 	this.canvas = document.getElementById(canvasId);
 	this.context = this.canvas.getContext("2d");
 	this.posmarkdiv = document.getElementById(posmarkid);
@@ -21,6 +21,8 @@ function Map(canvasId, posmarkid) {
 	this.photoSatellite = new Image();
 	this.displayPhotoSatellite = true;
 	this.displayRégions = false;
+	this.$dialog = $('#'+dialogId);
+	this.dialopIsOpen = false;
 	this.recomputeCanvasPosition();
 	var _this = this;
 	this.photoSatelliteOK = false;
@@ -94,40 +96,7 @@ Map.prototype.recomputeCanvasPosition = function() {
 	this.originY = (this.screenRect.h/2)/this.zoom;
 }
 
-// renvoie l'objet aux coordonnées (univers Braldahim) x et y.
-// On optimisera ça plus tard via une matrice (on utilise déjà une matrice pour la partie vue)
-Map.prototype.objectOn = function(x, y) {
-	if (this.mapData.Vues) {
-		for (var i=this.mapData.Vues.length; i-->0;) {
-			var vue = this.mapData.Vues[i];
-			if (vue.active && vue.matrix) {
-				var W = vue.XMax-vue.XMin;
-				var index = ((x-vue.XMin)%W)+(W*(y-vue.YMin));
-				var cell = vue.matrix[index];
-				if (cell) return cell; // la cellule n'est définie que si elle contient quelque chose
-			}
-		}
-	}
-	if (this.mapData.LieuxVilles && this.zoom>25) {
-		for (var i=this.mapData.LieuxVilles.length; i-->0;) {
-			var lv = this.mapData.LieuxVilles[i];
-			if (lv.X==x && lv.Y==y) return lv;
-		}
-	}
-	if (this.mapData.Champs && this.zoom>25) {
-		for (var i=this.mapData.Champs.length; i-->0;) {
-			var o = this.mapData.Champs[i];
-			if (o.X==x && o.Y==y) return o;
-		}
-	}
-	if (this.mapData.Echoppes && this.zoom>25) {
-		for (var i=this.mapData.Echoppes.length; i-->0;) {
-			var o = this.mapData.Echoppes[i];
-			if (o.X==x && o.Y==y) return o;
-		}
-	}
-	return null;
-}
+
 // l'objet passé, reçu en json, devient le fournisseur des données de carte et de vue.
 // Les champs dans le nom commence par une minuscule sont définis localement et
 //  ceux dont le nom commence par une majuscule proviennent du serveur (cette norme
@@ -151,14 +120,14 @@ Map.prototype.setData = function(mapData) {
 		for (var i=this.mapData.Champs.length; i-->0;) {
 			var o = this.mapData.Champs[i];
 			o.Nom = "Champ";
-			o.Details = "Propriétaire : "+o.IdBraldun;
+			o.détails = "Propriétaire : "+o.IdBraldun;
 			this.getCellCreate(o.X, o.Y).champ=o;
 		}
 	}
 	if (this.mapData.Echoppes) {
 		for (var i=this.mapData.Echoppes.length; i-->0;) {
 			var o = this.mapData.Echoppes[i];
-			o.Details = o.Métier+" : "+o.IdBraldun;
+			o.détails = o.Métier+" : "+o.IdBraldun;
 			this.getCellCreate(o.X, o.Y).échoppe=o;
 		}
 	}
@@ -232,7 +201,7 @@ Map.prototype.redraw = function() {
 					this.drawRégion(this.mapData.Régions[i]);
 				}
 			}
-			if (this.bubbleText.length>0) {
+			if (this.bubbleText.length>0 && !this.dialopIsOpen) {
 				this.bubbleText.splice(0, 0, this.pointerX+','+this.pointerY);
 				this.drawBubble();
 			}
@@ -290,11 +259,25 @@ Map.prototype.mouseDown = function(e) {
 	this.dragStartOriginX = this.originX;
 	this.dragStartOriginY = this.originY;
 	this.zoomChangedSinceLastRedraw = true;
-	this.hoverObject = null;
+	//this.hoverObject = null;
 	this.redraw();
 }
 Map.prototype.mouseUp = function(e) {
 	this.mouseIsDown = false;
+	if (this.dialopIsOpen) {
+		this.$dialog.hide();
+		this.dialopIsOpen = false;
+		return;
+	}
+	var mouseX = e.offsetX; // Chrome
+	var mouseY = e.offsetY; // Chrome
+	if (!mouseX) {
+		mouseX = e.layerX; // FF
+		mouseY = e.layerY; // FF
+	}
+	if (Math.abs(mouseX-this.dragStartPageX)<5 && Math.abs(mouseY-this.dragStartPageY)<5 && this.hoverObject) {
+		this.openCellDialog(this.pointerX, this.pointerY);
+	}
 	this.hoverObject = null;
 	this.redraw();
 }
@@ -303,6 +286,27 @@ Map.prototype.mouseLeave = function(e) {
 	this.mouseIsDown = false;
 	this.hoverObject = null;
 	this.redraw();
+}
+
+// renvoie un "objet" à la position (x,y) dans le référetiel Braldahim :
+// - une cellule s'il y en a une non vide (le fond ne comptant pas)
+// - une cellule de vue s'il y en a une non vide, en ne cherchant que dans les vues affichées
+// - null s'il n'y a rien d'intéressant sur la case
+Map.prototype.objectOn = function(x,y) {
+	var cell = this.getCell(this.pointerX, this.pointerY);
+	if (cell && (cell.champ||cell.échoppe||cell.lieu)) return cell;
+	if (this.mapData.Vues) {
+		for (var i=this.mapData.Vues.length; i-->0;) {
+			var vue = this.mapData.Vues[i];
+			if (vue.active) {
+				var cell = getCellVue(vue, x, y);
+				if (cell) {
+					return cell;
+				}
+			}
+		}
+	}
+	return null;
 }
 
 Map.prototype.mouseMove = function(e) {

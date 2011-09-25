@@ -7,8 +7,6 @@ En cours :
 ==========
 
 * affichage des objets mobiles (Braldûns, monstres, buissons, éléments, etc.) de la dernière vue
-* mode d'affichage "proto vue"
-* montrer les boites de dialogues sur les lieux et objets
 
 P1 :
 ====
@@ -20,6 +18,7 @@ P1 :
 P2 :
 ====
 
+* bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent
 * dans le js : table définie suivant les dimensions actuelles et la résolution (si les lieux sont visibles) permettant l'accès rapide aux dits lieux suivant x,y. Remplie en cours de dessin. Notons qu'on peut aussi envisager une sous liste des objets survolables à l'écran (vide si la résolution ne permet pas le survol)
 
 Questions :

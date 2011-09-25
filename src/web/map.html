@@ -9,14 +9,17 @@
 	<script src="Rect.js?v=2"></script>
 	<script src="Map.js?v=8"></script>
 	<script src="Map_bubble.js"></script>
+	<script src="Map_dialog.js"></script>
 	<script src="Map_env.js?v=10"></script>
 	<script src="Map_vue.js?v=11"></script>
 	
 	<style type="text/css">
-	body {
-		background-color: #3A3;
+	body, td {
 		font-size: 12px;
 		font-family: Verdana, Geneva, sans-serif;
+	}
+	body {
+		background-color: #3A3;
 		padding:0;
 		margin:0;
 	}
@@ -52,6 +55,24 @@
 		-moz-user-select: none;
 		user-select: none;
 		-webkit-user-select: none;
+	}
+	#map_dialog {
+		position: fixed;
+		background-color : rgba(0, 50, 0, 0.8);
+		border-radius: 5px;
+		padding: 5px;
+		display: none;
+		color: white;
+		z-index: 10;
+	}
+	.dialog_title {
+		font-weight: bold;
+	}
+	#map_dialog td, #map_dialog a {
+		color: white;
+	}
+	#map_dialog a:hover {
+		color: yellow;
 	}
 	a.layer {
 		display: block;
@@ -97,6 +118,7 @@
 </div>
 <div id=map><canvas id=map_canvas></canvas></div>
 <div id=posmark>-</div>
+<div id=map_dialog></div>
 
 
 <script type="text/javascript">
@@ -120,7 +142,7 @@ function fetchMap(callback) {
 }
 
 $(document).ready(function() {
-	map = new Map("map_canvas", "posmark");
+	map = new Map("map_canvas", "posmark", "map_dialog");
 	fetchMap(function(msg){
 		map.setData(msg);
 		var html = "";

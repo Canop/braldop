@@ -50,13 +50,6 @@ Les fonds
 
  Cette image doit pouvoir être affichée telle quelle. On définira donc la palette de telle sorte que chaque couleur soit la moyenne (HSV?) des couleurs de l'illustration du terrain utilisée en 64x64.
 
- * Remarques Boule.H :
-  - Attention. Un fond, tel qu'il est définit plus haut (définition Braldahim) n'est pas pérenne dans le temps.
-  - Des crevasses / bosquet / portail / palissade / balise / tunnel peuvent apparaitre ou disparaitre rapidement.
-  - Exemple : si un bûcheron abbat la totalité d'un bosquet sur un arbre, l'environnement en dessous apparait.
-  - Il me semble que la gestion des fonds tels qu'ils sont définis ci-dessus ne colle pas avec "fonds sous la forme d'une image (encodée en gif) de 1600x1000 pixels".
-  - Par contre, pourquoi pas stocker les environnements + eaux sur cette image. Puis en JS, on colle si besoin les balises / bosquets / route / pavé / tunnel / palissade par dessus, qui eux, pourraient être gérés comme les lieux privés.
-
 
 Les lieux publics
 -----------------

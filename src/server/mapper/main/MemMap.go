@@ -100,7 +100,7 @@ func (mm *MemMap) Compile() (m *Map) {
 	for _, e := range mm.EchoppesParXY {
 		// on renseigne si possible le nom du braldun
 		if mmb, ok := mm.Bralduns[e.IdBraldun]; ok {
-			e.NomCompletBraldun = mmb.Prénom+" "+mmb.Nom
+			e.NomCompletBraldun = mmb.Prénom + " " + mmb.Nom
 		} else {
 			fmt.Printf("Braldun introuvable : %d\n", e.IdBraldun)
 		}
@@ -109,7 +109,7 @@ func (mm *MemMap) Compile() (m *Map) {
 	for _, e := range mm.ChampsParXY {
 		// on renseigne si possible le nom du braldun
 		if mmb, ok := mm.Bralduns[e.IdBraldun]; ok {
-			e.NomCompletBraldun = mmb.Prénom+" "+mmb.Nom
+			e.NomCompletBraldun = mmb.Prénom + " " + mmb.Nom
 		} else {
 			fmt.Printf("Braldun introuvable : %d\n", e.IdBraldun)
 		}
@@ -124,7 +124,7 @@ func (mm *MemMap) Compile() (m *Map) {
 	for _, v := range mm.DernièresVues {
 		m.Vues = append(m.Vues, v)
 		// on indique le prénom du voyeur
-		if b, ok :=  mm.Bralduns[v.Voyeur]; ok {
+		if b, ok := mm.Bralduns[v.Voyeur]; ok {
 			v.PrénomVoyeur = b.Prénom
 		}
 		// on remplit les champs manquant des bralduns

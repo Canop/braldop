@@ -14,7 +14,6 @@ type VueObjet struct {
 	Quantité uint
 }
 
-
 func (o *VueObjet) readCsvCharrette(cells []string) (err os.Error) {
 	if len(cells) < 6 {
 		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
@@ -45,4 +44,3 @@ func (o *VueObjet) readCsvElement(cells []string) (err os.Error) {
 	o.Quantité, _ = strconv.Atoui(cells[5])
 	return
 }
-

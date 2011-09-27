@@ -7,12 +7,13 @@ import (
 )
 
 type VueMonstre struct {
-	X         int16
-	Y         int16
-	Id        uint
-	Nom       string
-	Taille    string
+	X      int16
+	Y      int16
+	Id     uint
+	Nom    string
+	Taille string
 	Niveau uint
+	IdType uint
 }
 
 func (o *VueMonstre) readCsv(cells []string) (err os.Error) {
@@ -36,4 +37,3 @@ func (o *VueMonstre) readCsv(cells []string) (err os.Error) {
 	}
 	return
 }
-

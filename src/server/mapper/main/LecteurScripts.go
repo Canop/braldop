@@ -24,7 +24,7 @@ import (
 type LecteurScripts struct {
 	NbReadFiles uint
 	MemMap      *MemMap
-	IdBralduns []string // la liste des bralduns dont on peut regarder la vue
+	IdBralduns  []string // la liste des bralduns dont on peut regarder la vue
 }
 
 type Visible interface {
@@ -93,16 +93,16 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 		path := strings.Split(f.Name(), "/")
 		filename := path[len(path)-1]
 		indexTokenPrivate := -1
-		for i, t := range(path) {
-			if t=="private" {
-				indexTokenPrivate=i
+		for i, t := range path {
+			if t == "private" {
+				indexTokenPrivate = i
 				break
 			}
 		}
-		if indexTokenPrivate>=0 {
-			ok := false 
-			for _, id := range(ls.IdBralduns) {
-				if id==path[indexTokenPrivate+1] {
+		if indexTokenPrivate >= 0 {
+			ok := false
+			for _, id := range ls.IdBralduns {
+				if id == path[indexTokenPrivate+1] {
 					ok = true
 					break
 				}
@@ -168,7 +168,7 @@ func main() {
 	ls := NewLecteurScripts()
 
 	fmt.Printf("Export : %s\n", os.Args[3])
-	
+
 	ls.IdBralduns = strings.Split(os.Args[2], ",")
 	fmt.Printf("Bralduns du groupe : %+v\n", ls.IdBralduns)
 

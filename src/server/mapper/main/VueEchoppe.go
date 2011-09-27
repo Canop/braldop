@@ -7,12 +7,12 @@ import (
 )
 
 type VueEchoppe struct {
-	X         int16
-	Y         int16
-	Id        uint
-	Nom       string
-	Métier    string
-	IdBraldun uint
+	X                 int16
+	Y                 int16
+	Id                uint
+	Nom               string
+	Métier            string
+	IdBraldun         uint
 	NomCompletBraldun string
 }
 

@@ -6,16 +6,6 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 En cours :
 ==========
 
-
-* amélioration du rendu sur Firefox, en particulier en zoom 64
-* intégrations vues de Boule
-* boutons de centrage des vues
-* ajout de quelques objets/éléments au dessin
-* script pour la récupération des vues de plusieurs bralduns
-* scripts+code pour les partages de vue
-* affichage correct du brouillard de guerre si plusieurs vues affichées
-* option pour l'affichage ou non du brouillard de guerre
-
 * dialogue/bâtiments : lien vers l'aide du bâtiment
 * version 4 des scripts de vue
 * affichage des objets mobiles (Braldûns, monstres, buissons, éléments, etc.) de la dernière vue

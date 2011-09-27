@@ -24,6 +24,7 @@ import (
 type LecteurScripts struct {
 	NbReadFiles uint
 	MemMap      *MemMap
+	IdBralduns []string // la liste des bralduns dont on peut regarder la vue
 }
 
 type Visible interface {
@@ -91,6 +92,26 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 	} else {
 		path := strings.Split(f.Name(), "/")
 		filename := path[len(path)-1]
+		indexTokenPrivate := -1
+		for i, t := range(path) {
+			if t=="private" {
+				indexTokenPrivate=i
+				break
+			}
+		}
+		if indexTokenPrivate>=0 {
+			ok := false 
+			for _, id := range(ls.IdBralduns) {
+				if id==path[indexTokenPrivate+1] {
+					ok = true
+					break
+				}
+			}
+			if !ok {
+				fmt.Printf("Fichier non autorisé : %s\n", f.Name())
+				return nil
+			}
+		}
 		if strings.HasSuffix(filename, ".csv") {
 			//~ fmt.Printf("   parsed file : %s\n", f.Name())
 			switch filename {
@@ -135,18 +156,25 @@ func (ls *LecteurScripts) traiteNomFichier(filename string) os.Error {
 
 /*
  * Paramètres :
- *  - chemin d'un répertoire contenant dans des sous répertoires
+ *  - chemin d'un répertoire contenant dans des sous répertoires les fichiers csv
+ *  - liste des id des bralduns séparés par des virgules
+ *  - chemin du répertoire dans lequel écrire les fichiers de sortie
  */
 func main() {
-	if len(os.Args) < 2 {
+	if len(os.Args) < 4 {
 		fmt.Println(os.EINVAL)
 		return
 	}
+	ls := NewLecteurScripts()
+
+	fmt.Printf("Export : %s\n", os.Args[3])
+	
+	ls.IdBralduns = strings.Split(os.Args[2], ",")
+	fmt.Printf("Bralduns du groupe : %+v\n", ls.IdBralduns)
 
 	//> lecture des fichiers csv
 	cheminRacine := os.Args[1]
 	startTime := time.Seconds()
-	ls := NewLecteurScripts()
 	err := ls.traiteNomFichier(cheminRacine)
 	if err != nil {
 		fmt.Printf("Erreur à la lecture des fichiers : %v", err)
@@ -157,12 +185,13 @@ func main() {
 	m := ls.MemMap.Compile()
 
 	//> export de la carte compilée
-	cheminFichierJson := cheminRacine + "/carte.json"
+	cheminFichierJson := os.Args[3] + "/carte.json"
 	f, err := os.Create(cheminFichierJson)
 	if err != nil {
 		fmt.Printf("Erreur à la création du fichier : %s", cheminFichierJson)
 		return
 	}
+	fmt.Printf("Carte compilée : %s\n", f.Name())
 	defer f.Close()
 	bout, _ := json.Marshal(m)
 	f.Write(bout)

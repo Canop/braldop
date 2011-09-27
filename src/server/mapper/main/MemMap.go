@@ -123,6 +123,10 @@ func (mm *MemMap) Compile() (m *Map) {
 	m.Régions = mm.Régions         // et les régions itou
 	for _, v := range mm.DernièresVues {
 		m.Vues = append(m.Vues, v)
+		// on indique le prénom du voyeur
+		if b, ok :=  mm.Bralduns[v.Voyeur]; ok {
+			v.PrénomVoyeur = b.Prénom
+		}
 		// on remplit les champs manquant des bralduns
 		for _, b := range v.Bralduns {
 			if mmb, ok := mm.Bralduns[b.Id]; ok {

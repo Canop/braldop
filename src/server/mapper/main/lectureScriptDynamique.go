@@ -52,7 +52,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 		if err := o.readCsvElement(cells); err != nil {
 			fmt.Printf(" Erreur lecture VueObjet : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" ELEMENT : %+v\n", o)
+			//~ fmt.Printf(" ELEMENT : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	case "ENVIRONNEMENT":

@@ -38,7 +38,7 @@
 		overflow: auto;
 	}
 	#map_settings h3 {
-		margin: 5px 0 5px 0px;
+		margin: 5px 0 2px 0px;
 	}
 	#map {
 		position: fixed;
@@ -101,6 +101,11 @@
 	.error {
 		color: red;
 	}
+	td img.goto:hover {
+		border-radius: 8px;
+		box-shadow: 0px 0px 3px green;
+		cursor: pointer;
+	}
 	</style>
 </head>
 <body>
@@ -110,10 +115,12 @@
 	<div id=layer_list>
 		<input type=checkbox id=layer_satellite><label for=layer_satellite>Photo Satellite</label><br>
 		<input type=checkbox id=layer_régions><label for=layer_régions>Régions</label><br>
+		<input type=checkbox id=layer_fog><label for=layer_fog>Brouillard de guerre</label><br>
 		<br>
 	</div>
 	<h3>Vues</h3>
 	<div id=view_list>
+		<table id=view_table><tbody></tbody></table>
 	</div>
 </div>
 <div id=map><canvas id=map_canvas></canvas></div>
@@ -149,10 +156,14 @@ $(document).ready(function() {
 		if (msg.Vues) {
 			for (i in msg.Vues) {
 				var v = msg.Vues[i];
-				html += '<input type=checkbox idBraldun='+v.Voyeur+' class=view id=view_'+v.Voyeur+'><label for=view_'+v.Voyeur+'>'+v.Voyeur+' ('+formatDate(1000*v.Time)+')</label><br>';
+				html += '<tr>';
+				html += '<td><input type=checkbox idBraldun='+v.Voyeur+' class=view id=view_'+v.Voyeur+'><label for=view_'+v.Voyeur+'>'+(v.PrénomVoyeur?v.PrénomVoyeur:v.Voyeur)+'</label></td>';
+				html += '<td valign=bottom>('+formatDate(1000*v.Time)+')</label></td>';
+				html += '<td valign=bottom><img x='+(v.XMin+v.XMax)/2+' y='+(v.YMin+v.YMax)/2+' class=goto src=img/player_target.png></td>';
+				html += '</tr>';
 			}
 		}
-		$('#view_list').html(html);
+		$('#view_table tbody').html(html);
 		map.redraw();
 		setTimeout(function(){map.redraw();}, 1000); // contournement de bug pas compris
 	});
@@ -162,6 +173,10 @@ $(document).ready(function() {
 	});
 	$('#layer_régions').prop('checked', map.displayRégions).change(function(){
 		map.displayRégions=this.checked;
+		map.redraw();
+	});
+	$('#layer_fog').prop('checked', map.displayFog).change(function(){
+		map.displayFog=this.checked;
 		map.redraw();
 	});
 	$('#view_list').delegate('input.view', 'change', function() {
@@ -174,6 +189,9 @@ $(document).ready(function() {
 			}
 		}
 		map.redraw();
+	});
+	$('#view_table').delegate('.goto', 'click', function() {
+		map.goto(parseInt($(this).attr('x')), parseInt($(this).attr('y')));
 	});
 });
 </script>

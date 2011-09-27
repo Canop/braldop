@@ -14,7 +14,14 @@ source config.sh
 
 cd $CHEMIN_BRALDOP/src/server/mapper
 gomake
-./mapper $CHEMIN_REPERTOIRE_DONNEES
 
-rsync -avz --stats $CHEMIN_REPERTOIRE_DONNEES/carte.json $CHEMIN_BRALDOP/src/web
+rsync -avz --stats --exclude="map.html" --exclude="carte.json" $CHEMIN_BRALDOP/src/web/* $CHEMIN_DEPLOIEMENT_WEB
 
+
+for (( i = 0 ; i < ${#NOM_GROUPE[@]} ; i++ ))
+do
+echo "======================= COMPILATION GROUPE ${NOM_GROUPE[$i]} ======================="
+mkdir -p $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
+rsync -avz --stats --exclude="index.html" --exclude="*.crx" $CHEMIN_BRALDOP/src/web/* $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
+./mapper $CHEMIN_REPERTOIRE_DONNEES ${BRALDUNS_GROUPE[$i]} $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
+done

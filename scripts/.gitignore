@@ -2,5 +2,6 @@
 
 # les paramètres locaux
 config.sh
+config-serveur-canop.sh
 
 deploy-canop.sh

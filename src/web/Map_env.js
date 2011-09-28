@@ -92,6 +92,8 @@ Map.prototype.initTiles = function() {
 	(this.imgMultiMonstres=new Image()).src = baseTilesUrl + 'vue/monstres.png';
 	(this.imgMonstreInconnu=new Image()).src = baseTilesUrl + 'vue/monstre.png';
 	
+	(this.imgCadavre=new Image()).src = baseTilesUrl + 'vue/cadavre.png';
+	
 	for (tile in this.envTiles) {
 		tile.onload = function() { 	_this.redraw(); }; // on dirait que ça ne marche pas
 	}

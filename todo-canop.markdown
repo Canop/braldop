@@ -14,7 +14,7 @@ P1 :
 * affichage des palissades et bosquets
 * dialogue/bâtiments : lien vers l'aide du bâtiment
 
-* petits-pas pour marquer les cases accessibles en marche
+* petits-pas pour marquer les cases accessibles en marche  (sur méthode spécifique pour l'intégration)
 * BUG : peau au pluriel ne prend pas un s...
 * BUG : souvent des non initialisations d'images outline
 * corriger le README de Braldop
@@ -32,7 +32,6 @@ P3 :
 ====
 
 * factoriser les données des bralduns, pour ne pas répéter partout leur nom (ne mettre dans les vues, champs, échoppes, que les numéros)
-* intégrer les matrices de vue à la matrice globale (une seule cellule par case) ? 
 
 Questions :
 ===========

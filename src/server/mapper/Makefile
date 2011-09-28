@@ -3,6 +3,7 @@ include $(GOROOT)/src/Make.inc
 TARG=mapper
 GOFILES=\
 	main/Point.go\
+	main/VueCadavre.go\
 	main/VueChamp.go\
 	main/VueEchoppe.go\
 	main/VueEnvironnement.go\

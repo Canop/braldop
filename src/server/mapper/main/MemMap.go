@@ -2,6 +2,7 @@ package main
 
 /*
 carte stockée en mémoire
+  TODO : renommer en MemCouche
 */
 
 import (

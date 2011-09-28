@@ -46,6 +46,7 @@ function getCellVueCreate(vue, x, y) {
 	if (!cell) {
 		cell = {};
 		cell.bralduns = [];
+		cell.cadavres = [];
 		cell.objets = [];
 		cell.monstres = [];
 		cell.nbBraldunsFémininsNonKO=0; 
@@ -116,6 +117,11 @@ Map.prototype.drawVue = function(vue, xMin, xMax, yMin, yMax) {
 				var cell = getCellVueCreate(vue, o.X, o.Y);
 				cell.monstres.push(o);
 			}
+			for (io in vue.Cadavres) {
+				var o = vue.Cadavres[io];
+				var cell = getCellVueCreate(vue, o.X, o.Y);
+				cell.cadavres.push(o);
+			}
 			//> pour chaque cellule on construit les tableaux d'images par zones
 			for (var x=vue.XMin; x<=vue.XMax; x++) {
 				for (var y=vue.YMin; y<=vue.YMax; y++) {
@@ -149,7 +155,7 @@ Map.prototype.drawVue = function(vue, xMin, xMax, yMin, yMax) {
 						}
 						if (imgb) cell.zones[0].push(imgb);
 						//-- zone 0 : monstres
-						if (cell.monstres.length>0) {
+						if (cell.monstres.length) {
 							var imgbase =  this.imgMonstres[cell.monstres[0].IdType];							
 							var img = imgbase ? (cell.monstres.length==1 ? imgbase.a : imgbase.b) : this.imgMonstreInconnu;
 							// on vérifie l'homogénéïté
@@ -166,9 +172,11 @@ Map.prototype.drawVue = function(vue, xMin, xMax, yMin, yMax) {
 						//-- zone 2 : braldun KO
 						if (nbBraldunsKO) cell.zones[2].push(this.img_braldun_ko);
 						//-- zone 2 : cadavre
-						//   TODO
+						if (cell.cadavres.length) {
+							cell.zones[2].push(this.imgCadavre);
+						}
 						//-- zones 2 et 3 : objets, triés suivant leur type et orientés dans l'une des deux zones
-						if (cell.objets.length>0) {
+						if (cell.objets.length) {
 							for (var i=0; i<cell.objets.length; i++) {
 								var o = cell.objets[i];
 								var typeDéjàPrésent = false;
@@ -211,22 +219,29 @@ Map.prototype.drawVue = function(vue, xMin, xMax, yMin, yMax) {
 					if (cell.zones[1].length>0) this.drawIcons(c, cx+2*d, cy+2*d, cell.zones[1], hover);
 					if (cell.zones[2].length>0) this.drawIcons(c, cx+d, cy+3*d, cell.zones[2], hover);
 					if (cell.zones[3].length>0) this.drawIcons(c, cx+3*d, cy+3*d, cell.zones[3], hover);
-					if (hover) {
-						if (cell.bralduns.length>0) {
+					if (hover) { // remplissage de la bulle du hover
+						if (cell.bralduns.length) {
 							this.bubbleText.push('Bralduns :');
 							for (var ib=0; ib<cell.bralduns.length; ib++) {
 								var b = cell.bralduns[ib];
 								this.bubbleText.push('  '+b.Prénom+' '+b.Nom+' (niveau '+b.Niveau+')');
 							}
 						}
-						if (cell.monstres.length>0) {
+						if (cell.monstres.length) {
 							this.bubbleText.push('Monstres :');
 							for (var ib=0; ib<cell.monstres.length; ib++) {
 								var o = cell.monstres[ib];
 								this.bubbleText.push('  '+o.Nom+' '+o.Taille+' (niveau '+o.Niveau+')');
 							}
 						}
-						if (cell.objets.length>0) {
+						if (cell.cadavres.length) {
+							this.bubbleText.push('Cadavres :');
+							for (var ib=0; ib<cell.cadavres.length; ib++) {
+								var o = cell.cadavres[ib];
+								this.bubbleText.push('  '+o.Nom+' '+o.Taille+' (niveau '+o.Niveau+')');
+							}
+						}
+						if (cell.objets.length) {
 							this.bubbleText.push('Au sol :');
 							for (var ib=0; ib<cell.objets.length; ib++) {
 								var o = cell.objets[ib];

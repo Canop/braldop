@@ -23,6 +23,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 			//~ fmt.Printf(" Braldun : %+v\n", o)
 			vue.Bralduns = append(vue.Bralduns, o)
 		}
+	case "CADAVRE":
+		o := new(VueCadavre)
+		if err := o.readCsv(cells); err != nil {
+			fmt.Printf(" Erreur lecture VueCadavre : %+v \n cellules : %+v", err, cells)
+		} else {
+			fmt.Printf(" VueCadavre : %+v\n", o)
+			vue.Cadavres = append(vue.Cadavres, o)
+		}
 	case "CHAMP":
 		o := new(VueChamp)
 		if err := o.readCsv(cells); err != nil {

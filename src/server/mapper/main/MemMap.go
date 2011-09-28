@@ -11,6 +11,7 @@ import (
 
 type MemMap struct {
 	Bralduns            map[uint]*Braldun // il s'agit des bralduns récupérés depuis le fichier statique donc certaines informations sont absentes
+	BosquetsParXY       map[int32]*VueBosquet
 	ChampsParXY         map[int32]*VueChamp
 	EchoppesParXY       map[int32]*VueEchoppe
 	EnvironnementsParXY map[int32]*VueEnvironnement
@@ -24,6 +25,7 @@ type MemMap struct {
 
 func NewMemMap() (mm *MemMap) {
 	mm = new(MemMap)
+	mm.BosquetsParXY = make(map[int32]*VueBosquet)
 	mm.Bralduns = make(map[uint]*Braldun)
 	mm.ChampsParXY = make(map[int32]*VueChamp)
 	mm.EchoppesParXY = make(map[int32]*VueEchoppe)
@@ -37,6 +39,9 @@ func NewMemMap() (mm *MemMap) {
 	return mm
 }
 
+func (mm *MemMap) StoreBosquet(o *VueBosquet) {
+	mm.BosquetsParXY[PosKey(o.X, o.Y)] = o
+}
 func (mm *MemMap) StoreChamp(o *VueChamp) {
 	mm.ChampsParXY[PosKey(o.X, o.Y)] = o
 }
@@ -75,6 +80,17 @@ func (mm *MemMap) Compile() (m *Map) {
 			cases[key] = c
 		}
 		c.Fond = e.NomSystemeEnvironnement
+	}
+	for _, b := range mm.BosquetsParXY {
+		key := PosKey(b.X, b.Y)
+		c, ok := cases[key]
+		if !ok {
+			c = new(Case)
+			c.X = b.X
+			c.Y = b.Y
+			cases[key] = c
+		}
+		c.Fond = b.NomType
 	}
 	for _, r := range mm.RoutesParXY {
 		key := PosKey(r.X, r.Y)

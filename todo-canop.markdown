@@ -10,6 +10,7 @@ En cours :
 P1 :
 ====
 
+* BUG : braldun KO pas dessinés ?
 * affichage des runes et buissons
 * affichage des palissades et bosquets
 * dialogue/bâtiments : lien vers l'aide du bâtiment
@@ -21,6 +22,9 @@ P1 :
 * corriger le README de Braldop
 * gestion de la profondeur (une couche par profondeur, le goto fait basculer la profondeur affichée)
 * corriger le pluriel de peau
+
+* BUG : je pense que mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
+	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes et bosquets en cas de modif de l'environnement ?
 
 P2 :
 ====

@@ -15,6 +15,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 		return
 	}
 	switch cells[0] {
+	case "BOSQUET":
+		o := new(VueBosquet)
+		if err := o.readCsv(cells); err != nil {
+			fmt.Printf(" Erreur lecture VueBosquet : %+v \n cellules : %+v", err, cells)
+		} else {
+			fmt.Printf(" VueBosquet : %+v\n", o)
+			ls.MemMap.StoreBosquet(o)
+		}
 	case "BRALDUN":
 		o := new(Braldun)
 		if err := o.readCsvDynamique(cells); err != nil {

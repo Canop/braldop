@@ -32,14 +32,15 @@ Map.prototype.getCellVueVisible = function(x, y) {
 
 // renvoie la cellule de la vue ou null (hors vue ou vide)
 function getCellVue(vue, x, y) {
-	var W = vue.XMax-vue.XMin;
+	var W = vue.XMax-vue.XMin+1;
 	var index = ((x-vue.XMin)%W)+(W*(y-vue.YMin));
+	//~ console.log('('+x+','+y+') -> '+index);
 	return vue.matrix ? vue.matrix[index] : null;
 }
 
 // renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
 function getCellVueCreate(vue, x, y) {
-	var W = vue.XMax-vue.XMin;
+	var W = vue.XMax-vue.XMin+1;
 	var index = ((x-vue.XMin)%W)+(W*(y-vue.YMin));
 	var cell = vue.matrix[index];
 	if (!cell) {
@@ -145,7 +146,6 @@ Map.prototype.drawVue = function(vue) {
 						} else {
 							console.log("pas d'image pour l'objet " + o.Type);
 						}
-						
 					}
 				}
 			}

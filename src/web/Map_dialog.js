@@ -100,6 +100,7 @@ Map.prototype.openCellDialog = function(x, y) {
 			html[h++] = '</table>';
 		}
 		if (cellVue.objets.length) {
+			empty = false;
 			html[h++] = "<b>Au sol :</b>";
 			html[h++] = '<table>';
 			for (var ib=0; ib<cellVue.objets.length; ib++) {

@@ -99,6 +99,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 			//fmt.Printf(" Route : %+v\n", o)
 			ls.MemMap.StoreRoute(o)
 		}
+	case "RUNE":
+		o := new(VueObjet)
+		if err := o.readCsvRune(cells); err != nil {
+			fmt.Printf(" Erreur lecture VueObjet : %+v \n cellules : %+v", err, cells)
+		} else {
+			//~ fmt.Printf(" RUNE : %+v\n", o)
+			vue.Objets = append(vue.Objets, o)
+		}
 	}
 }
 

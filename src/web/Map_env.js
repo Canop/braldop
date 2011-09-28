@@ -79,6 +79,7 @@ Map.prototype.initTiles = function() {
 	(this.imgObjets['peau'] = new Image()).src = baseTilesUrl + "elements/peau.png";
 	(this.imgObjets['planche'] = new Image()).src = baseTilesUrl + "elements/planche.png";
 	(this.imgObjets['rondin'] = new Image()).src = baseTilesUrl + "elements/rondin.png";
+	(this.imgObjets['rune'] = new Image()).src = baseTilesUrl + "vue//runes.png"; // rien pour le singulier ?
 	
 	var numTypeMonstres =[1, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 21, 23, 24, 25, 26, 27, 28, 37, 38];
 	this.imgMonstres = [];

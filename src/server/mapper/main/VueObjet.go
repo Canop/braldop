@@ -44,3 +44,18 @@ func (o *VueObjet) readCsvElement(cells []string) (err os.Error) {
 	o.Quantité, _ = strconv.Atoui(cells[5])
 	return
 }
+
+func (o *VueObjet) readCsvRune(cells []string) (err os.Error) {
+	if len(cells) < 3 {
+		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		return
+	}
+	if o.X, err = Atoi16(cells[1]); err != nil {
+		return
+	}
+	if o.Y, err = Atoi16(cells[2]); err != nil {
+		return
+	}
+	o.Type = "rune"
+	return
+}

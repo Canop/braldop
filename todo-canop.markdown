@@ -10,10 +10,11 @@ En cours :
 P1 :
 ====
 
-* affichage des cadavres, runes et buissons
+* affichage des runes et buissons
 * affichage des palissades et bosquets
 * dialogue/bâtiments : lien vers l'aide du bâtiment
 
+* affichage match de soule
 * petits-pas pour marquer les cases accessibles en marche  (sur méthode spécifique pour l'intégration)
 * BUG : peau au pluriel ne prend pas un s...
 * BUG : souvent des non initialisations d'images outline

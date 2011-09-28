@@ -84,10 +84,12 @@ Map.prototype.drawIcons = function(c, sx, sy, icons, hover) {
 	}
 	var imgh;
 	if (this.zoom!=64) imgh=this.zoom*0.35;
-	for (var i=x.length; i-->0;) {
-		if (hover) {
+	if (hover) {
+		for (var i=x.length; i-->0;) {
 			drawCenteredImage(c, this.getOutlineImg(icons[i]), x[i], y[i], null, imgh?imgh+4:null);
 		}
+	}
+	for (var i=x.length; i-->0;) {
 		drawCenteredImage(c, icons[i], x[i], y[i], null, imgh?imgh+4:null);
 	}
 }

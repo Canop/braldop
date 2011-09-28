@@ -70,6 +70,21 @@ Map.prototype.openCellDialog = function(x, y) {
 			}		
 			html[h++] = '</table>';
 		}
+		if (cellVue.monstres.length>0) {
+			empty = false;
+			html[h++] = "<b>Monstres :</b>";
+			html[h++] = '<table>';
+			for (var ib=0; ib<cellVue.monstres.length; ib++) {
+				var o = cellVue.monstres[ib];
+				var imgbase =  this.imgMonstres[o.IdType];	
+				var img = imgbase ? imgbase.a : this.imgMonstreInconnu;
+				html[h++] = '<tr><td>';
+				html[h++] = '<img src="'+img.src+'">';
+				html[h++] = '</td><td><a target=winprofil href="http://jeu.braldahim.com/voir/monstre/?monstre='+o.Id+'">'+o.Nom+' '+o.Taille+'</a></td><td>niv. '+o.Niveau;
+				html[h++] = '</td></tr>';
+			}
+			html[h++] = '</table>';
+		}
 		if (cellVue.objets.length>0) {
 			html[h++] = "<b>Au sol :</b>";
 			html[h++] = '<table>';

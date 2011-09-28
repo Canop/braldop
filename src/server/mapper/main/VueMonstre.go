@@ -17,7 +17,7 @@ type VueMonstre struct {
 }
 
 func (o *VueMonstre) readCsv(cells []string) (err os.Error) {
-	if len(cells) < 8 {
+	if len(cells) < 9 {
 		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
@@ -33,6 +33,9 @@ func (o *VueMonstre) readCsv(cells []string) (err os.Error) {
 	o.Nom = cells[5]
 	o.Taille = cells[6]
 	if o.Niveau, err = strconv.Atoui(cells[7]); err != nil {
+		return
+	}
+	if o.IdType, err = strconv.Atoui(cells[8]); err != nil {
 		return
 	}
 	return

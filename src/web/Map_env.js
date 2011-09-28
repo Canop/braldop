@@ -69,6 +69,7 @@ Map.prototype.initTiles = function() {
 	(this.img_bralduns_feminin = new Image()).src = baseTilesUrl + "vue/bralduns_feminin.png";
 	(this.img_bralduns_masculin = new Image()).src = baseTilesUrl + "vue/bralduns_masculin.png";
 	(this.img_bralduns_masculin_feminin = new Image()).src = baseTilesUrl + "vue/bralduns_masculin_feminin.png";
+	(this.img_braldun_ko = new Image()).src = baseTilesUrl + "vue/braldunKo.png";
 	
 	this.imgObjets = {};
 	(this.imgObjets['castar'] = new Image()).src = baseTilesUrl + "vue/castars.png";
@@ -79,6 +80,17 @@ Map.prototype.initTiles = function() {
 	(this.imgObjets['planche'] = new Image()).src = baseTilesUrl + "elements/planche.png";
 	(this.imgObjets['rondin'] = new Image()).src = baseTilesUrl + "elements/rondin.png";
 	
+	var numTypeMonstres =[1, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 21, 23, 24, 25, 26, 27, 28, 37, 38];
+	this.imgMonstres = [];
+	for (var i in numTypeMonstres) {
+		var num = numTypeMonstres[i];
+		var o = {};
+		(o.a=new Image()).src = baseTilesUrl + 'type_monstre/'+num+'a.png'; // un seul
+		(o.b=new Image()).src = baseTilesUrl + 'type_monstre/'+num+'b.png'; // plusieurs
+		this.imgMonstres[num]=o;
+	}
+	(this.imgMultiMonstres=new Image()).src = baseTilesUrl + 'vue/monstres.png';
+	(this.imgMonstreInconnu=new Image()).src = baseTilesUrl + 'vue/monstre.png';
 	
 	for (tile in this.envTiles) {
 		tile.onload = function() { 	_this.redraw(); }; // on dirait que ça ne marche pas

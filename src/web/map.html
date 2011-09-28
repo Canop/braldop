@@ -156,9 +156,10 @@ $(document).ready(function() {
 		if (msg.Vues) {
 			for (i in msg.Vues) {
 				var v = msg.Vues[i];
+				v.active = true; // on active par défaut la vue
 				html += '<tr>';
-				html += '<td><input type=checkbox idBraldun='+v.Voyeur+' class=view id=view_'+v.Voyeur+'><label for=view_'+v.Voyeur+'>'+(v.PrénomVoyeur?v.PrénomVoyeur:v.Voyeur)+'</label></td>';
-				html += '<td valign=bottom>('+formatDate(1000*v.Time)+')</label></td>';
+				html += '<td><input type=checkbox checked idBraldun='+v.Voyeur+' class=view id=view_'+v.Voyeur+'><label for=view_'+v.Voyeur+'>'+(v.PrénomVoyeur?v.PrénomVoyeur:v.Voyeur)+'</label></td>';
+				html += '<td valign=bottom><small>('+formatDate(1000*v.Time)+')</label></small></td>';
 				html += '<td valign=bottom><img x='+(v.XMin+v.XMax)/2+' y='+(v.YMin+v.YMax)/2+' class=goto src=img/player_target.png></td>';
 				html += '</tr>';
 			}

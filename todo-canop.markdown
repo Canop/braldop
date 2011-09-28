@@ -6,24 +6,27 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 En cours :
 ==========
 
-* dialogue/bâtiments : lien vers l'aide du bâtiment
-* version 4 des scripts de vue
-* affichage des objets mobiles (Braldûns, monstres, buissons, éléments, etc.) de la dernière vue
 
 P1 :
 ====
 
+* affichage des cadavres, runes et buissons
+* affichage des palissades et bosquets
+* dialogue/bâtiments : lien vers l'aide du bâtiment
+
+* petits-pas pour marquer les cases accessibles en marche
 * BUG : peau au pluriel ne prend pas un s...
 * BUG : souvent des non initialisations d'images outline
-* lecture et affichage monstres (faut déjà que j'en voie...)
-* corriger l'assombrissement des vues : il disparait quand la zone vue n'intercepte pas l'écran (et de toutes manières il faut cumuler les trous, pas les assombrissements)
 * corriger le README de Braldop
+* gestion de la profondeur (une couche par profondeur, le goto fait basculer la profondeur affichée)
+* corriger le pluriel de peau
 
 P2 :
 ====
 
-* extension braldop : déclencher les appels du script de vue (ou transmettre directement la vue ?) lors des mouvements
+* extension braldop : déclencher les appels du script de vue (ou transmettre directement la vue ?) lors des mouvements [suivant planning intégration complète]
 * bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent
+* points de distinction, gredins et redresseurs
 
 P3 :
 ====

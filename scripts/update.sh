@@ -33,7 +33,7 @@ CHEMIN_JOUR="$CHEMIN_REPERTOIRE_DONNEES/private/${ID_BRALDUN[$i]}/$FIN_REPERTOIR
 mkdir -p $CHEMIN_JOUR
 cd $CHEMIN_JOUR
 DEBUT_NOM_FICHIERS_JOUR=`date +%Hh%M`
-wget "http://sp.braldahim.com/scripts/vue/?idBraldun=${ID_BRALDUN[$i]}&mdpRestreint=${MDP_RESTREINT_BRALDUN[$i]}&version=4" -O "$DEBUT_NOM_FICHIERS_JOUR-vue.csv"
+wget "http://sp.braldahim.com/scripts/vue/?idBraldun=${ID_BRALDUN[$i]}&mdpRestreint=${MDP_RESTREINT_BRALDUN[$i]}&version=5" -O "$DEBUT_NOM_FICHIERS_JOUR-vue.csv"
 wget "http://sp.braldahim.com/scripts/profil/?idBraldun=${ID_BRALDUN[$i]}&mdpRestreint=${MDP_RESTREINT_BRALDUN[$i]}&version=2" -O "$DEBUT_NOM_FICHIERS_JOUR-profil.csv"
 wget "http://sp.braldahim.com/scripts/evenements/?idBraldun=${ID_BRALDUN[$i]}&mdpRestreint=${MDP_RESTREINT_BRALDUN[$i]}&version=2" -O "$DEBUT_NOM_FICHIERS_JOUR-evenements.csv"
 done

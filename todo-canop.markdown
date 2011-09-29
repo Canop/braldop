@@ -10,21 +10,21 @@ En cours :
 P1 :
 ====
 
-* BUG : braldun KO pas dessinés ?
-* affichage des runes et buissons
-* affichage des palissades et bosquets
+* BUG : braldun KO pas dessinés ? Bug dans le script de vue ?
 * dialogue/bâtiments : lien vers l'aide du bâtiment
+* tabac, lingot, aliment, potion
 
+* deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
+
+* affichage braldun en soule
 * affichage match de soule
 * petits-pas pour marquer les cases accessibles en marche  (sur méthode spécifique pour l'intégration)
-* BUG : peau au pluriel ne prend pas un s...
 * BUG : souvent des non initialisations d'images outline
 * corriger le README de Braldop
 * gestion de la profondeur (une couche par profondeur, le goto fait basculer la profondeur affichée)
-* corriger le pluriel de peau
 
-* BUG : je pense que mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
-	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes et bosquets en cas de modif de l'environnement ?
+* BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
+	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
 
 P2 :
 ====

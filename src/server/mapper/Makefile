@@ -10,6 +10,7 @@ GOFILES=\
 	main/VueEnvironnement.go\
 	main/VueMonstre.go\
 	main/VueObjet.go\
+	main/VuePalissade.go\
 	main/VuePosition.go\
 	main/VueRoute.go\
 	main/Braldun.go\

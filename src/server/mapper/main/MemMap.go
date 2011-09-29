@@ -3,6 +3,7 @@ package main
 /*
 carte stockée en mémoire
   TODO : renommer en MemCouche
+  TODO : refactorer un jour tout ça... 
 */
 
 import (
@@ -14,6 +15,7 @@ type MemMap struct {
 	BosquetsParXY       map[int32]*VueBosquet
 	ChampsParXY         map[int32]*VueChamp
 	EchoppesParXY       map[int32]*VueEchoppe
+	PalissadesParXY     map[int32]*VuePalissade
 	EnvironnementsParXY map[int32]*VueEnvironnement
 	RoutesParXY         map[int32]*VueRoute
 	Villes              []*Ville
@@ -30,6 +32,7 @@ func NewMemMap() (mm *MemMap) {
 	mm.ChampsParXY = make(map[int32]*VueChamp)
 	mm.EchoppesParXY = make(map[int32]*VueEchoppe)
 	mm.EnvironnementsParXY = make(map[int32]*VueEnvironnement)
+	mm.PalissadesParXY = make(map[int32]*VuePalissade)
 	mm.RoutesParXY = make(map[int32]*VueRoute)
 	mm.Villes = make([]*Ville, 0, 10)
 	mm.LieuxVilles = make([]*LieuVille, 0, 10)
@@ -50,6 +53,9 @@ func (mm *MemMap) StoreEchoppe(o *VueEchoppe) {
 }
 func (mm *MemMap) StoreEnvironnement(o *VueEnvironnement) {
 	mm.EnvironnementsParXY[PosKey(o.X, o.Y)] = o
+}
+func (mm *MemMap) StorePalissade(o *VuePalissade) {
+	mm.PalissadesParXY[PosKey(o.X, o.Y)] = o
 }
 func (mm *MemMap) StoreRoute(o *VueRoute) {
 	mm.RoutesParXY[PosKey(o.X, o.Y)] = o
@@ -114,6 +120,22 @@ func (mm *MemMap) Compile() (m *Map) {
 			c.Fond = "pave"
 		}
 	}
+	for _, b := range mm.PalissadesParXY {
+		key := PosKey(b.X, b.Y)
+		c, ok := cases[key]
+		if !ok {
+			c = new(Case)
+			c.X = b.X
+			c.Y = b.Y
+			cases[key] = c
+		}
+		if b.Portail {
+			c.Fond = "portail"
+		} else {
+			c.Fond = "palissade"
+		}
+	}
+
 	for _, e := range mm.EchoppesParXY {
 		// on renseigne si possible le nom du braldun
 		if mmb, ok := mm.Bralduns[e.IdBraldun]; ok {

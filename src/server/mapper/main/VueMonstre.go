@@ -12,8 +12,8 @@ type VueMonstre struct {
 	Id     uint
 	Nom    string
 	Taille string
-	Niveau uint
 	IdType uint
+	Gibier bool
 }
 
 func (o *VueMonstre) readCsv(cells []string) (err os.Error) {
@@ -32,11 +32,11 @@ func (o *VueMonstre) readCsv(cells []string) (err os.Error) {
 	}
 	o.Nom = cells[5]
 	o.Taille = cells[6]
-	if o.Niveau, err = strconv.Atoui(cells[7]); err != nil {
+	if o.IdType, err = strconv.Atoui(cells[7]); err != nil {
 		return
 	}
-	if o.IdType, err = strconv.Atoui(cells[8]); err != nil {
-		return
+	if cells[8] == "oui" {
+		o.Gibier = true
 	}
 	return
 }

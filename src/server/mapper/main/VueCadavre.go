@@ -12,11 +12,10 @@ type VueCadavre struct {
 	Id     uint
 	Nom    string
 	Taille string
-	Niveau uint
 }
 
 func (o *VueCadavre) readCsv(cells []string) (err os.Error) {
-	if len(cells) < 8 {
+	if len(cells) < 7 {
 		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
@@ -31,8 +30,5 @@ func (o *VueCadavre) readCsv(cells []string) (err os.Error) {
 	}
 	o.Nom = cells[5]
 	o.Taille = cells[6]
-	if o.Niveau, err = strconv.Atoui(cells[7]); err != nil {
-		return
-	}
 	return
 }

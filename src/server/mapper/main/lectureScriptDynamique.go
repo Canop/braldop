@@ -20,7 +20,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 		if err := o.readCsv(cells); err != nil {
 			fmt.Printf(" Erreur lecture VueBosquet : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" VueBosquet : %+v\n", o)
+			//~ fmt.Printf(" VueBosquet : %+v\n", o)
 			ls.MemMap.StoreBosquet(o)
 		}
 	case "BRALDUN":
@@ -31,12 +31,20 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 			//~ fmt.Printf(" Braldun : %+v\n", o)
 			vue.Bralduns = append(vue.Bralduns, o)
 		}
+	case "BUISSON":
+		o := new(VueObjet)
+		if err := o.readCsvBuisson(cells); err != nil {
+			fmt.Printf(" Erreur lecture VueObjet : %+v \n cellules : %+v", err, cells)
+		} else {
+			//~ fmt.Printf(" BUISSON : %+v\n", o)
+			vue.Objets = append(vue.Objets, o)
+		}
 	case "CADAVRE":
 		o := new(VueCadavre)
 		if err := o.readCsv(cells); err != nil {
 			fmt.Printf(" Erreur lecture VueCadavre : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" VueCadavre : %+v\n", o)
+			//~ fmt.Printf(" VueCadavre : %+v\n", o)
 			vue.Cadavres = append(vue.Cadavres, o)
 		}
 	case "CHAMP":
@@ -86,6 +94,22 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 		} else {
 			//~ fmt.Printf(" VueMonstre : %+v\n", o)
 			vue.Monstres = append(vue.Monstres, o)
+		}
+	case "PALISSADE":
+		o := new(VuePalissade)
+		if err := o.readCsv(cells, false); err != nil {
+			fmt.Printf(" Erreur lecture VuePalissade : %+v \n cellules : %+v", err, cells)
+		} else {
+			//~ fmt.Printf(" VuePalissade : %+v\n", o)
+			ls.MemMap.StorePalissade(o)
+		}
+	case "PORTAIL":
+		o := new(VuePalissade)
+		if err := o.readCsv(cells, true); err != nil {
+			fmt.Printf(" Erreur lecture VuePalissade : %+v \n cellules : %+v", err, cells)
+		} else {
+			//~ fmt.Printf(" VuePalissade : %+v\n", o)
+			ls.MemMap.StorePalissade(o)
 		}
 	case "POSITION":
 		o := new(VuePosition)

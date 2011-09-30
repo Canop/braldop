@@ -192,6 +192,7 @@ $(document).ready(function() {
 		map.redraw();
 	});
 	$('#view_table').delegate('.goto', 'click', function() {
+		if (map.zoom<32) map.zoom=32;
 		map.goto(parseInt($(this).attr('x')), parseInt($(this).attr('y')));
 	});
 });

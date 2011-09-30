@@ -64,6 +64,19 @@ Map.prototype.initTiles = function() {
 		(this.envTiles[environnements[env]] = new Image()).src = baseTilesUrl + "vue/environnement/" + environnements[env] + ".png";
 	}
 	
+	this.imgBralduns = {};
+	var typeImgBralduns = [
+		'braldun_feminin', 'braldun_feminin-a', 'braldun_feminin-b', 'braldun_masculin', 'braldun_masculin-a', 'braldun_masculin-b',
+		'bralduns_feminin', 'bralduns_feminin-a', 'bralduns_feminin-b', 'bralduns_feminin-combat',
+		'bralduns_masculin', 'bralduns_masculin-a', 'bralduns_masculin-b', 'bralduns_masculin-combat',
+		'bralduns_masculin_feminin', 'bralduns_masculin_feminin-a', 'bralduns_masculin_feminin-b', 'bralduns_masculin_feminin-combat'
+	];
+	for (var i=0; i<typeImgBralduns.length; i++) {
+		var key = typeImgBralduns[i];
+		var img = new Image();
+		img.src = baseTilesUrl + "vue/"+key+'.png';
+		this.imgBralduns[key]=img;
+	}
 	(this.img_braldun_feminin = new Image()).src = baseTilesUrl + "vue/braldun_feminin.png";
 	(this.img_braldun_masculin = new Image()).src = baseTilesUrl + "vue/braldun_masculin.png";
 	(this.img_bralduns_feminin = new Image()).src = baseTilesUrl + "vue/bralduns_feminin.png";
@@ -77,6 +90,7 @@ Map.prototype.initTiles = function() {
 	(this.imgObjets['charrette'] = new Image()).src = baseTilesUrl + "cockpit/charrette.png";
 	(this.imgObjets['cuir'] = new Image()).src = baseTilesUrl + "elements/cuir.png";
 	(this.imgObjets['fourrure'] = new Image()).src = baseTilesUrl + "elements/fourrure.png";
+	(this.imgObjets['munition'] = new Image()).src = baseTilesUrl + "type_munition/type_munition_1.png"; // todo sans doute pas satisfaisant
 	(this.imgObjets['peau'] = new Image()).src = baseTilesUrl + "elements/peau.png";
 	(this.imgObjets['planche'] = new Image()).src = baseTilesUrl + "elements/planche.png";
 	(this.imgObjets['rondin'] = new Image()).src = baseTilesUrl + "elements/rondin.png";

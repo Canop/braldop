@@ -3,20 +3,31 @@ Avertissement :
 
 Ce document est propriété Canop et toute modification externe sera refusée. Il est sur git pour la sauvegarde et la libre consultation, pas pour faire des demandes. Il reflète ce que j'ai besoin de noter plus que ce que j'ai réellement l'intention de faire.
 
+Fait :
+======
+
+* lien vers le braldun proprio dans le menu sur les échoppes et champs
+* BUG : on affiche parfois dans le menu des objets/bralduns/monstres hors vue (pas de vérification de range dans getCellVue)
+* bulle : résumer si trop de trucs
+* intégrer les dernières données de Boule/Jonquille
+
 En cours :
 ==========
 
+* munition
+* matériel
+* BUG : braldun KO pas dessinés ? Bug dans le script de vue ?
+* affichage braldun en soule
 
 P1 :
 ====
 
-* BUG : braldun KO pas dessinés ? Bug dans le script de vue ?
+* menu avec ascenseur si trop grand
 * dialogue/bâtiments : lien vers l'aide du bâtiment
-* tabac, lingot, aliment, potion
+* tabac, lingot, aliment, potion, munition
 
 * deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
 
-* affichage braldun en soule
 * affichage match de soule
 * petits-pas pour marquer les cases accessibles en marche  (sur méthode spécifique pour l'intégration)
 * BUG : souvent des non initialisations d'images outline
@@ -29,6 +40,8 @@ P1 :
 P2 :
 ====
 
+* option pour intégrer le quadrillage
+* tag (optionnel) de cellule pour indiquer les coordonnées
 * extension braldop : déclencher les appels du script de vue (ou transmettre directement la vue ?) lors des mouvements [suivant planning intégration complète]
 * bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent
 * points de distinction, gredins et redresseurs
@@ -41,18 +54,3 @@ P3 :
 Questions :
 ===========
 
-
-Note :
-======
-
-Boule : 
-
-	Sur Braldahim, les cases sont ordonnées telles que : 
-	 - Haut gauche : Braldûns, monstres
-	 - Haut droit : lieu ou échoppe ou champ
-	 - Bas gauche : cadavre, castars et runes, buisson, Braldûns KO. Les 5 images peuvent être affichés en même temps
-	 - Bas droit : les charrettes + éléments (matériels, aliments, potions, équipements, munitions, minerais bruts, lingôt, parties plantes brutes, parties plantes préparées, grains, ingrédients, tabac)
-
-	Généralement, ce qu'il y a en bas à gauche correspond aux combats : runes / castars / Braldûns KO / cadavre. Le buisson est là, mais c'est parce qu'il n'y avait pas de place ailleurs.
-
-	Sur Braldop, les castars sont partis en bas à droite. Est-ce possible de les mettre en bas à gauche ? 

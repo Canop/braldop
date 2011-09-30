@@ -23,6 +23,7 @@ type Braldun struct {
 	Sexe       string // "f" ou "m"
 	KO         bool
 	Intangible bool
+	Camp       string // équipe de soule : "a" ou "b" ou ""
 }
 
 // cette méthode est appelée pour le décodage du fichier statique
@@ -61,6 +62,7 @@ func (o *Braldun) readCsvDynamique(cells []string) (err os.Error) {
 	}
 	o.KO = cells[5] == "oui"
 	o.Intangible = cells[6] == "oui"
+	o.Camp = cells[8]
 	return
 }
 

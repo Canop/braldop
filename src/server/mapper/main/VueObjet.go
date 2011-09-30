@@ -6,6 +6,7 @@ package main
  *  charettes
  *  runes
  *  buissons
+ *  munition
  */
 
 import (
@@ -77,6 +78,22 @@ func (o *VueObjet) readCsvElement(cells []string) (err os.Error) {
 			o.Label += "s"
 		}
 	}
+	return
+}
+func (o *VueObjet) readCsvMunition(cells []string) (err os.Error) {
+	if len(cells) < 8 {
+		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		return
+	}
+	if o.X, err = Atoi16(cells[1]); err != nil {
+		return
+	}
+	if o.Y, err = Atoi16(cells[2]); err != nil {
+		return
+	}
+	o.Type = "munition"
+	o.Quantité, _ = strconv.Atoui(cells[6])
+	o.Label = fmt.Sprintf("%d %s", o.Quantité, cells[5])
 	return
 }
 

@@ -94,6 +94,32 @@ Affichage des lieux
 
 Je pense mettre en place le même système dans le javascript que pour la vue : précompiler la liste reçue pour associer rapidement à chaque position une case (uniquement s'il y a quelque chose dans la case). La seule différence a priori sera l'utilisation d'une map au lieu d'un tableau (mais ça ne change rien à part des économies de RAM).
 
+Intégration de commandes
+========================
+
+La carte affichée doit présenter des actions. Certaines, purement documentaires, peuvent être définies simplement (ouverture de la fiche d'un braldun ou d'un monstre, affichage d'une page du wiki). D'autres nécessitent la prise en compte de règles complexes (charge, déplacement, etc.).
+Je propose que l'API de la carte offre deux méthodes pour l'intégration :
+
+Map.setActionFonction(callback)
+-------------------------------
+
+Map.setActions(list)
+--------------------
+
+La liste serait un tableau d'objets présentant (au moins) les champs suivants
+action : {
+	Type : un type numérique permettant de faire certains traitements (comme afficher l'icône de pas sur la carte par exemple)
+	X : x du point d'application
+	Y : y du point d'application
+	IdBraldun : cible éventuelle
+	IdMondre : cible éventuelle
+	Label : le nom à afficher dans le menu
+	Icône : sous-partie optionnelle du chemin vers une icône
+	CoûtPA : le coût de l'action
+}
+
+Lors de la sélection dans un menu, la fonction définie par setActionFonction serait appelée avec pour paramètre l'objet action.
+
 Points en suspens
 =================
  

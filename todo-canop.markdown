@@ -17,11 +17,11 @@ P1 :
 ====
 
 * dialogue/bâtiments : lien vers l'aide du bâtiment
-* tabac, lingot, aliment, potion, munition
+* tabac, lingot, aliment, potion
 
 * deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
 
-* affichage match de soule
+* affichage communauté dans la bulle et le menu
 * petits-pas pour marquer les cases accessibles en marche  (sur méthode spécifique pour l'intégration)
 * BUG : souvent des non initialisations d'images outline
 * corriger le README de Braldop
@@ -33,7 +33,7 @@ P1 :
 P2 :
 ====
 
-* option pour intégrer le quadrillage
+* option pour le quadrillage
 * tag (optionnel) de cellule pour indiquer les coordonnées
 * extension braldop : déclencher les appels du script de vue (ou transmettre directement la vue ?) lors des mouvements [suivant planning intégration complète]
 * bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent

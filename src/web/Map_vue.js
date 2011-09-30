@@ -195,7 +195,7 @@ Map.prototype.drawVue = function(vue, xMin, xMax, yMin, yMax) {
 								if (typeDéjàPrésent) continue;
 								var dest = cell.zones[3];
 								if (o.Type=='castar'||o.Type=='rune') dest = cell.zones[2];
-								else if (o.Type=="buisson") dest = cell.zones[1];
+								else if (o.Type=="ballon"||o.Type=="buisson") dest = cell.zones[1];
 								var img = this.imgObjets[o.Type];
 								if (img) {
 									dest.push(img);

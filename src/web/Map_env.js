@@ -77,14 +77,9 @@ Map.prototype.initTiles = function() {
 		img.src = baseTilesUrl + "vue/"+key+'.png';
 		this.imgBralduns[key]=img;
 	}
-	(this.img_braldun_feminin = new Image()).src = baseTilesUrl + "vue/braldun_feminin.png";
-	(this.img_braldun_masculin = new Image()).src = baseTilesUrl + "vue/braldun_masculin.png";
-	(this.img_bralduns_feminin = new Image()).src = baseTilesUrl + "vue/bralduns_feminin.png";
-	(this.img_bralduns_masculin = new Image()).src = baseTilesUrl + "vue/bralduns_masculin.png";
-	(this.img_bralduns_masculin_feminin = new Image()).src = baseTilesUrl + "vue/bralduns_masculin_feminin.png";
-	(this.img_braldun_ko = new Image()).src = baseTilesUrl + "vue/braldunKo.png";
 	
 	this.imgObjets = {};
+	(this.imgObjets['ballon'] = new Image()).src = baseTilesUrl + "vue/ballon.png";
 	(this.imgObjets['buisson'] = new Image()).src = baseTilesUrl + "vue/buisson.png";
 	(this.imgObjets['castar'] = new Image()).src = baseTilesUrl + "vue/castars.png";
 	(this.imgObjets['charrette'] = new Image()).src = baseTilesUrl + "cockpit/charrette.png";

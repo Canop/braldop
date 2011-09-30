@@ -6,23 +6,16 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* lien vers le braldun proprio dans le menu sur les échoppes et champs
-* BUG : on affiche parfois dans le menu des objets/bralduns/monstres hors vue (pas de vérification de range dans getCellVue)
-* bulle : résumer si trop de trucs
-* intégrer les dernières données de Boule/Jonquille
 
 En cours :
 ==========
 
-* munition
 * matériel
-* BUG : braldun KO pas dessinés ? Bug dans le script de vue ?
-* affichage braldun en soule
+* BUG : braldun KO pas dessinés ? Bug dans le script de vue ? -> oui, attendre de revoir des KO...
 
 P1 :
 ====
 
-* menu avec ascenseur si trop grand
 * dialogue/bâtiments : lien vers l'aide du bâtiment
 * tabac, lingot, aliment, potion, munition
 

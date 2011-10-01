@@ -74,7 +74,7 @@ Map.prototype.drawIcons = function(c, sx, sy, icons, hover) {
 		var d = 0.17*this.zoom;
 		x[0]=sx;   y[0]=sy-d;
 		x[1]=sx-d; y[1]=sy+d;
-		x[2]=sx-d; y[2]=sy+d;
+		x[2]=sx+d; y[2]=sy+d;
 		break;
 	case 4:
 	default: // si le cas se présente, il faut implémenter le cas 5
@@ -196,11 +196,14 @@ Map.prototype.drawVue = function(vue, xMin, xMax, yMin, yMax) {
 								var dest = cell.zones[3];
 								if (o.Type=='castar'||o.Type=='rune') dest = cell.zones[2];
 								else if (o.Type=="ballon"||o.Type=="buisson") dest = cell.zones[1];
-								var img = this.imgObjets[o.Type];
+								var img;
+								if (o.Type=="tabac"||o.Type=="plante"||o.Type=="potion"||o.Type=="aliment") img = this.imgObjets[o.Type+'-'+o.IdType];
+								else img = this.imgObjets[o.Type];
 								if (img) {
 									dest.push(img);
 								} else {
-									console.log("pas d'image pour l'objet " + o.Type);
+									console.log("pas d'image pour cet objet :");
+									console.log(o);
 								}
 							}
 						}

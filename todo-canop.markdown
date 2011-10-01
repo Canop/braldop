@@ -10,19 +10,18 @@ Fait :
 En cours :
 ==========
 
-* matériel
+* matériel, graine
 * BUG : braldun KO pas dessinés ? Bug dans le script de vue ? -> oui, attendre de revoir des KO...
 
 P1 :
 ====
 
 * dialogue/bâtiments : lien vers l'aide du bâtiment
-* tabac, lingot, aliment, potion
-
 * deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
 
 * affichage communauté dans la bulle et le menu
 * petits-pas pour marquer les cases accessibles en marche  (sur méthode spécifique pour l'intégration)
+* BUG : l'intersection de deux vues est assombrie
 * BUG : souvent des non initialisations d'images outline
 * corriger le README de Braldop
 * gestion de la profondeur (une couche par profondeur, le goto fait basculer la profondeur affichée)
@@ -33,6 +32,7 @@ P1 :
 P2 :
 ====
 
+* structure générique plus propre côté js pour décrire l'accès aux images, les documentations associées
 * option pour le quadrillage
 * tag (optionnel) de cellule pour indiquer les coordonnées
 * extension braldop : déclencher les appels du script de vue (ou transmettre directement la vue ?) lors des mouvements [suivant planning intégration complète]

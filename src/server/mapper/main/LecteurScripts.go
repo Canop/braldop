@@ -25,6 +25,7 @@ type LecteurScripts struct {
 	NbReadFiles uint
 	MemMap      *MemMap
 	IdBralduns  []string // la liste des bralduns dont on peut regarder la vue
+	verbose     uint     // 0 : peu, 1 : un peu, 2 : beaucoup
 }
 
 type Visible interface {
@@ -108,7 +109,9 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 				}
 			}
 			if !ok {
-				fmt.Printf("Fichier non autorisé : %s\n", f.Name())
+				if ls.verbose > 0 {
+					fmt.Printf("Fichier non autorisé : %s\n", f.Name())
+				}
 				return nil
 			}
 		}

@@ -117,7 +117,9 @@ Map.prototype.openCellDialog = function(x, y) {
 			html[h++] = '<table>';
 			for (var ib=0; ib<cellVue.objets.length; ib++) {
 				var o = cellVue.objets[ib];
-				var img = this.imgObjets[o.Type];
+				var img;
+				if (o.Type=="tabac"||o.Type=="plante"||o.Type=="potion"||o.Type=="aliment") img = this.imgObjets[o.Type+'-'+o.IdType];
+				else img = this.imgObjets[o.Type];
 				html[h++] = '<tr><td>';
 				if (img) html[h++] = '<img src="'+img.src+'">';
 				html[h++] = '</td><td>';

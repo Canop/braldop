@@ -6,16 +6,15 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-
 En cours :
 ==========
 
-* matériel, graine
 * BUG : braldun KO pas dessinés ? Bug dans le script de vue ? -> oui, attendre de revoir des KO...
 
 P1 :
 ====
 
+* matériel
 * dialogue/bâtiments : lien vers l'aide du bâtiment
 * deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
 

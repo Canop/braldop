@@ -77,6 +77,32 @@ func (o *VueObjet) readCsvQLB(cells []string, Type string) (err os.Error) {
 	return
 }
 
+func (o *VueObjet) readCsvGraine(cells []string) (err os.Error) {
+	if len(cells) < 6 {
+		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		return
+	}
+	if o.X, err = Atoi16(cells[1]); err != nil {
+		return
+	}
+	if o.Y, err = Atoi16(cells[2]); err != nil {
+		return
+	}
+	o.Type = "graine"
+	o.Quantité, _ = strconv.Atoui(cells[4])
+	o.Label = fmt.Sprintf("%d %s", o.Quantité, "graine")
+	if o.Quantité > 1 {
+		o.Label += "s de "
+	} else {
+		o.Label += " de "
+	}
+	o.Label += cells[5]
+	if o.IdType, err = strconv.Atoui(cells[6]); err != nil {
+		return
+	}
+	return
+}
+
 func (o *VueObjet) readCsvTabac(cells []string) (err os.Error) {
 	if len(cells) < 6 {
 		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))

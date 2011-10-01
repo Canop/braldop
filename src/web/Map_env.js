@@ -99,6 +99,7 @@ Map.prototype.initTiles = function() {
 	for (var i=1; i<=5; i++) (this.imgObjets['plante-'+i] = new Image()).src = baseTilesUrl + "type_partieplante/type_partieplante_"+i+".png";
 	for (var i=1; i<=27; i++) (this.imgObjets['potion-'+i] = new Image()).src = baseTilesUrl + "type_potion/type_potion_"+i+".png";
 	for (var i=1; i<=27; i++) (this.imgObjets['aliment-'+i] = new Image()).src = baseTilesUrl + "type_aliment/type_aliment_"+i+".png";
+	for (var i=1; i<=9; i++) (this.imgObjets['graine-'+i] = new Image()).src = baseTilesUrl + "type_graine/type_graine_"+i+".png";
 	
 	
 	var numTypeMonstres =[1, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 21, 23, 24, 25, 26, 27, 28, 37, 38];

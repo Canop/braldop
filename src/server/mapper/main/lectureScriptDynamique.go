@@ -107,6 +107,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 			//~ fmt.Printf(" VueEnvironnement : %+v\n", o)
 			ls.MemMap.StoreEnvironnement(o)
 		}
+	case "GRAINE":
+		o := new(VueObjet)
+		if err := o.readCsvGraine(cells); err != nil {
+			fmt.Printf(" Erreur lecture GRAINE : %+v \n cellules : %+v", err, cells)
+		} else {
+			fmt.Printf(" GRAINE : %+v\n", o)
+			vue.Objets = append(vue.Objets, o)
+		}
 	case "INGREDIENT":
 		o := new(VueObjet)
 		if err := o.readCsvQLB(cells, "ingrédient"); err != nil {

@@ -197,7 +197,7 @@ Map.prototype.drawVue = function(vue, xMin, xMax, yMin, yMax) {
 								if (o.Type=='castar'||o.Type=='rune') dest = cell.zones[2];
 								else if (o.Type=="ballon"||o.Type=="buisson") dest = cell.zones[1];
 								var img;
-								if (o.Type=="tabac"||o.Type=="plante"||o.Type=="potion"||o.Type=="aliment") img = this.imgObjets[o.Type+'-'+o.IdType];
+								if (o.Type=="tabac"||o.Type=="plante"||o.Type=="potion"||o.Type=="aliment"||o.Type=="graine") img = this.imgObjets[o.Type+'-'+o.IdType];
 								else img = this.imgObjets[o.Type];
 								if (img) {
 									dest.push(img);

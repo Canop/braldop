@@ -22,3 +22,9 @@ func Atoi16(s string) (i16 int16, err os.Error) {
 func PosKey(x int16, y int16) int32 {
 	return (int32(x) << 16) + (int32(y))
 }
+
+func (o *Point) readCsvPoint(cells []string) {
+	o.X, _ = Atoi16(cells[1])
+	o.Y, _ = Atoi16(cells[2])
+	o.Z, _ = Atoi16(cells[3])
+}

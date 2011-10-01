@@ -23,6 +23,7 @@ wget -N "http://public.braldahim.com/regions.csv"
 wget -N "http://public.braldahim.com/villes.csv"
 wget -N "http://public.braldahim.com/zones.csv"
 wget -N "http://public.braldahim.com/bralduns.csv"
+wget -N "http://public.braldahim.com/communautes.csv"
 
 
 echo "= récupération des données dynamiques ============================="

@@ -14,11 +14,12 @@ En cours :
 P1 :
 ====
 
+* récupération des communautés
+* affichage communauté dans la bulle et le menu
 * matériel
 * dialogue/bâtiments : lien vers l'aide du bâtiment
 * deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
 
-* affichage communauté dans la bulle et le menu
 * petits-pas pour marquer les cases accessibles en marche  (sur méthode spécifique pour l'intégration)
 * BUG : l'intersection de deux vues est assombrie
 * BUG : souvent des non initialisations d'images outline

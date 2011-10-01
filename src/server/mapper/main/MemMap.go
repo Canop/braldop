@@ -12,6 +12,7 @@ import (
 
 type MemMap struct {
 	Bralduns            map[uint]*Braldun // il s'agit des bralduns récupérés depuis le fichier statique donc certaines informations sont absentes
+	Communautés map[uint]*Communauté
 	BosquetsParXY       map[int32]*VueBosquet
 	ChampsParXY         map[int32]*VueChamp
 	EchoppesParXY       map[int32]*VueEchoppe
@@ -29,6 +30,7 @@ func NewMemMap() (mm *MemMap) {
 	mm = new(MemMap)
 	mm.BosquetsParXY = make(map[int32]*VueBosquet)
 	mm.Bralduns = make(map[uint]*Braldun)
+	mm.Communautés = make(map[uint]*Communauté)
 	mm.ChampsParXY = make(map[int32]*VueChamp)
 	mm.EchoppesParXY = make(map[int32]*VueEchoppe)
 	mm.EnvironnementsParXY = make(map[int32]*VueEnvironnement)
@@ -173,10 +175,20 @@ func (mm *MemMap) Compile() (m *Map) {
 				b.Nom = mmb.Nom
 				b.Niveau = mmb.Niveau
 				b.Sexe = mmb.Sexe
+				b.IdCommunauté = mmb.IdCommunauté
 			} else {
 				fmt.Printf("Braldun introuvable : %d\n", b.Id)
 			}
 		}
+	}
+	// pour les communautés, j'ai des soucis avec l'export json des maps donc je fais un gros tableau
+	maxId := 0
+	for i,_ := range mm.Communautés {
+		if int(i)>maxId {maxId=int(i)}
+	}
+	m.Communautés = make([]*Communauté, maxId+1, maxId+1)
+	for i, c := range mm.Communautés {
+		m.Communautés[i]=c
 	}
 	return m
 }

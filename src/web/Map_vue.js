@@ -237,7 +237,9 @@ Map.prototype.drawVue = function(vue, xMin, xMax, yMin, yMax) {
 								this.bubbleText.push('Bralduns :');
 								for (var ib=0; ib<cell.bralduns.length; ib++) {
 									var b = cell.bralduns[ib];
-									this.bubbleText.push('  '+b.Prénom+' '+b.Nom+' (niveau '+b.Niveau+')');
+									var s = '  '+b.Prénom+' '+b.Nom+' (niv.'+b.Niveau+')'
+									if (b.IdCommunauté>0) s += ' ' +this.mapData.Communautés[b.IdCommunauté].Nom;
+									this.bubbleText.push(s);
 								}
 							}
 						}

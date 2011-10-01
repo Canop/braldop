@@ -120,6 +120,8 @@ func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
 			switch filename {
 			case "bralduns.csv":
 				return ls.parseFichierStatique(f, func() Visible { return new(Braldun) })
+			case "communautes.csv":
+				return ls.parseFichierStatique(f, func() Visible { return new(Communauté) })
 			case "lieux_villes.csv":
 				return ls.parseFichierStatique(f, func() Visible { return new(LieuVille) })
 			case "regions.csv":

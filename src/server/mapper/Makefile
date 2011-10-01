@@ -14,6 +14,7 @@ GOFILES=\
 	main/VuePosition.go\
 	main/VueRoute.go\
 	main/Braldun.go\
+	main/Communaute.go\
 	main/LieuVille.go\
 	main/Ville.go\
 	main/Region.go\

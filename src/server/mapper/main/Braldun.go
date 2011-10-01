@@ -24,11 +24,12 @@ type Braldun struct {
 	KO         bool
 	Intangible bool
 	Camp       string // équipe de soule : "a" ou "b" ou ""
+	IdCommunauté uint
 }
 
 // cette méthode est appelée pour le décodage du fichier statique
 func (o *Braldun) readCsv(cells []string) (err os.Error) {
-	if len(cells) < 6 {
+	if len(cells) < 13 {
 		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
@@ -42,6 +43,7 @@ func (o *Braldun) readCsv(cells []string) (err os.Error) {
 		return
 	}
 	o.Sexe = string(cells[4][0])
+	o.IdCommunauté, _ = strconv.Atoui(cells[12])
 	return
 }
 

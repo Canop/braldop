@@ -18,6 +18,7 @@ type Map struct {
 	LieuxVilles []*LieuVille
 	Régions     []*Région
 	Vues        []*Vue
+	Communautés []*Communauté // on exporte l'ensemble des communautés, il n'y en a quasiment pas
 }
 
 func NewMap() (m *Map) {

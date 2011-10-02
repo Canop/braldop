@@ -4,6 +4,7 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.context = this.canvas.getContext("2d");
 	this.context.mozImageSmoothingEnabled = false; // contourne un bug de FF qui rend floues les images même à taille naturelle
 	this.posmarkdiv = document.getElementById(posmarkid);
+	this.callbacks = {};
 	this.initTiles();
 	this.screenRect = new Rect();
 	this.rect = new Rect(); // le rectangle englobant le contenu que l'on veut montrer
@@ -67,9 +68,7 @@ function Map(canvasId, posmarkid, dialogId) {
 	});
 }
 
-// centre l'écran sur la case de coordonnées (x, y, z)
-Map.prototype.goto = function(x, y, z) {
-	console.log('goto x:'+x+' y:'+y+' z:'+z);
+Map.prototype.changeProfondeur = function(z) {
 	var newCouche = null;
 	for (var ic=0; ic<this.mapData.Couches.length; ic++) {
 		var couche = this.mapData.Couches[ic];
@@ -80,6 +79,14 @@ Map.prototype.goto = function(x, y, z) {
 	} else {
 		this.couche = newCouche;
 		this.z = z;
+	}
+}
+
+// centre l'écran sur la case de coordonnées (x, y, z)
+Map.prototype.goto = function(x, y, z) {
+	this.changeProfondeur(z);
+	if (this.callbacks['profondeur']) {
+		this.callbacks['profondeur'](z);
 	}
 	this.originX = (this.screenRect.w/2)/this.zoom - x;
 	this.originY = y+(this.screenRect.h/2)/this.zoom;
@@ -331,7 +338,6 @@ Map.prototype.mouseDown = function(e) {
 	this.dragStartOriginX = this.originX;
 	this.dragStartOriginY = this.originY;
 	this.zoomChangedSinceLastRedraw = true;
-	//this.hoverObject = null;
 	this.redraw();
 }
 Map.prototype.mouseUp = function(e) {
@@ -432,3 +438,10 @@ Map.prototype.naturalRectToScreenRect = function(naturalRect, screenRect) {
 	screenRect.w = this.zoom*naturalRect.w;
 	screenRect.h = this.zoom*naturalRect.h;
 };
+
+
+// permet de spécifier un callback 
+// - 'profondeur' : appelé en cas de changement de profondeur. L'argument de la méthode sera la profondeur z
+Map.prototype.setCallback = function(key, f) {
+	this.callbacks[key] = f;
+}

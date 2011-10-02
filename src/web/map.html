@@ -118,6 +118,8 @@
 		<input type=checkbox id=layer_fog><label for=layer_fog>Brouillard de guerre</label><br>
 		<br>
 	</div>
+	<div id=choix_profondeur>
+	</div>
 	<h3>Vues</h3>
 	<div id=view_list>
 		<table id=view_table><tbody></tbody></table>
@@ -152,8 +154,19 @@ $(document).ready(function() {
 	map = new Map("map_canvas", "posmark", "map_dialog");
 	fetchMap(function(msg){
 		map.setData(msg);
+		//> on batit le menu de choix de la profondeur
+		var html = ''
+		if (msg.Couches) {
+			html += 'Profondeur : <select id=select_profondeur>';
+			for (var i=0; i<msg.Couches.length; i++) {
+				var z = msg.Couches[i].Z;
+				html += '<option value='+z+'>'+z+'</option>';
+			}
+			html += '</select>';
+		}
+		$('#choix_profondeur').html(html);
 		//> on construit la liste des vues disponibles
-		var html = "";
+		html = "";
 		if (msg.Vues) {
 			for (i in msg.Vues) {
 				var v = msg.Vues[i];
@@ -166,6 +179,9 @@ $(document).ready(function() {
 			}
 		}
 		$('#view_table tbody').html(html);
+		map.setCallback('profondeur', function(z) {
+			$('#select_profondeur').val(z);
+		});
 		map.redraw();
 		setTimeout(function(){map.redraw();}, 1000); // contournement de bug pas compris
 	});
@@ -195,6 +211,10 @@ $(document).ready(function() {
 	$('#view_table').delegate('.goto', 'click', function() {
 		if (map.zoom<32) map.zoom=32;
 		map.goto(parseInt($(this).attr('x')), parseInt($(this).attr('y')), parseInt($(this).attr('z')));
+	});
+	$('#select_profondeur').live('change', function() {
+		map.changeProfondeur(parseInt($(this).val()));
+		map.redraw();
 	});
 });
 </script>

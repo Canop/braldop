@@ -205,6 +205,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 			fmt.Printf(" Erreur lecture position : %+v \n cellules : %+v", err, cells)
 		} else {
 			//~ fmt.Printf(" Position : %+v\n", o)
+			vue.Z = o.Z
 			vue.Voyeur = o.IdBraldun
 			vue.XMin = o.XMin
 			vue.XMax = o.XMax

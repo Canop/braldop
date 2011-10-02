@@ -152,15 +152,16 @@ $(document).ready(function() {
 	map = new Map("map_canvas", "posmark", "map_dialog");
 	fetchMap(function(msg){
 		map.setData(msg);
+		//> on construit la liste des vues disponibles
 		var html = "";
 		if (msg.Vues) {
 			for (i in msg.Vues) {
 				var v = msg.Vues[i];
-				v.active = true; // on active par défaut la vue
+				v.active = true; // on active par défaut les vues
 				html += '<tr>';
 				html += '<td><input type=checkbox checked idBraldun='+v.Voyeur+' class=view id=view_'+v.Voyeur+'><label for=view_'+v.Voyeur+'>'+(v.PrénomVoyeur?v.PrénomVoyeur:v.Voyeur)+'</label></td>';
 				html += '<td valign=bottom><small>('+formatDate(1000*v.Time)+')</label></small></td>';
-				html += '<td valign=bottom><img x='+(v.XMin+v.XMax)/2+' y='+(v.YMin+v.YMax)/2+' class=goto src=img/player_target.png></td>';
+				html += '<td valign=bottom><img x='+(v.XMin+v.XMax)/2+' y='+(v.YMin+v.YMax)/2+' z='+v.Z+' class=goto src=img/player_target.png></td>';
 				html += '</tr>';
 			}
 		}
@@ -193,7 +194,7 @@ $(document).ready(function() {
 	});
 	$('#view_table').delegate('.goto', 'click', function() {
 		if (map.zoom<32) map.zoom=32;
-		map.goto(parseInt($(this).attr('x')), parseInt($(this).attr('y')));
+		map.goto(parseInt($(this).attr('x')), parseInt($(this).attr('y')), parseInt($(this).attr('z')));
 	});
 });
 </script>

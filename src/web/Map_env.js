@@ -86,7 +86,7 @@ Map.prototype.initTiles = function() {
 	(this.imgObjets['cuir'] = new Image()).src = baseTilesUrl + "elements/cuir.png";
 	(this.imgObjets['fourrure'] = new Image()).src = baseTilesUrl + "elements/fourrure.png";
 	(this.imgObjets['ingrédient'] = new Image()).src = baseTilesUrl + "type_ingredient/type_ingredient_8.png"; // on fera évoluer quand le jeu proposera des icônes différentes
-    (this.imgObjets['matériel'] = new Image()).src = baseTilesUrl + "type_materiel/type_materiel_1.png"; // on fera évoluer quand le jeu proposera des icônes différentes
+	(this.imgObjets['matériel'] = new Image()).src = baseTilesUrl + "type_materiel/type_materiel_1.png"; // on fera évoluer quand le jeu proposera des icônes différentes
 	(this.imgObjets['peau'] = new Image()).src = baseTilesUrl + "elements/peau.png";
 	(this.imgObjets['planche'] = new Image()).src = baseTilesUrl + "elements/planche.png";
 	(this.imgObjets['rondin'] = new Image()).src = baseTilesUrl + "elements/rondin.png";

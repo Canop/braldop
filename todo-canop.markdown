@@ -24,7 +24,6 @@ P1 :
 * BUG : l'intersection de deux vues est assombrie
 * BUG : souvent des non initialisations d'images outline
 * corriger le README de Braldop
-* gestion de la profondeur (une couche par profondeur, le goto fait basculer la profondeur affichée)
 
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement

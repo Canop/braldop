@@ -68,6 +68,10 @@ function Map(canvasId, posmarkid, dialogId) {
 	});
 }
 
+Map.prototype.updatePosDiv = function() {
+	this.posmarkdiv.innerHTML='Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
+}
+
 Map.prototype.changeProfondeur = function(z) {
 	var newCouche = null;
 	for (var ic=0; ic<this.mapData.Couches.length; ic++) {
@@ -80,16 +84,17 @@ Map.prototype.changeProfondeur = function(z) {
 		this.couche = newCouche;
 		this.z = z;
 	}
+	this.updatePosDiv();
 }
 
 // centre l'écran sur la case de coordonnées (x, y, z)
 Map.prototype.goto = function(x, y, z) {
-	this.changeProfondeur(z);
 	if (this.callbacks['profondeur']) {
 		this.callbacks['profondeur'](z);
 	}
 	this.originX = (this.screenRect.w/2)/this.zoom - x;
 	this.originY = y+(this.screenRect.h/2)/this.zoom;
+	this.changeProfondeur(z);
 	this.redraw();
 }
 
@@ -321,7 +326,7 @@ Map.prototype.mouseWheel = function(e) {
 	}
 	this.originX += (mouseX)*zr; 
 	this.originY += (mouseY)*zr;
-	this.posmarkdiv.innerHTML='Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY;
+	this.updatePosDiv();
 	this.hoverObject = null;
 	this.redraw();
 }
@@ -399,7 +404,7 @@ Map.prototype.mouseMove = function(e) {
 	this.pointerScreenY = mouseY;
 	this.pointerX = Math.floor(mouseX/this.zoom-this.originX);
 	this.pointerY = -Math.floor(mouseY/this.zoom-this.originY);
-	this.posmarkdiv.innerHTML='Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
+	this.updatePosDiv();
 	if (this.mouseIsDown) {
 		var dx = (mouseX-this.dragStartPageX)/this.zoom;
 		var dy = (mouseY-this.dragStartPageY)/this.zoom;

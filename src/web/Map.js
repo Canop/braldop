@@ -12,6 +12,8 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.scales = [0.5, 1, 2, 4, 8, 16, 32, 48, 64]; // éliminé : 92
 	this.scaleIndex = 8; // -> zoom "naturel" de 64
 	this.zoom = this.scales[this.scaleIndex];
+	this.z = 0; // la profondeur affichée
+	this.couche = null; // la couche actuellement affichée. Doit correspondre à la profondeur this.z
 	this.W = 900; // simplement un nombre supérieur à la demi-largeur ou demi-hauteur de la carte mais pas trop
 	this.mouseIsDown=false;
 	this.pointerX = 2* this.W; // coordonnées du pointeur dans l'univers Braldahim
@@ -74,20 +76,20 @@ Map.prototype.goto = function(x, y) {
 }
 
 // renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
-Map.prototype.getCellCreate = function(x, y) {
+Map.prototype.getCellCreate = function(couche, x, y) {
 	var index = ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
 	//console.log("("+x+","+y+") -> "+index);
-	var cell = this.matrix[index];
+	var cell = couche.matrix[index];
 	if (!cell) {
 		cell = {};
-		this.matrix[index] = cell;
+		couche.matrix[index] = cell;
 	}
 	return cell;
 }
 // renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
-Map.prototype.getCell = function(x, y) {
+Map.prototype.getCell = function(couche, x, y) {
 	var index = ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
-	return this.matrix[index];
+	return couche.matrix[index];
 }
 
 Map.prototype.recomputeCanvasPosition = function() {
@@ -114,36 +116,42 @@ Map.prototype.recomputeCanvasPosition = function() {
 Map.prototype.setData = function(mapData) {
 	this.mapData = mapData;
 	console.log("carte reçue");
-	this.matrix = {};//new Array(); // todo benchmarker pour comparer les effets en ram et cpu
-	if (this.mapData.Cases) {
-		for (var i=this.mapData.Cases.length; i-->0;) {
-			var o = this.mapData.Cases[i];
-			var c = this.getCell(o.X, o.Y);
-			if (c) {
-				console.log("doublon!");
+	this.z = 0; // on va basculer forcément sur la couche zéro
+	this.couche = null; 
+	for (var ic=0; ic<this.mapData.Couches.length; ic++) {
+		var couche = this.mapData.Couches[ic];
+		if (couche.z==0) this.couche = couche;
+		couche.matrix = {};//new Array(); // todo benchmarker pour comparer les effets en ram et cpu de la version map et de la version table
+		if (couche.Cases) {
+			for (var i=couche.Cases.length; i-->0;) {
+				var o = couche.Cases[i];
+				this.getCellCreate(couche, o.X, o.Y).fond = o.Fond;
 			}
-			this.getCellCreate(o.X, o.Y).fond = o.Fond;
+		}
+		if (couche.Champs) {
+			for (var i=couche.Champs.length; i-->0;) {
+				var o = couche.Champs[i];
+				o.Nom = "Champ";
+				o.détails = "Propriétaire : "+o.NomCompletBraldun;
+				this.getCellCreate(couche, o.X, o.Y).champ=o;
+			}
+		}
+		if (couche.Echoppes) {
+			for (var i=couche.Echoppes.length; i-->0;) {
+				var o = couche.Echoppes[i];
+				o.détails = o.Métier+" : "+o.NomCompletBraldun;
+				this.getCellCreate(couche, o.X, o.Y).échoppe=o;
+			}
 		}
 	}
-	if (this.mapData.Champs) {
-		for (var i=this.mapData.Champs.length; i-->0;) {
-			var o = this.mapData.Champs[i];
-			o.Nom = "Champ";
-			o.détails = "Propriétaire : "+o.NomCompletBraldun;
-			this.getCellCreate(o.X, o.Y).champ=o;
-		}
-	}
-	if (this.mapData.Echoppes) {
-		for (var i=this.mapData.Echoppes.length; i-->0;) {
-			var o = this.mapData.Echoppes[i];
-			o.détails = o.Métier+" : "+o.NomCompletBraldun;
-			this.getCellCreate(o.X, o.Y).échoppe=o;
-		}
+	if (!this.couche) {
+		console.log('Pas de couche zéro !');
+		return;
 	}
 	if (this.mapData.LieuxVilles) {
 		for (var i=this.mapData.LieuxVilles.length; i-->0;) {
 			var o = this.mapData.LieuxVilles[i];
-			this.getCellCreate(o.X, o.Y).lieu=o;
+			this.getCellCreate(couche, o.X, o.Y).lieu=o;
 		}
 	}
 	console.log("carte compilée");
@@ -162,7 +170,7 @@ Map.prototype.drawFog = function() {
 		var radius = this.zoom/6;
 		for (var i=this.mapData.Vues.length; i-->0;) {
 			var vue = this.mapData.Vues[i];
-			if (vue.active) {
+			if (vue.active && vue.Z==this.z) {
 				hasVue = true;
 				var hole = new Rect();
 				hole.x = this.zoom*(this.originX+vue.XMin);
@@ -207,19 +215,14 @@ Map.prototype.redraw = function() {
 			var xMax = Math.ceil(this.screenRect.w/this.zoom-this.originX);
 			var yMin = -Math.floor(this.screenRect.h/this.zoom-this.originY);
 			var yMax = Math.ceil(this.originY);
-			
-			//~ console.log("xMin="+xMin);
-			//~ console.log("xMax="+xMax);
-			//~ console.log("yMin="+yMin);
-			//~ console.log("yMax="+yMax);
-			
+
 			if (this.zoom>1) {
 				var screenRect = new Rect();
 				screenRect.w = this.zoom;
 				screenRect.h = this.zoom;
 				for (var x=xMin; x<=xMax; x++) {
 					for (var y=yMin; y<=yMax; y++) {
-						var cell = this.getCell(x, y);
+						var cell = this.getCell(this.couche, x, y);
 						if (cell) {
 							screenRect.x = this.zoom*(this.originX+x);
 							screenRect.y = this.zoom*(this.originY-y);
@@ -235,7 +238,7 @@ Map.prototype.redraw = function() {
 			if (this.mapData.Vues) {
 				for (var i=this.mapData.Vues.length; i-->0;) {
 					var vue = this.mapData.Vues[i];
-					if (vue.active) this.drawVue(vue, xMin, xMax, yMin, yMax);
+					if (vue.active && vue.Z==this.z) this.drawVue(vue, xMin, xMax, yMin, yMax);
 				}
 			}
 			if (this.displayFog) {
@@ -342,12 +345,12 @@ Map.prototype.mouseLeave = function(e) {
 // - null s'il n'y a rien d'intéressant sur la case
 Map.prototype.objectOn = function(x,y) {
 	if (this.zoom<10) return null;
-	var cell = this.getCell(this.pointerX, this.pointerY);
+	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
 	if (cell && (cell.champ||cell.échoppe||cell.lieu)) return cell;
 	if (this.mapData.Vues) {
 		for (var i=this.mapData.Vues.length; i-->0;) {
 			var vue = this.mapData.Vues[i];
-			if (vue.active) {
+			if (vue.active && vue.Z==z) {
 				var cell = getCellVue(vue, x, y);
 				if (cell) {
 					return cell;

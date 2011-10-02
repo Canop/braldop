@@ -187,7 +187,7 @@ func main() {
 	}
 
 	//> compilation de la carte
-	m := ls.MemMap.Compile()
+	carte := ls.MemMap.Compile()
 
 	//> export de la carte compilée
 	cheminFichierJson := os.Args[3] + "/carte.json"
@@ -198,7 +198,7 @@ func main() {
 	}
 	fmt.Printf("Carte compilée : %s\n", f.Name())
 	defer f.Close()
-	bout, _ := json.Marshal(m)
+	bout, _ := json.Marshal(carte)
 	f.Write(bout)
 
 	//> affichage d'un petit bilan

@@ -6,7 +6,7 @@ Objet exportable en json
 */
 
 type Vue struct {
-	Z int16 // la profondeur de la couche, 0 pour la surface
+	Z            int16 // la profondeur de la couche, 0 pour la surface
 	Time         int64 // secondes depuis 1970. Une date à 0 signifie que l'objet est vide ou invalide
 	Voyeur       uint  // id du braldun. Un id à 0 signifie que l'objet est vide ou invalide
 	PrénomVoyeur string

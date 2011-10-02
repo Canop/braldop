@@ -9,7 +9,7 @@ import (
 type VueEchoppe struct {
 	X                 int16
 	Y                 int16
-	Z int16
+	Z                 int16
 	Id                uint
 	Nom               string
 	Métier            string

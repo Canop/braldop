@@ -8,7 +8,7 @@ import (
 type VueBosquet struct {
 	X       int16
 	Y       int16
-	Z int16
+	Z       int16
 	NomType string
 }
 

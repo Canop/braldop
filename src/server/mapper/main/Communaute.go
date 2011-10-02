@@ -12,8 +12,8 @@ import (
 )
 
 type Communauté struct {
-	Id         uint
-	Nom        string
+	Id  uint
+	Nom string
 }
 
 // cette méthode est appelée pour le décodage du fichier statique

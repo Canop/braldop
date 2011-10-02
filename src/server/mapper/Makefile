@@ -18,9 +18,11 @@ GOFILES=\
 	main/LieuVille.go\
 	main/Ville.go\
 	main/Region.go\
-	main/Map.go\
+	main/Carte.go\
+	main/Couche.go\
 	main/Vue.go\
 	main/MemMap.go\
+	main/MemCouche.go\
 	main/lectureScriptDynamique.go\
 	main/lectureScriptStatique.go\
 	main/LecteurScripts.go\

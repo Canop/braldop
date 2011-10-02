@@ -14,16 +14,16 @@ import (
 )
 
 type Braldun struct {
-	Id         uint
-	X          int16
-	Y          int16
-	Prénom     string
-	Nom        string
-	Niveau     uint
-	Sexe       string // "f" ou "m"
-	KO         bool
-	Intangible bool
-	Camp       string // équipe de soule : "a" ou "b" ou ""
+	Id           uint
+	X            int16
+	Y            int16
+	Prénom       string
+	Nom          string
+	Niveau       uint
+	Sexe         string // "f" ou "m"
+	KO           bool
+	Intangible   bool
+	Camp         string // équipe de soule : "a" ou "b" ou ""
 	IdCommunauté uint
 }
 

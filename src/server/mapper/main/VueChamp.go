@@ -9,7 +9,7 @@ import (
 type VueChamp struct {
 	X                 int16
 	Y                 int16
-	Z int16
+	Z                 int16
 	IdBraldun         uint
 	NomCompletBraldun string
 }

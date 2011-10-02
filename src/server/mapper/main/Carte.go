@@ -4,16 +4,8 @@ package main
 carte compilée, exportable en json par exemple.
 */
 
-type Case struct {
-	X    int16
-	Y    int16
-	Fond string
-}
-
-type Map struct {
-	Cases       []*Case
-	Champs      []*VueChamp
-	Echoppes    []*VueEchoppe
+type Carte struct {
+	Couches     []*Couche // les couches correspondant chacune à une profondeur
 	Villes      []*Ville
 	LieuxVilles []*LieuVille
 	Régions     []*Région
@@ -21,10 +13,9 @@ type Map struct {
 	Communautés []*Communauté // on exporte l'ensemble des communautés, il n'y en a quasiment pas
 }
 
-func NewMap() (m *Map) {
-	m = new(Map)
-	m.Cases = make([]*Case, 0, 40)
-	m.Echoppes = make([]*VueEchoppe, 0, 40)
+func NewCarte() (m *Carte) {
+	m = new(Carte)
+	m.Couches = make([]*Couche, 0, 3)
 	m.Vues = make([]*Vue, 0, 1)
 	return m
 }

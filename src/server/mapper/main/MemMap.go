@@ -11,56 +11,55 @@ import (
 )
 
 type MemMap struct {
-	Bralduns            map[uint]*Braldun // il s'agit des bralduns récupérés depuis le fichier statique donc certaines informations sont absentes
-	Communautés map[uint]*Communauté
-	BosquetsParXY       map[int32]*VueBosquet
-	ChampsParXY         map[int32]*VueChamp
-	EchoppesParXY       map[int32]*VueEchoppe
-	PalissadesParXY     map[int32]*VuePalissade
-	EnvironnementsParXY map[int32]*VueEnvironnement
-	RoutesParXY         map[int32]*VueRoute
-	Villes              []*Ville
-	LieuxVilles         []*LieuVille
-	Régions             []*Région
-	DernièresVues       map[uint]*Vue // les dernières vues avec pour clé l'id du Braldun voyeur
-	Objets              []*VueObjet
+	Bralduns      map[uint]*Braldun // il s'agit des bralduns récupérés depuis le fichier statique donc certaines informations sont absentes
+	Communautés   map[uint]*Communauté
+	Couches       map[int16]*MemCouche // les couches, indexées par profondeur
+	Villes        []*Ville
+	LieuxVilles   []*LieuVille
+	Régions       []*Région
+	DernièresVues map[uint]*Vue // les dernières vues avec pour clé l'id du Braldun voyeur
 }
 
 func NewMemMap() (mm *MemMap) {
 	mm = new(MemMap)
-	mm.BosquetsParXY = make(map[int32]*VueBosquet)
+	mm.Couches = make(map[int16]*MemCouche)
 	mm.Bralduns = make(map[uint]*Braldun)
 	mm.Communautés = make(map[uint]*Communauté)
-	mm.ChampsParXY = make(map[int32]*VueChamp)
-	mm.EchoppesParXY = make(map[int32]*VueEchoppe)
-	mm.EnvironnementsParXY = make(map[int32]*VueEnvironnement)
-	mm.PalissadesParXY = make(map[int32]*VuePalissade)
-	mm.RoutesParXY = make(map[int32]*VueRoute)
 	mm.Villes = make([]*Ville, 0, 10)
 	mm.LieuxVilles = make([]*LieuVille, 0, 10)
 	mm.Régions = make([]*Région, 0, 10)
 	mm.DernièresVues = make(map[uint]*Vue)
-	mm.Objets = make([]*VueObjet, 0, 10)
 	return mm
 }
 
+// renvoie la couche de profondeur z, la créant si nécessaire
+func (mm *MemMap) GetCouche(z int16) *MemCouche {
+	c, ok := mm.Couches[z]
+	if !ok {
+		c = NewMemCouche()
+		c.Z = z
+		mm.Couches[z] = c
+	}
+	return c
+}
+
 func (mm *MemMap) StoreBosquet(o *VueBosquet) {
-	mm.BosquetsParXY[PosKey(o.X, o.Y)] = o
+	mm.GetCouche(o.Z).BosquetsParXY[PosKey(o.X, o.Y)] = o
 }
 func (mm *MemMap) StoreChamp(o *VueChamp) {
-	mm.ChampsParXY[PosKey(o.X, o.Y)] = o
+	mm.GetCouche(o.Z).ChampsParXY[PosKey(o.X, o.Y)] = o
 }
 func (mm *MemMap) StoreEchoppe(o *VueEchoppe) {
-	mm.EchoppesParXY[PosKey(o.X, o.Y)] = o
+	mm.GetCouche(o.Z).EchoppesParXY[PosKey(o.X, o.Y)] = o
 }
 func (mm *MemMap) StoreEnvironnement(o *VueEnvironnement) {
-	mm.EnvironnementsParXY[PosKey(o.X, o.Y)] = o
+	mm.GetCouche(o.Z).EnvironnementsParXY[PosKey(o.X, o.Y)] = o
 }
 func (mm *MemMap) StorePalissade(o *VuePalissade) {
-	mm.PalissadesParXY[PosKey(o.X, o.Y)] = o
+	mm.GetCouche(o.Z).PalissadesParXY[PosKey(o.X, o.Y)] = o
 }
 func (mm *MemMap) StoreRoute(o *VueRoute) {
-	mm.RoutesParXY[PosKey(o.X, o.Y)] = o
+	mm.GetCouche(o.Z).RoutesParXY[PosKey(o.X, o.Y)] = o
 }
 func (mm *MemMap) StoreVille(o *Ville) { // on va supposer qu'on ne lit pas deux fois la même ville
 	mm.Villes = append(mm.Villes, o)
@@ -71,99 +70,17 @@ func (mm *MemMap) StoreLieuVille(o *LieuVille) { // on va supposer qu'on ne lit 
 func (mm *MemMap) StoreRégion(o *Région) {
 	mm.Régions = append(mm.Régions, o)
 }
-func (mm *MemMap) StoreObjet(o *VueObjet) {
-	mm.Objets = append(mm.Objets, o)
-}
 
-func (mm *MemMap) Compile() (m *Map) {
-	m = NewMap()
-	cases := make(map[int32]*Case) // map suivant PosKey(x,y)
-	for _, e := range mm.EnvironnementsParXY {
-		key := PosKey(e.X, e.Y)
-		c, ok := cases[key]
-		if !ok {
-			c = new(Case)
-			c.X = e.X
-			c.Y = e.Y
-			cases[key] = c
-		}
-		c.Fond = e.NomSystemeEnvironnement
+func (mm *MemMap) Compile() (carte *Carte) {
+	carte = NewCarte()
+	for _, mc := range mm.Couches {
+		carte.Couches = append(carte.Couches, mc.Compile(mm))
 	}
-	for _, b := range mm.BosquetsParXY {
-		key := PosKey(b.X, b.Y)
-		c, ok := cases[key]
-		if !ok {
-			c = new(Case)
-			c.X = b.X
-			c.Y = b.Y
-			cases[key] = c
-		}
-		c.Fond = b.NomType
-	}
-	for _, r := range mm.RoutesParXY {
-		key := PosKey(r.X, r.Y)
-		c, ok := cases[key]
-		if !ok {
-			c = new(Case)
-			c.X = r.X
-			c.Y = r.Y
-			cases[key] = c
-		}
-		switch r.TypeRoute {
-		case "balise":
-			c.Fond = c.Fond + "-gr"
-		case "echoppe":
-			c.Fond = "pave"
-		case "route":
-			c.Fond = "route"
-		case "ville":
-			c.Fond = "pave"
-		case "ruine":
-			c.Fond = "pave"
-		}
-	}
-	for _, b := range mm.PalissadesParXY {
-		key := PosKey(b.X, b.Y)
-		c, ok := cases[key]
-		if !ok {
-			c = new(Case)
-			c.X = b.X
-			c.Y = b.Y
-			cases[key] = c
-		}
-		if b.Portail {
-			c.Fond = "portail"
-		} else {
-			c.Fond = "palissade"
-		}
-	}
-
-	for _, e := range mm.EchoppesParXY {
-		// on renseigne si possible le nom du braldun
-		if mmb, ok := mm.Bralduns[e.IdBraldun]; ok {
-			e.NomCompletBraldun = mmb.Prénom + " " + mmb.Nom
-		} else {
-			fmt.Printf("Braldun introuvable : %d\n", e.IdBraldun)
-		}
-		m.Echoppes = append(m.Echoppes, e)
-	}
-	for _, e := range mm.ChampsParXY {
-		// on renseigne si possible le nom du braldun
-		if mmb, ok := mm.Bralduns[e.IdBraldun]; ok {
-			e.NomCompletBraldun = mmb.Prénom + " " + mmb.Nom
-		} else {
-			fmt.Printf("Braldun introuvable : %d\n", e.IdBraldun)
-		}
-		m.Champs = append(m.Champs, e)
-	}
-	for _, c := range cases {
-		m.Cases = append(m.Cases, c)
-	}
-	m.Villes = mm.Villes           // pour l'instant pour les villes c'est simple...
-	m.LieuxVilles = mm.LieuxVilles // et pour leurs lieux aussi
-	m.Régions = mm.Régions         // et les régions itou
+	carte.Villes = mm.Villes
+	carte.LieuxVilles = mm.LieuxVilles
+	carte.Régions = mm.Régions
 	for _, v := range mm.DernièresVues {
-		m.Vues = append(m.Vues, v)
+		carte.Vues = append(carte.Vues, v)
 		// on indique le prénom du voyeur
 		if b, ok := mm.Bralduns[v.Voyeur]; ok {
 			v.PrénomVoyeur = b.Prénom
@@ -183,12 +100,14 @@ func (mm *MemMap) Compile() (m *Map) {
 	}
 	// pour les communautés, j'ai des soucis avec l'export json des maps donc je fais un gros tableau
 	maxId := 0
-	for i,_ := range mm.Communautés {
-		if int(i)>maxId {maxId=int(i)}
+	for i, _ := range mm.Communautés {
+		if int(i) > maxId {
+			maxId = int(i)
+		}
 	}
-	m.Communautés = make([]*Communauté, maxId+1, maxId+1)
+	carte.Communautés = make([]*Communauté, maxId+1, maxId+1)
 	for i, c := range mm.Communautés {
-		m.Communautés[i]=c
+		carte.Communautés[i] = c
 	}
-	return m
+	return
 }

@@ -11,7 +11,7 @@ import (
 type VuePalissade struct {
 	X       int16
 	Y       int16
-	Z int16
+	Z       int16
 	Portail bool
 }
 

@@ -4,6 +4,7 @@
 #  de la carte et du site web.
 # Il est recommandé d'appeler en cron le présent script.
 #  
+# Ce script est une variante du script update.sh. On ne récupère ici que la vue
 
 CHEMIN=`dirname $0`
 cd $CHEMIN
@@ -30,8 +31,6 @@ mkdir -p $CHEMIN_JOUR
 cd $CHEMIN_JOUR
 DEBUT_NOM_FICHIERS_JOUR=`date +%Hh%M`
 wget "http://sp.braldahim.com/scripts/vue/?idBraldun=${ID_BRALDUN[$i]}&mdpRestreint=${MDP_RESTREINT_BRALDUN[$i]}&version=5" -O "$DEBUT_NOM_FICHIERS_JOUR-vue.csv"
-wget "http://sp.braldahim.com/scripts/profil/?idBraldun=${ID_BRALDUN[$i]}&mdpRestreint=${MDP_RESTREINT_BRALDUN[$i]}&version=2" -O "$DEBUT_NOM_FICHIERS_JOUR-profil.csv"
-wget "http://sp.braldahim.com/scripts/evenements/?idBraldun=${ID_BRALDUN[$i]}&mdpRestreint=${MDP_RESTREINT_BRALDUN[$i]}&version=2" -O "$DEBUT_NOM_FICHIERS_JOUR-evenements.csv"
 done
 
 echo "= compilation de la carte et déploiement =========================="

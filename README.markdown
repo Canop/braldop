@@ -1,25 +1,21 @@
 Présentation :
 ==============
 
-Braldop est un système cartographique pour les joueurs de [Braldahim](http://www.braldahim.com)
+Braldop est un complément au jeu [Braldahim](http://www.braldahim.com).
 
-Vous pouvez consulter [la vue de Canopée](http://canop.org/braldop/map.html).
+Il s'agit tout à la fois :
 
-Il s'agit également d'un prototype pour une version future de la vue dans ce jeu.
+* d'une librairie cartographique et visuelle, [Goût-Gueule](http://forum.braldahim.com/viewtopic.php?f=30&t=1223), en cours d'[intégration](http://forum.braldahim.com/viewtopic.php?f=30&t=1236) dans le jeu lui-même et disponible pour tous ceux qui souhaitent augmenter leur interface tactique de groupe
+* d'un système tout prêt de partage de vues et cartes, pour les joueurs solo ou les groupes
+* d'une extension pour le navigateur Chrome
 
 Le projet est géré par cano.petrole@gmail.com. N'hésitez pas à appeler au secours si nécessaire.
 
 
 
-Structure :
-===========
 
-* scripts : les scripts qui permettent de maintenir la carte à jour
-* src/server : les codes sources
-
-
-Installation :
-==============
+Installation du système cartographique :
+========================================
 
 Cas 1 :
 -------

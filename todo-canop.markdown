@@ -7,11 +7,6 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 En cours :
 ==========
 
-* cuicui d'approche de fin de période
-* correction bug des intersections de vues sur le brouillard de guerre
-
-* BUG : mauvais positionnement du menu dans la version intégrée
-* BUG : braldun KO pas dessinés ? Bug dans le script de vue ? -> oui, attendre de revoir des KO pour vérifier...
 
 P1 :
 ====

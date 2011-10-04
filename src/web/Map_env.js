@@ -69,7 +69,8 @@ Map.prototype.initTiles = function() {
 		'braldun_feminin', 'braldun_feminin-a', 'braldun_feminin-b', 'braldun_masculin', 'braldun_masculin-a', 'braldun_masculin-b',
 		'bralduns_feminin', 'bralduns_feminin-a', 'bralduns_feminin-b', 'bralduns_feminin-combat',
 		'bralduns_masculin', 'bralduns_masculin-a', 'bralduns_masculin-b', 'bralduns_masculin-combat',
-		'bralduns_masculin_feminin', 'bralduns_masculin_feminin-a', 'bralduns_masculin_feminin-b', 'bralduns_masculin_feminin-combat'
+		'bralduns_masculin_feminin', 'bralduns_masculin_feminin-a', 'bralduns_masculin_feminin-b', 'bralduns_masculin_feminin-combat',
+		'braldunKo'
 	];
 	for (var i=0; i<typeImgBralduns.length; i++) {
 		var key = typeImgBralduns[i];

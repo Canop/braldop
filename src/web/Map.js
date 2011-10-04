@@ -190,7 +190,7 @@ Map.prototype.drawFog = function() {
 	if (this.mapData.Vues.length>1 || alwaysUseNewFog) {
 		//> Cette méthode gère correctement tous les cas, en particulier celui de l'intersection de plusieurs vues,
 		//  mais elle est lente sur Firefox.
-		var r = 0.05; // on utilise une image plus petite pour le brouillard, pour améliorer les perfs et rendre flou
+		var r = 0.07; // on utilise une image plus petite pour le brouillard, pour améliorer les perfs et rendre flou
 		var rw = this.canvas.width*r;
 		var rh = this.canvas.height*r;
 		var rz = this.zoom*r;
@@ -203,7 +203,7 @@ Map.prototype.drawFog = function() {
 		var c = this.fogContext;
 		c.globalCompositeOperation = 'source-over';
 		c.clearRect(0, 0, rw, rh);
-		c.fillStyle = "rgba(30, 30, 30, 0.55)";
+		c.fillStyle = "rgba(0, 0, 0, 0.5)";
 		c.fillRect(0, 0, rw, rh);
 		if (this.mapData.Vues) {
 			for (var i=this.mapData.Vues.length; i-->0;) {

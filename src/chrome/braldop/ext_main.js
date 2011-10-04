@@ -11,4 +11,7 @@ console.log("pageName=\""+pageName+"\"");
 
 if (pageName=='login') {
 	traiteLogin();
+} else {
+	setTimeout(setAlarms, 5000); // on n'exécute pas tout de suite car les éléments mettent du temps à se charger
 }
+

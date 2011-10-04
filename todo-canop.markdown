@@ -7,15 +7,15 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 En cours :
 ==========
 
+* cuicui d'approche de fin de période
+* correction bug des intersections de vues sur le brouillard de guerre
+
 * BUG : mauvais positionnement du menu dans la version intégrée
 * BUG : braldun KO pas dessinés ? Bug dans le script de vue ? -> oui, attendre de revoir des KO pour vérifier...
 
 P1 :
 ====
 
-* sonner 15 minutes avant la DLA
-* récupération des communautés
-* affichage communauté dans la bulle et le menu
 * matériel
 * dialogue/bâtiments : lien vers l'aide du bâtiment
 * deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
@@ -24,6 +24,7 @@ P1 :
 * BUG : souvent des non initialisations d'images outline
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
+* brouillard long à dessiner sur Firefox
 
 P2 :
 ====
@@ -35,7 +36,4 @@ P2 :
 * bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent
 * points de distinction, gredins et redresseurs
 * factoriser les données des bralduns, pour ne pas répéter partout leur nom (ne mettre dans les vues, champs, échoppes, que les numéros)
-
-Questions :
-===========
 

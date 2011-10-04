@@ -1,5 +1,5 @@
 # l'extension compilée
-braldop.crx
+*.crx
 
 # la clef nécessaire à sa mise à jour (si vous faites une extension dérivée de braldop, vous devrez lui donner un autre nom)
 braldop.pem

@@ -1,5 +1,5 @@
-Voici une description/glossaire pour commencer :
-================================================
+Glossaire/Modèle :
+==================
 
 * Case : correspond à l'un des points (x,y, z) de la surface, x et y variant actuellement respectivement dans [-800, 800] et [-500, 500], les y positifs au nord. Z pouvant aller jusqu'en -13
 * Environnement : il y en a exactement un par case :

@@ -3,7 +3,7 @@
  et des utilitaires. Contient aussi la constante donnant la version courante de Braldop
 */
 
-var extVersion = "1.0";
+var extVersion = "1.1";
 
 function getUrlParameter(name, defaultValue) {
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");

@@ -221,7 +221,7 @@ func (o *VueObjet) readCsvMunition(cells []string) (err os.Error) {
 	o.Type = "munition"
 	o.Quantité, _ = strconv.Atoui(cells[6])
 	o.Label = fmt.Sprintf("%d %s", o.Quantité, cells[5])
-	o.IdType, _ = strconv.Atoui(cells[6])
+	o.IdType, _ = strconv.Atoui(cells[7])
 	return
 }
 

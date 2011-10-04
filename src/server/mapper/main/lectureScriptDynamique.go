@@ -159,6 +159,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 			//~ fmt.Printf(" MUNITION : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
+	case "NID":
+		o := new(VueObjet)
+		if err := o.readCsvSimpleLabel(cells, "nid"); err != nil {
+			fmt.Printf(" Erreur lecture VueObjet : %+v \n cellules : %+v\n", err, cells)
+		} else {
+			//~ fmt.Printf(" NID : %+v\n", o)
+			vue.Objets = append(vue.Objets, o)
+		}
 	case "PALISSADE":
 		o := new(VuePalissade)
 		if err := o.readCsv(cells, false); err != nil {

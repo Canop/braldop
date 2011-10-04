@@ -97,6 +97,7 @@ Map.prototype.initTiles = function() {
 	(this.imgObjets['tabac-3'] = new Image()).src = baseTilesUrl + "type_tabac/type_tabac_3.png";
 	(this.imgObjets['lingot'] = new Image()).src = baseTilesUrl + "type_minerai/type_minerai_1_p.png";
 	(this.imgObjets['minerai'] = new Image()).src = baseTilesUrl + "type_minerai/type_minerai_1.png";
+	(this.imgObjets['nid'] = new Image()).src = baseTilesUrl + "vue/nid.png";
 	for (var i=1; i<=5; i++) (this.imgObjets['plante-'+i] = new Image()).src = baseTilesUrl + "type_partieplante/type_partieplante_"+i+".png";
 	for (var i=1; i<=27; i++) (this.imgObjets['potion-'+i] = new Image()).src = baseTilesUrl + "type_potion/type_potion_"+i+".png";
 	for (var i=1; i<=27; i++) (this.imgObjets['aliment-'+i] = new Image()).src = baseTilesUrl + "type_aliment/type_aliment_"+i+".png";

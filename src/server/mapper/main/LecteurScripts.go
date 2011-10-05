@@ -14,6 +14,7 @@ package main
 
 import (
 	"bufio"
+	"path/filepath"
 	"fmt"
 	"json"
 	"os"
@@ -39,12 +40,15 @@ func NewLecteurScripts() (ls *LecteurScripts) {
 	return ls
 }
 
-func readLine(r *bufio.Reader) (line string, err os.Error) {
+func readLine(r *bufio.Reader) (cells []string, err os.Error) {
+	var line string
 	if line, err = r.ReadString('\n'); err == nil {
 		line = line[0 : len(line)-1]
+		cells = strings.Split(line, ";")
 	}
 	return
 }
+
 
 // renvoie le nombre de secondes depuis 1970 caché dans le chemin vers le fichier : année/mois/jour/truc-heurehminutes.csv
 // Le parsage des dates est pour moi le gros WTF du go... si quelqu'un arrive à faire plus propre...
@@ -78,85 +82,65 @@ func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
 	return 0
 }
 
-// fichier ou répertoire
-func (ls *LecteurScripts) traiteFichier(f *os.File) os.Error {
-	childs, err := f.Readdir(-1)
-	if err == nil {
-		//fmt.Println("Entering directory " + f.Name())
-		for _, fi := range childs {
-			err := ls.traiteNomFichier(f.Name() + "/" + fi.Name)
-			if err != nil {
-				return err
-			}
-		}
-		//fmt.Println("Leaving directory " + f.Name())
-	} else {
-		path := strings.Split(f.Name(), "/")
-		filename := path[len(path)-1]
-		indexTokenPrivate := -1
-		for i, t := range path {
-			if t == "private" {
-				indexTokenPrivate = i
-				break
-			}
-		}
-		if indexTokenPrivate >= 0 {
-			ok := false
-			for _, id := range ls.IdBralduns {
-				if id == path[indexTokenPrivate+1] {
-					ok = true
-					break
-				}
-			}
-			if !ok {
-				if ls.verbose > 0 {
-					fmt.Printf("Fichier non autorisé : %s\n", f.Name())
-				}
-				return nil
-			}
-		}
-		if strings.HasSuffix(filename, ".csv") {
-			//~ fmt.Printf("   parsed file : %s\n", f.Name())
-			switch filename {
-			case "bralduns.csv":
-				return ls.parseFichierStatique(f, func() Visible { return new(Braldun) })
-			case "communautes.csv":
-				return ls.parseFichierStatique(f, func() Visible { return new(Communauté) })
-			case "lieux_villes.csv":
-				return ls.parseFichierStatique(f, func() Visible { return new(LieuVille) })
-			case "regions.csv":
-				return ls.parseFichierStatique(f, func() Visible { return new(Région) })
-			case "villes.csv":
-				return ls.parseFichierStatique(f, func() Visible { return new(Ville) })
-			default:
-				vue, err := ls.parseFichierDynamique(f, ls.readTimeFromFilePath(path))
-				if err != nil {
-					fmt.Printf("erreur parsing fichier dynamique : %+v\n", err)
-				} else {
-					//~ fmt.Printf("    -> vue : %+v\n", vue)
-					if vue.Voyeur > 0 && vue.Time > 0 {
-						if ls.MemMap.DernièresVues[vue.Voyeur] == nil || vue.Time > ls.MemMap.DernièresVues[vue.Voyeur].Time {
-							ls.MemMap.DernièresVues[vue.Voyeur] = vue
-						}
-					}
-				}
-				return err
-			}
-		} else {
-			//~ fmt.Println("   ignored file : " + f.Name())
+
+func IndexOfStringIn(s string, a []string) int {
+	for i, t := range(a) {
+		if s==t {
+			return i
 		}
 	}
-	return nil
+	return -1
 }
 
-// fichier ou répertoire
-func (ls *LecteurScripts) traiteNomFichier(filename string) os.Error {
-	f, err := os.Open(filename)
-	if err != nil {
-		return err
+// implémentation de filepath.Visitor
+func (ls *LecteurScripts) VisitFile(path string, f *os.FileInfo) {
+	pathToken := strings.Split(path, "/")
+	if strings.HasSuffix(path, ".csv") {
+		f, err := os.Open(path)
+		if err != nil {
+			return
+		}
+		defer f.Close()	
+		r := bufio.NewReader(f)
+		switch pathToken[len(pathToken)-1] {
+		case "bralduns.csv":
+			ls.parseFichierStatique(r, func() Visible { return new(Braldun) })
+		case "communautes.csv":
+			ls.parseFichierStatique(r, func() Visible { return new(Communauté) })
+		case "lieux_villes.csv":
+			ls.parseFichierStatique(r, func() Visible { return new(LieuVille) })
+		case "regions.csv":
+			ls.parseFichierStatique(r, func() Visible { return new(Région) })
+		case "villes.csv":
+			ls.parseFichierStatique(r, func() Visible { return new(Ville) })
+		default:
+			vue := ls.parseFichierDynamique(r, ls.readTimeFromFilePath(pathToken))
+			if vue != nil {
+				//~ fmt.Printf("    -> vue : %+v\n", vue)
+				if vue.Voyeur > 0 && vue.Time > 0 {
+					if ls.MemMap.DernièresVues[vue.Voyeur] == nil || vue.Time > ls.MemMap.DernièresVues[vue.Voyeur].Time {
+						ls.MemMap.DernièresVues[vue.Voyeur] = vue
+					}
+				}
+			}
+		}
 	}
-	defer f.Close()
-	return ls.traiteFichier(f)
+}
+
+// implémentation de filepath.Visitor
+func (ls *LecteurScripts) VisitDir(path string, f *os.FileInfo) bool {
+	pathToken := strings.Split(path, "/")
+	indexTokenPrivate := IndexOfStringIn("private", pathToken)
+	if indexTokenPrivate==-1 || indexTokenPrivate+1==len(pathToken) {
+		return true
+	}
+	if IndexOfStringIn(pathToken[indexTokenPrivate+1], ls.IdBralduns)==-1 {
+		if ls.verbose > 0 {
+			fmt.Printf("Fichier non autorisé : %s\n", path)
+		}
+		return false
+	}
+	return true
 }
 
 /*
@@ -171,20 +155,21 @@ func main() {
 		return
 	}
 	ls := NewLecteurScripts()
-
-	fmt.Printf("Export : %s\n", os.Args[3])
-
+	
+	startTime := time.Seconds()
 	ls.IdBralduns = strings.Split(os.Args[2], ",")
-	fmt.Printf("Bralduns du groupe : %+v\n", ls.IdBralduns)
 
 	//> lecture des fichiers csv
-	cheminRacine := os.Args[1]
-	startTime := time.Seconds()
-	err := ls.traiteNomFichier(cheminRacine)
-	if err != nil {
-		fmt.Printf("Erreur à la lecture des fichiers : %v", err)
-		return
-	}
+	filepath.Walk(os.Args[1], func(path string, info *os.FileInfo, err os.Error) os.Error {
+		if info.IsDirectory() {
+			if !ls.VisitDir(path, info) {
+				return filepath.SkipDir
+			}
+		} else {
+			ls.VisitFile(path, info)
+		}
+		return nil
+	})
 
 	//> compilation de la carte
 	carte := ls.MemMap.Compile()
@@ -204,4 +189,5 @@ func main() {
 	//> affichage d'un petit bilan
 	fmt.Printf("Fini en %d secondes\n Fichiers lus : %d\n", time.Seconds()-startTime, ls.NbReadFiles)
 	fmt.Println()
+
 }

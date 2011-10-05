@@ -7,19 +7,28 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 En cours :
 ==========
 
+* utiliser csv.Reader pour lire plus simplement les fichiers csv -> non : cette API impose le même nombre de colonnes sur toutes les lignes...
+
+* centrer automatiquement si une seule vue
+* deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
+* faire l'API d'injection d'actions
+* faire une fonction de test/démonstration des actions
+* définition d'une API pour le blabla
 
 P1 :
 ====
 
+* icônes PVE/PVP devant les noms des régions
+* problème : temps de chargement excessif. Les images ne sont-elles pas cachées ? profiler.
 * matériel
 * dialogue/bâtiments : lien vers l'aide du bâtiment
-* deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
 * petits-pas pour marquer les cases accessibles en marche  (sur méthode spécifique pour l'intégration)
 * BUG : l'intersection de deux vues est assombrie
 * BUG : souvent des non initialisations d'images outline
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
 * brouillard long à dessiner sur Firefox
+* les dates sont décalées d'une heure. Pourtant mon serveur semble à l'heure...
 
 P2 :
 ====

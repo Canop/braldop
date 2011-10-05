@@ -4,14 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 )
 
-func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
-	cells := strings.Split(line, ";")
-	//fmt.Println(" cells : " + strings.Join(cells, "#"))
+func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) {
 	if len(cells) < 3 {
-		fmt.Printf("  Ligne trop courte : %s\n", line)
+		fmt.Println("  Ligne trop courte : ", cells)
 		return
 	}
 	switch cells[0] {
@@ -247,21 +244,20 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(line string, vue *Vue) {
 	}
 }
 
-func (ls *LecteurScripts) parseFichierDynamique(file *os.File, time int64) (vue *Vue, err os.Error) {
-	r := bufio.NewReader(file)
+func (ls *LecteurScripts) parseFichierDynamique(r *bufio.Reader, time int64) (vue *Vue) {
 	vue = NewVue()
 	vue.Time = time
-	line, err := readLine(r)
-	for err == nil {
-		ls.parseLigneFichierDynamique(line, vue)
-		line, err = readLine(r)
-	}
 	ls.NbReadFiles++
-	if err != os.EOF {
-		fmt.Println("Error in parsing (parseFichierDynamique) :")
-		fmt.Println(err)
-		return
+	for {
+		line, err := readLine(r)
+		if err!=nil {
+			if err != os.EOF {
+				fmt.Println("Error in parsing (parseFichierDynamique) :")
+				fmt.Println(err)
+			}
+			return			
+		}
+		ls.parseLigneFichierDynamique(line, vue)
 	}
-	err = nil
 	return
 }

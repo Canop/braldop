@@ -25,7 +25,6 @@ type VueObjet struct {
 	IdType   uint
 }
 
-
 func (o *VueObjet) readCsvSimple(cells []string, Type string, Label string) (err os.Error) {
 	if len(cells) < 5 {
 		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
@@ -309,4 +308,3 @@ func (o *VueObjet) readCsvAliment(cells []string) (err os.Error) {
 	}
 	return
 }
-

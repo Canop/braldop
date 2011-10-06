@@ -164,16 +164,30 @@ Map.prototype.drawVue = function(vue, xMin, xMax, yMin, yMax) {
 						}
 						//-- zone 0 : monstres
 						if (cell.monstres.length) {
-							var imgbase =  this.imgMonstres[cell.monstres[0].IdType];							
-							var img = imgbase ? (cell.monstres.length==1 ? imgbase.a : imgbase.b) : this.imgMonstreInconnu;
-							// on vérifie l'homogénéïté
-							for (var i=1; i<cell.monstres.length; i++) {
-								if (cell.monstres[0].IdType!=cell.monstres[i].IdType) {
-									img = this.imgMultiMonstres;
-									break;
+							var nbByType = {};
+							var nbTypes=0;
+							for (var i=cell.monstres.length; i-->0;) {
+								var t = cell.monstres[i].IdType;
+								if (nbByType[t]) {
+									nbByType[t]++;
+								} else {
+									nbByType[t] = 1;
+									nbTypes++;
 								}
 							}
-							cell.zones[0].push(img);
+							if (nbTypes==1 && cell.monstres.length==2) {
+								var imgBase = this.imgMonstres[t];
+								var img = imgBase ? imgBase.a : this.imgMonstreInconnu;
+								cell.zones[0].push(img);
+								cell.zones[0].push(img);
+							} if (nbTypes<3) {
+								for (t in nbByType) {
+									var imgBase = this.imgMonstres[t];
+									cell.zones[0].push(imgBase ? (nbByType[t]==1 ? imgBase.a : imgBase.b) : this.imgMonstreInconnu);
+								}
+							} else {
+								cell.zones[0].push(this.imgMultiMonstres);
+							}
 						}
 						//-- zone 2 : braldun KO
 						if (nbBraldunsKO) cell.zones[2].push(this.imgBralduns['braldunKo']);

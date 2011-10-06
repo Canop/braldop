@@ -141,7 +141,8 @@ Map.prototype.recomputeCanvasPosition = function() {
 // Les données sont copiées dans une structure qui donne un accès par les coordonnées des cases.
 Map.prototype.setData = function(mapData) {
 	this.mapData = mapData;
-	console.log("carte reçue");
+	//console.log("carte reçue");
+	//var startTime = (new Date()).getTime();
 	this.z = 0; // on va basculer forcément sur la couche zéro
 	this.couche = null; 
 	for (var ic=0; ic<this.mapData.Couches.length; ic++) {
@@ -181,7 +182,7 @@ Map.prototype.setData = function(mapData) {
 			this.getCellCreate(this.couche, o.X, o.Y).lieu=o;
 		}
 	}
-	console.log("carte compilée");
+	//console.log("carte compilée en " + ((new Date()).getTime()-startTime) + " ms");
 }
 
 // dessine le brouillard de guerre

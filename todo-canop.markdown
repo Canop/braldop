@@ -7,12 +7,12 @@ Fait :
 ======
 
 * correction heure (problème de zones)
+* centrer automatiquement si une seule vue
+* deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
 
 En cours :
 ==========
 
-* centrer automatiquement si une seule vue
-* deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
 * faire l'API d'injection d'actions
 * faire une fonction de test/démonstration des actions
 * définition d'une API pour le blabla
@@ -20,6 +20,7 @@ En cours :
 P1 :
 ====
 
+* BUG : quand un braldun est listé dans deux vues il apparait deux fois dans les bulles
 * icônes PVE/PVP devant les noms des régions
 * problème : temps de chargement excessif. Les images ne sont-elles pas cachées ? profiler.
 * matériel

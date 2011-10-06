@@ -4,6 +4,7 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.context = this.canvas.getContext("2d");
 	this.context.mozImageSmoothingEnabled = false; // contourne un bug de FF qui rend floues les images même à taille naturelle
 	this.posmarkdiv = document.getElementById(posmarkid);
+	this.initTypesActions();
 	this.callbacks = {};
 	this.initTiles();
 	this.screenRect = new Rect();

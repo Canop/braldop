@@ -1,7 +1,7 @@
-Glossaire/Modèle :
-==================
+Glossaire/Modèle
+================
 
-* Case : correspond à l'un des points (x,y, z) de la surface, x et y variant actuellement respectivement dans [-800, 800] et [-500, 500], les y positifs au nord. Z pouvant aller jusqu'en -13
+* Case : correspond à l'un des points (x,y, z), x et y variant actuellement respectivement dans [-800, 800] et [-500, 500], les y positifs au nord. Z pouvant aller jusqu'en -13
 * Environnement : il y en a exactement un par case :
     - caverne
     - gazon
@@ -98,13 +98,9 @@ Intégration de commandes
 ========================
 
 La carte affichée doit présenter des actions. Certaines, purement documentaires, peuvent être définies simplement (ouverture de la fiche d'un braldun ou d'un monstre, affichage d'une page du wiki). D'autres nécessitent la prise en compte de règles complexes (charge, déplacement, etc.).
-Je propose que l'API de la carte offre deux méthodes pour l'intégration :
+Je propose que l'API de la carte offre cette méthode l'intégration :
 
-Map.setActionFonction(callback)
--------------------------------
-
-Map.setActions(list)
---------------------
+	Map.setActions(list, callback)
 
 La liste serait un tableau d'objets présentant (au moins) les champs suivants
 action : {
@@ -124,5 +120,7 @@ Points en suspens
 =================
  
 * Et si l'on causait d'autre chose que de la surface, ça donnerait quoi ?
-  - il y a les mines, en z=-10 ou  -11 ou -12, accessibles via une entrée de mine dans les villes ou via un puit (un puit = un lieu de type puit)
+  - il y a les mines, en z=-10 ou -11 ou -12, accessibles via une entrée de mine dans les villes ou via un puit (un puit = un lieu de type puit)
   - les donjons, avec z < 0 et z > -10 (une entrée de donjon = un lieu, cette entrée permet de descendre en z < 0)
+
+* Fait-on une image (moins grande) pour chaque niveau ? Ca me semble le mieux, non ?

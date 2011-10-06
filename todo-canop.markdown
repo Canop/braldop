@@ -3,11 +3,13 @@ Avertissement :
 
 Ce document est propriété Canop et toute modification externe sera refusée. Il est sur git pour la sauvegarde et la libre consultation, pas pour faire des demandes. Il reflète ce que j'ai besoin de noter plus que ce que j'ai réellement l'intention de faire.
 
+Fait :
+======
+
+* correction heure (problème de zones)
 
 En cours :
 ==========
-
-* utiliser csv.Reader pour lire plus simplement les fichiers csv -> non : cette API impose le même nombre de colonnes sur toutes les lignes...
 
 * centrer automatiquement si une seule vue
 * deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
@@ -28,7 +30,6 @@ P1 :
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
 * brouillard long à dessiner sur Firefox
-* les dates sont décalées d'une heure. Pourtant mon serveur semble à l'heure...
 
 P2 :
 ====

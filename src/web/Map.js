@@ -29,6 +29,7 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.$dialog = $('#'+dialogId);
 	this.dialopIsOpen = false;
 	this.fogImg = null;
+	this.actionsParBraldun = {};
 	this.fogContext = null;
 	this.recomputeCanvasPosition();
 	var _this = this;
@@ -69,6 +70,7 @@ function Map(canvasId, posmarkid, dialogId) {
 		_this.recomputeCanvasPosition();
 		_this.redraw();
 	});
+	currentMap = this;
 }
 
 Map.prototype.updatePosDiv = function() {
@@ -183,6 +185,9 @@ Map.prototype.setData = function(mapData) {
 			this.getCellCreate(this.couche, o.X, o.Y).lieu=o;
 		}
 	}
+	for (var i=this.mapData.Vues.length; i-->0;) {
+		this.compileVue(this.mapData.Vues[i]);
+	}
 	//console.log("carte compilée en " + ((new Date()).getTime()-startTime) + " ms");
 }
 
@@ -277,17 +282,17 @@ Map.prototype.redraw = function() {
 				this.naturalRectToScreenRect(this.photoSatelliteRect, this.photoSatelliteScreenRect);
 				this.photoSatelliteScreenRect.drawImage(this.context, this.photoSatellite);
 			}
-			var xMin = Math.floor(-this.originX);
-			var xMax = Math.ceil(this.screenRect.w/this.zoom-this.originX);
-			var yMin = -Math.floor(this.screenRect.h/this.zoom-this.originY);
-			var yMax = Math.ceil(this.originY);
+			this.xMin = Math.floor(-this.originX);
+			this.xMax = Math.ceil(this.screenRect.w/this.zoom-this.originX);
+			this.yMin = -Math.floor(this.screenRect.h/this.zoom-this.originY);
+			this.yMax = Math.ceil(this.originY);
 
 			if (this.zoom>1) {
 				var screenRect = new Rect();
 				screenRect.w = this.zoom;
 				screenRect.h = this.zoom;
-				for (var x=xMin; x<=xMax; x++) {
-					for (var y=yMin; y<=yMax; y++) {
+				for (var x=this.xMin; x<=this.xMax; x++) {
+					for (var y=this.yMin; y<=this.yMax; y++) {
 						var cell = this.getCell(this.couche, x, y);
 						if (cell) {
 							screenRect.x = this.zoom*(this.originX+x);
@@ -302,9 +307,13 @@ Map.prototype.redraw = function() {
 				}
 			}
 			if (this.mapData.Vues) {
-				for (var i=this.mapData.Vues.length; i-->0;) {
-					var vue = this.mapData.Vues[i];
-					if (vue.active && vue.Z==this.z) this.drawVue(vue, xMin, xMax, yMin, yMax);
+				if (this.zoom>30) {
+					for (var i=this.mapData.Vues.length; i-->0;) {
+						var vue = this.mapData.Vues[i];
+						if (vue.active && vue.Z==this.z) {
+							this.drawVue(vue);
+						}
+					}
 				}
 				if (this.displayFog) {
 					this.drawFog();

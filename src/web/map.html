@@ -203,6 +203,7 @@ $(document).ready(function() {
 		map.setCallback('profondeur', function(z) {
 			$('#select_profondeur').val(z);
 		});
+		teste(); // met en place des tests pour l'intégration
 		map.redraw();
 		setTimeout(function(){
 			if (msg.Vues && msg.Vues.length==1) {
@@ -243,7 +244,6 @@ $(document).ready(function() {
 		map.changeProfondeur(parseInt($(this).val()));
 		map.redraw();
 	});
-	teste(); // met en place des tests pour l'intégration
 });
 </script>
 

@@ -20,6 +20,7 @@ En cours :
 P1 :
 ====
 
+* extension : ajouter un lien vers la carte de groupe
 * BUG : quand un braldun est listé dans deux vues il apparait deux fois dans les bulles
 * icônes PVE/PVP devant les noms des régions
 * problème : temps de chargement excessif. Les images ne sont-elles pas cachées ? profiler.

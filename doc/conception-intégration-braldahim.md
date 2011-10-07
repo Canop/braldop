@@ -98,11 +98,12 @@ Intégration de commandes
 ========================
 
 La carte affichée doit présenter des actions. Certaines, purement documentaires, peuvent être définies simplement (ouverture de la fiche d'un braldun ou d'un monstre, affichage d'une page du wiki). D'autres nécessitent la prise en compte de règles complexes (charge, déplacement, etc.).
-Je propose que l'API de la carte offre cette méthode l'intégration :
+
+L'API de la carte offre cette méthode l'intégration :
 
 	Map.setActions(idBraldun, list, callback)
 
-La liste serait un tableau d'objets présentant les champs suivants
+La liste est un tableau d'objets présentant les champs suivants
 action : {
 	Type : un type numérique permettant de faire certains traitements (comme afficher l'icône de pas sur la carte par exemple) et de retrouver le label et l'icône
 	X : x du point d'application
@@ -111,11 +112,12 @@ action : {
 	IdMonstre : cible éventuelle
 	PA : coût en PA
 }
+
 Les noms de ces champs sont tous capitalisés, comme les champs de tous les paramètres externes passés à Braldop.
 
 Le callback a entre autres responsabilités celle du dialogue de confirmation
 
-Lors de la sélection dans un menu, la fonction définie par setActionFonction serait appelée avec pour paramètre l'objet action.
+Lors de la sélection dans un menu, la fonction définie par setActionFonction est appelée avec pour paramètres l'id du braldun acteur et l'objet action.
 
 Points en suspens
 =================

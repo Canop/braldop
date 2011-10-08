@@ -15,7 +15,7 @@ P1 :
 ====
 
 * extension : ajouter un lien vers la carte de groupe
-* BUG : quand un braldun est listé dans deux vues il apparait deux fois dans les bulles
+* BUG : quand un truc est listé dans deux vues il apparait deux fois dans les bulles
 * icônes PVE/PVP devant les noms des régions
 * problème : temps de chargement excessif. Les images ne sont-elles pas cachées ? profiler.
 * matériel
@@ -31,7 +31,6 @@ P2 :
 ====
 
 * structure générique plus propre côté js pour décrire l'accès aux images, les documentations associées
-* option pour le quadrillage
 * tag (optionnel) de cellule pour indiquer les coordonnées
 * extension braldop : déclencher les appels du script de vue (ou transmettre directement la vue ?) lors des mouvements [suivant planning intégration complète]
 * bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent

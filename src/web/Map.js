@@ -26,6 +26,7 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.displayPhotoSatellite = true;
 	this.displayRégions = false;
 	this.displayFog = true;
+	this.displayGrid = false;
 	this.$dialog = $('#'+dialogId);
 	this.dialopIsOpen = false;
 	this.fogImg = null;
@@ -265,6 +266,20 @@ Map.prototype.drawFog = function() {
 	}
 }
 
+// dessine la grille
+Map.prototype.drawGrid = function() {
+	var c = this.context;
+	c.strokeStyle = "rgba(100, 100, 100, 0.4)";
+	var sy = this.zoom*(this.originY-this.yMax);
+	for (;sy<=this.screenRect.h; sy+=this.zoom) {
+		drawThinHorizontalLine(c, 0, this.screenRect.w, sy);
+	}
+	var sx = (this.originX+this.xMin)*this.zoom;
+	for (;sx<=this.screenRect.w; sx+=this.zoom) {
+		drawThinVerticalLine(c, sx, 0, this.screenRect.w);
+	}
+}
+
 // redessine la page. Peut-être appelée de n'importe quel contexte, y compris depuis une méthode de dessin (pour par exemple faire une animation)
 Map.prototype.redraw = function() {
 	if (this.drawInProgress) {
@@ -305,6 +320,9 @@ Map.prototype.redraw = function() {
 						}
 					}
 				}
+			}
+			if (this.zoom>5 && this.displayGrid) {
+				this.drawGrid();
 			}
 			if (this.mapData.Vues) {
 				if (this.zoom>30) {
@@ -496,7 +514,7 @@ Map.prototype.naturalRectToScreenRect = function(naturalRect, screenRect) {
 };
 
 
-// permet de spécifier un callback 
+// permet de spécifier un callback pour une clef
 // - 'profondeur' : appelé en cas de changement de profondeur. L'argument de la méthode sera la profondeur z
 Map.prototype.setCallback = function(key, f) {
 	this.callbacks[key] = f;

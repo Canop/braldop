@@ -6,15 +6,9 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* correction heure (problème de zones)
-* centrer automatiquement si une seule vue
-* deux monstres du même type ou de types différents : les afficher l'un à côté de l'autre
-
 En cours :
 ==========
 
-* faire l'API d'injection d'actions
-* faire une fonction de test/démonstration des actions
 * définition d'une API pour le blabla
 
 P1 :

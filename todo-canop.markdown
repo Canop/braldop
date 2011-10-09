@@ -19,6 +19,7 @@ P1 :
 * icônes PVE/PVP devant les noms des régions
 * problème : temps de chargement excessif. Les images ne sont-elles pas cachées ? profiler.
 * matériel
+* crevasses ?
 * dialogue/bâtiments : lien vers l'aide du bâtiment
 * BUG : souvent des non initialisations d'images outline
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)

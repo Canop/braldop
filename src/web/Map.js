@@ -321,7 +321,7 @@ Map.prototype.redraw = function() {
 					}
 				}
 			}
-			if (this.zoom>5 && this.displayGrid) {
+			if (this.zoom>15 && this.displayGrid) {
 				this.drawGrid();
 			}
 			if (this.mapData.Vues) {

@@ -175,6 +175,7 @@ function fetchMap(callback) {
 $(document).ready(function() {
 	map = new Map("map_canvas", "posmark", "map_dialog");
 	fetchMap(function(msg){
+		teste(msg, map); // met en place des tests pour l'intégration
 		map.setData(msg);
 		//> on batit le menu de choix de la profondeur
 		var html = ''
@@ -204,7 +205,6 @@ $(document).ready(function() {
 		map.setCallback('profondeur', function(z) {
 			$('#select_profondeur').val(z);
 		});
-		teste(); // met en place des tests pour l'intégration
 		map.redraw();
 		setTimeout(function(){
 			if (msg.Vues && msg.Vues.length==1) {

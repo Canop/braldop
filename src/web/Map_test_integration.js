@@ -1,23 +1,24 @@
 /*
-ce fichier contient des fonctions destinées à tester l'API de Braldop pour une utilisation intégrée
+ ce fichier contient des fonctions destinées à tester l'API de Braldop pour une utilisation intégrée
 */
 
 
-function test_marcheAutour(actions, xc, yc, d) {
+function test_marcheAutour(actions, acteur, xc, yc, d) {
 	for (var x=xc-d; x<=xc+d; x++) {
 		for (var y=yc-d; y<=yc+d; y++) {
-			if (x!=xc||y!=yc) actions.push({Type:0, X:x, Y:y, PA:2});
+			if (x!=xc||y!=yc) actions.push({Acteur:acteur, Type:0, X:x, Y:y, PA:2});
 		}
 	}
 }
 
-function test_injecteActions() {
-	
+function test_injecteActions(mapData, map) {
 	var actions = [];
-	test_marcheAutour(actions, -110, 336, 2);
-	map.setActions(22, actions, function(id, a) {console.log('Action:');console.log(a);});
+	test_marcheAutour(actions, 22, -110, 336, 2);
+	//map.setActions(22, actions, function(id, a) {console.log('Action:');console.log(a);});
+	map.setCallback('action', function(a) {console.log('Action:'); console.log(a);});
+	mapData.Actions = actions;
 }
 
-function teste() {
-	test_injecteActions();
+function teste(mapData, map) {
+	test_injecteActions(mapData, map);
 }

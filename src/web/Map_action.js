@@ -23,7 +23,7 @@ Map.prototype.initTypesActions = function() {
 	}
 	this.typesActions = [];
 	// 0 : marcher
-	this.typesActions[0] = {nom:'Marcher', iconeCase:icon('vue/pas')};
+	this.typesActions["Marcher"] = {nom:'Marcher', iconeCase:icon('vue/pas')};
 	this.actions = []; // un tableau de toutes les actions
 }
 
@@ -81,9 +81,9 @@ function mapDoAction(key) {
 		currentMap.$dialog.hide();
 		currentMap.dialopIsOpen = false;
 	}
-	if (currentMap.callbacks['action']) {
-		currentMap.callbacks['action'](action);
-	} else {
-		console.log("aucun callback d'action défini");
-	}
+    if (currentMap.callbacks[action.Type]) {
+    		currentMap.callbacks[action.Type](action);
+    } else {
+    	console.log("aucun callback d'action défini");
+    }
 }

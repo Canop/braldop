@@ -92,7 +92,7 @@ Map.prototype.drawIcons = function(c, sx, sy, icons, hover) {
 			drawCenteredImage(c, this.getOutlineImg(icons[i]), x[i], y[i], null, imgh?imgh+4:null);
 		}
 	}
-	for (var i=x.length; i-->0;) {
+	for (var i=0; i<x.length; i++) {
 		drawCenteredImage(c, icons[i], x[i], y[i], null, imgh?imgh+4:null);
 	}
 }
@@ -173,7 +173,16 @@ Map.prototype.compileVue = function(vue) {
 						var img = imgBase ? imgBase.a : this.imgMonstreInconnu;
 						cell.zones[0].push(img);
 						cell.zones[0].push(img);
-					} if (nbTypes<3) {
+					} else if (nbTypes==1 && cell.monstres.length==3) {
+						var imgBase = this.imgMonstres[t];
+						if (imgBase) {
+							cell.zones[0].push(imgBase.b);
+							cell.zones[0].push(imgBase.a);
+						} else {
+							cell.zones[0].push(this.imgMonstreInconnu);
+							cell.zones[0].push(this.imgMonstreInconnu);
+						}
+					} else if (nbTypes<3) {
 						for (t in nbByType) {
 							var imgBase = this.imgMonstres[t];
 							cell.zones[0].push(imgBase ? (nbByType[t]==1 ? imgBase.a : imgBase.b) : this.imgMonstreInconnu);

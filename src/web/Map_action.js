@@ -82,7 +82,7 @@ function mapDoAction(key) {
 		currentMap.dialopIsOpen = false;
 	}
     if (currentMap.callbacks[action.Type]) {
-    		currentMap.callbacks[action.Type](action);
+    	currentMap.callbacks[action.Type](action);
     } else {
     	console.log("aucun callback d'action défini");
     }

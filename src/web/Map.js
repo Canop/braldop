@@ -187,14 +187,11 @@ Map.prototype.setData = function(mapData) {
 		}
 	}
 	// tri puis compilation des vues
-	if (this.mapData.Vues) {
-		this.mapData.Vues.sort(function(a, b) {
-			return a.Time-b.Time;
-		});
-		for (var i=this.mapData.Vues.length; i-->0;) {
-			this.compileVue(this.mapData.Vues[i]);
-		}
-	}
+	if (!this.mapData.Vues) this.mapData.Vues=[];
+	this.mapData.Vues.sort(function(a, b) {
+		return a.Time-b.Time;
+	});
+	this.compileLesVues();
 	// s'il y a des actions, on appelle la méthode addAction
 	if (mapData.Actions) {
 		for (var i=mapData.Actions.length; i-->0;) {
@@ -338,12 +335,7 @@ Map.prototype.redraw = function() {
 			}
 			if (this.mapData.Vues) {
 				if (this.zoom>30) {
-					for (var i=this.mapData.Vues.length; i-->0;) {
-						var vue = this.mapData.Vues[i];
-						if (vue.active && vue.Z==this.z) {
-							this.drawVue(vue);
-						}
-					}
+					this.dessineLesVues();
 				}
 				if (this.displayFog) {
 					this.drawFog();
@@ -459,16 +451,9 @@ Map.prototype.objectOn = function(x,y) {
 	if (this.zoom<10) return null;
 	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
 	if (cell && (cell.champ||cell.échoppe||cell.lieu)) return cell;
-	if (this.mapData.Vues) {
-		for (var i=this.mapData.Vues.length; i-->0;) {
-			var vue = this.mapData.Vues[i];
-			if (vue.active && vue.Z==this.z) {
-				var cell = getCellVue(vue, x, y);
-				if (cell) {
-					return cell;
-				}
-			}
-		}
+	var cell = this.getCellVue(x, y);
+	if (cell) {
+		return cell;
 	}
 	return null;
 }

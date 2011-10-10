@@ -68,7 +68,7 @@ Map.prototype.addAction = function(a) {
 			console.log('Vue non trouvée pour les actions passées (idBraldun='+a.Acteur+')');
 			return;
 		}
-		var cell = getCellVueCreate(vue, a.X, a.Y);
+		var cell = this.getCellVueCreate(a.X, a.Y);
 		cell.action = a; // une action max par case pour l'instant
 		cell.zones[1].push(this.typesActions[a.Type].iconeCase);
 	}	

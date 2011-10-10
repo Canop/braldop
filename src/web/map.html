@@ -205,6 +205,7 @@ $(document).ready(function() {
 		map.setCallback('profondeur', function(z) {
 			$('#select_profondeur').val(z);
 		});
+		map.compileLesVues(); // en raison de leur activation
 		map.redraw();
 		setTimeout(function(){
 			if (msg.Vues && msg.Vues.length==1) {
@@ -239,6 +240,7 @@ $(document).ready(function() {
 				break;
 			}
 		}
+		map.compileLesVues();
 		map.redraw();
 	});
 	$('#view_table').delegate('.goto', 'click', function() {

@@ -9,10 +9,12 @@ Fait :
 En cours :
 ==========
 
+* compilation des vues dans la grille principale, avec retenue uniquement pour chaque cellule des données de la vue la plus récente [-> ne suffit pas si on veut qu'une cellule de vue vide remplace une pleine, et ne permet pas de gérer le (dé)cochage de vues (ou alors avec recompilation)]
 
 P1 :
 ====
 
+* PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox
 * extension : ajouter un lien vers la carte de groupe
 * définition d'une API pour le blabla
 * BUG : quand un truc est listé dans deux vues il apparait deux fois dans les bulles -> une seule matrice pour toutes les vues ? vérif à la compil ?
@@ -34,5 +36,6 @@ P2 :
 * extension braldop : déclencher les appels du script de vue (ou transmettre directement la vue ?) lors des mouvements [suivant planning intégration complète]
 * bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent
 * factoriser les données des bralduns, pour ne pas répéter partout leur nom (ne mettre dans les vues, champs, échoppes, que les numéros)
+* compression du json
 
 

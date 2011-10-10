@@ -186,8 +186,14 @@ Map.prototype.setData = function(mapData) {
 			this.getCellCreate(this.couche, o.X, o.Y).lieu=o;
 		}
 	}
-	for (var i=this.mapData.Vues.length; i-->0;) {
-		this.compileVue(this.mapData.Vues[i]);
+	// tri puis compilation des vues
+	if (this.mapData.Vues) {
+		this.mapData.Vues.sort(function(a, b) {
+			return a.Time-b.Time;
+		});
+		for (var i=this.mapData.Vues.length; i-->0;) {
+			this.compileVue(this.mapData.Vues[i]);
+		}
 	}
 	// s'il y a des actions, on appelle la méthode addAction
 	if (mapData.Actions) {

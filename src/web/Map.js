@@ -90,6 +90,7 @@ Map.prototype.changeProfondeur = function(z) {
 		this.couche = newCouche;
 		this.z = z;
 	}
+	this.matriceVues = this.matricesVuesParZ[this.z];
 	this.updatePosDiv();
 }
 
@@ -148,6 +149,8 @@ Map.prototype.recomputeCanvasPosition = function() {
 // Les données sont copiées dans une structure qui donne un accès par les coordonnées des cases.
 Map.prototype.setData = function(mapData) {
 	this.mapData = mapData;
+	this.matricesVuesParZ = {};
+	this.matricesVuesParZ[0]={};
 	//console.log("carte reçue");
 	//var startTime = (new Date()).getTime();
 	this.z = 0; // on va basculer forcément sur la couche zéro
@@ -182,6 +185,10 @@ Map.prototype.setData = function(mapData) {
 		console.log('Pas de couche zéro !');
 		return;
 	}
+	if (!this.mapData.Vues) this.mapData.Vues=[];
+	this.mapData.Vues.sort(function(a, b) {
+		return a.Time-b.Time;
+	});
 	//  les lieux de ville (pour l'instant ?) n'ont pas de profondeur explicite mais ne concerne que la surface. On les met dans la couche zéro
 	if (this.mapData.LieuxVilles) {
 		for (var i=this.mapData.LieuxVilles.length; i-->0;) {
@@ -189,18 +196,31 @@ Map.prototype.setData = function(mapData) {
 			this.getCellCreate(this.couche, o.X, o.Y).lieu=o;
 		}
 	}
-	// tri puis compilation des vues
-	if (!this.mapData.Vues) this.mapData.Vues=[];
-	this.mapData.Vues.sort(function(a, b) {
-		return a.Time-b.Time;
-	});
-	this.compileLesVues();
-	// s'il y a des actions, on appelle la méthode addAction
 	if (mapData.Actions) {
-		for (var i=mapData.Actions.length; i-->0;) {
-			this.addAction(mapData.Actions[i]);
+		for (var ia=mapData.Actions.length; ia-->0;) {
+			var a = mapData.Actions[ia];
+			a.key = this.actions.length; // on donne à l'action une clef pour la retrouver plus facilement
+			this.actions.push(a);
+			// on ajoute les actions à la vue (trouvée par l'acteur)
+			var vue;
+			if (this.mapData.Vues) {
+				for (var i=this.mapData.Vues.length; i-->0;) {
+					if (this.mapData.Vues[i].Voyeur==a.Acteur) {
+						vue = this.mapData.Vues[i];
+						break;
+					}
+				}
+			}
+			if (!vue) {
+				console.log('Vue non trouvée pour action');
+				continue;
+			}
+			if (!vue.actions) vue.actions = [];
+			vue.actions.push(a);
 		}
 	}
+	this.compileLesVues();
+	this.matriceVues = this.matricesVuesParZ[0];
 	//console.log("carte compilée en " + ((new Date()).getTime()-startTime) + " ms");
 }
 

@@ -94,30 +94,6 @@ Affichage des lieux
 
 Je pense mettre en place le même système dans le javascript que pour la vue : précompiler la liste reçue pour associer rapidement à chaque position une case (uniquement s'il y a quelque chose dans la case). La seule différence a priori sera l'utilisation d'une map au lieu d'un tableau (mais ça ne change rien à part des économies de RAM).
 
-Intégration de commandes
-========================
-
-La carte affichée doit présenter des actions. Certaines, purement documentaires, peuvent être définies simplement (ouverture de la fiche d'un braldun ou d'un monstre, affichage d'une page du wiki). D'autres nécessitent la prise en compte de règles complexes (charge, déplacement, etc.).
-
-L'API de la carte offre cette méthode l'intégration :
-
-	Map.setActions(idBraldun, list, callback)
-
-La liste est un tableau d'objets présentant les champs suivants
-action : {
-	Type : un type numérique permettant de faire certains traitements (comme afficher l'icône de pas sur la carte par exemple) et de retrouver le label et l'icône
-	X : x du point d'application
-	Y : y du point d'application
-	IdBraldun : cible éventuelle
-	IdMonstre : cible éventuelle
-	PA : coût en PA
-}
-
-Les noms de ces champs sont tous capitalisés, comme les champs de tous les paramètres externes passés à Braldop.
-
-Le callback a entre autres responsabilités celle du dialogue de confirmation
-
-Lors de la sélection dans un menu, la fonction définie par setActionFonction est appelée avec pour paramètres l'id du braldun acteur et l'objet action.
 
 Points en suspens
 =================

@@ -77,10 +77,15 @@ Map.prototype.drawIcons = function(c, sx, sy, icons, hover) {
 
 // construit l'objet matriceVues qui contient les infos de toutes les vues visibles
 Map.prototype.compileLesVues = function() {
-	this.matriceVues = {};
+	this.matricesVuesParZ = {};
 	for (var iv=0; iv<this.mapData.Vues.length; iv++) {
 		var vue = this.mapData.Vues[iv];
 		if (!vue.active) continue;
+		this.matriceVues = this.matricesVuesParZ[vue.Z];
+		if (!this.matriceVues) {
+			this.matriceVues = {};
+			this.matricesVuesParZ[vue.Z] = this.matriceVues;
+		}
 		if (iv>0) {
 			// on nettoie la zone en vue (les vues ont été triées par date auparavant)
 			for (x=vue.XMin; x<=vue.XMax; x++) {
@@ -108,6 +113,15 @@ Map.prototype.compileLesVues = function() {
 			var o = vue.Cadavres[io];
 			var cell = this.getCellVueCreate(o.X, o.Y);
 			cell.cadavres.push(o);
+		}
+		//> on ajoute les actions aux cellules
+		if (vue.actions) {
+			for (var i=0; i<vue.actions.length; i++) {
+				var a = vue.actions[i];
+				var cell = this.getCellVueCreate(a.X, a.Y);
+				cell.action = a; // une action max par case pour l'instant
+				cell.zones[1].push(this.typesActions[a.Type].iconeCase);
+			}
 		}
 		//> pour chaque cellule on construit les tableaux d'images par zones
 		for (var x=vue.XMin; x<=vue.XMax; x++) {
@@ -217,6 +231,8 @@ Map.prototype.compileLesVues = function() {
 			}
 		}
 	}
+		
+		
 }
 
 

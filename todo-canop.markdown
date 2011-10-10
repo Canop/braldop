@@ -11,8 +11,7 @@ En cours :
 
 * compilation des vues dans la grille principale, avec retenue uniquement pour chaque cellule des données de la vue la plus récente [-> ne suffit pas si on veut qu'une cellule de vue vide remplace une pleine, et ne permet pas de gérer le (dé)cochage de vues (ou alors avec recompilation)]
 * vérifier le z de la matriceVues ! (faire une matriceVues par z)
-* calculer l'index dans une seule fonction
-
+* PB : avec la recompilation il faut aussi remettre les actions
 
 P1 :
 ====

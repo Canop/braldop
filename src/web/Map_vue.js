@@ -11,19 +11,16 @@ Map.prototype.getBralduns = function(x, y) {
 // renvoie la cellule de la vue ou null (hors vue ou vide)
 // Attention : cette méthode ne vérifie pas que x et y sont dans la portée de la vue : le faire avant
 Map.prototype.getCellVue = function(x, y) {
-	var index = ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
-	//~ console.log('('+x+','+y+') -> '+index);
-	return this.matriceVues[index];
+	return this.matriceVues[this.getIndex(x, y)];
 }
 
 Map.prototype.cleanCellVue = function(x, y) {
-	var index = ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
-	delete this.matriceVues[index];
+	delete this.matriceVues[this.getIndex(x, y)];
 }
 
 // renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
 Map.prototype.getCellVueCreate = function(x, y) {
-	var index = ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
+	var index = this.getIndex(x, y);
 	var cell = this.matriceVues[index];
 	if (!cell) {
 		cell = {};
@@ -220,8 +217,6 @@ Map.prototype.compileLesVues = function() {
 			}
 		}
 	}
-	console.log('Matrice vues :');
-	console.log(this.matriceVues);
 }
 
 

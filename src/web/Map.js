@@ -93,6 +93,11 @@ Map.prototype.changeProfondeur = function(z) {
 	this.updatePosDiv();
 }
 
+// calcule l'index 2D de la cellule
+Map.prototype.getIndex = function(x, y) {
+	return ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
+}
+
 // centre l'écran sur la case de coordonnées (x, y, z)
 Map.prototype.goto = function(x, y, z) {
 	if (this.callbacks['profondeur']) {
@@ -106,8 +111,7 @@ Map.prototype.goto = function(x, y, z) {
 
 // renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
 Map.prototype.getCellCreate = function(couche, x, y) {
-	var index = ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
-	//console.log("("+x+","+y+") -> "+index);
+	var index = this.getIndex(x, y);
 	var cell = couche.matrix[index];
 	if (!cell) {
 		cell = {};
@@ -117,8 +121,7 @@ Map.prototype.getCellCreate = function(couche, x, y) {
 }
 // renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
 Map.prototype.getCell = function(couche, x, y) {
-	var index = ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
-	return couche.matrix[index];
+	return couche.matrix[this.getIndex(x, y)];
 }
 
 Map.prototype.recomputeCanvasPosition = function() {

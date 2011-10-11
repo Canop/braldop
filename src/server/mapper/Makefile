@@ -8,6 +8,7 @@ GOFILES=\
 	main/VueChamp.go\
 	main/VueEchoppe.go\
 	main/VueEnvironnement.go\
+	main/VueLieu.go\
 	main/VueMonstre.go\
 	main/VueObjet.go\
 	main/VuePalissade.go\

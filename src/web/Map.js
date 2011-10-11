@@ -180,6 +180,12 @@ Map.prototype.setData = function(mapData) {
 				this.getCellCreate(couche, o.X, o.Y).échoppe=o;
 			}
 		}
+		if (couche.Lieux) {
+			for (var i=couche.Lieux.length; i-->0;) {
+				var o = couche.Lieux[i];
+				this.getCellCreate(couche, o.X, o.Y).lieu=o;
+			}
+		}
 	}
 	if (!this.couche) {
 		console.log('Pas de couche zéro !');

@@ -67,6 +67,9 @@ func (mm *MemMap) StoreVille(o *Ville) { // on va supposer qu'on ne lit pas deux
 func (mm *MemMap) StoreLieuVille(o *LieuVille) { // on va supposer qu'on ne lit pas deux fois le même lieu
 	mm.LieuxVilles = append(mm.LieuxVilles, o)
 }
+func (mm *MemMap) StoreLieu(o *VueLieu) {
+	mm.GetCouche(o.Z).LieuxParXY[PosKey(o.X, o.Y)] = o
+}
 func (mm *MemMap) StoreRégion(o *Région) {
 	mm.Régions = append(mm.Régions, o)
 }

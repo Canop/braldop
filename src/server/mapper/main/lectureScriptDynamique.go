@@ -17,7 +17,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) 
 		if err := o.readCsvAliment(cells); err != nil {
 			fmt.Printf(" Erreur lecture ALIMENT : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" ALIMENT : %+v\n", o)
+			//~ fmt.Printf(" ALIMENT : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	case "BALLON_SOULE":
@@ -109,7 +109,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) 
 		if err := o.readCsvGraine(cells); err != nil {
 			fmt.Printf(" Erreur lecture GRAINE : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" GRAINE : %+v\n", o)
+			//~ fmt.Printf(" GRAINE : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	case "INGREDIENT":
@@ -122,12 +122,20 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) 
 			//~ fmt.Printf(" INGREDIENT : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
+	case "LIEU":
+		o := new(VueLieu)
+		if err := o.readCsv(cells); err != nil {
+			fmt.Printf(" Erreur lecture LIEU : %+v \n cellules : %+v", err, cells)
+		} else {
+			//~ fmt.Printf(" LIEU : %+v\n", o)
+			ls.MemMap.StoreLieu(o)
+		}
 	case "LINGOT":
 		o := new(VueObjet)
 		if err := o.readCsvLingot(cells); err != nil {
 			fmt.Printf(" Erreur lecture LINGOT : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" LINGOT : %+v\n", o)
+			//~ fmt.Printf(" LINGOT : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	case "MINERAI_BRUT":
@@ -135,7 +143,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) 
 		if err := o.readCsvMinerai(cells); err != nil {
 			fmt.Printf(" Erreur lecture MINERAI_BRUT : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" MINERAI_BRUT : %+v\n", o)
+			//~ fmt.Printf(" MINERAI_BRUT : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	case "MONSTRE":
@@ -177,7 +185,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) 
 		if err := o.readCsvPlante(cells, true); err != nil {
 			fmt.Printf(" Erreur lecture PLANTE_BRUTE : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" PLANTE_BRUTE : %+v\n", o)
+			//~ fmt.Printf(" PLANTE_BRUTE : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	case "PLANTE_PREPAREE":
@@ -185,7 +193,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) 
 		if err := o.readCsvPlante(cells, false); err != nil {
 			fmt.Printf(" Erreur lecture PLANTE_PREPAREE : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" PLANTE_PREPAREE : %+v\n", o)
+			//~ fmt.Printf(" PLANTE_PREPAREE : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	case "POTION":
@@ -193,7 +201,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) 
 		if err := o.readCsvPotion(cells); err != nil {
 			fmt.Printf(" Erreur lecture POTION : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" POTION : %+v\n", o)
+			//~ fmt.Printf(" POTION : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	case "PORTAIL":

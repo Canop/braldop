@@ -15,6 +15,7 @@ type MemCouche struct {
 	EchoppesParXY       map[int32]*VueEchoppe
 	PalissadesParXY     map[int32]*VuePalissade
 	EnvironnementsParXY map[int32]*VueEnvironnement
+	LieuxParXY map[int32]*VueLieu
 	RoutesParXY         map[int32]*VueRoute
 }
 
@@ -25,28 +26,11 @@ func NewMemCouche() (mc *MemCouche) {
 	mc.EchoppesParXY = make(map[int32]*VueEchoppe)
 	mc.EnvironnementsParXY = make(map[int32]*VueEnvironnement)
 	mc.PalissadesParXY = make(map[int32]*VuePalissade)
+	mc.LieuxParXY = make(map[int32]*VueLieu)
 	mc.RoutesParXY = make(map[int32]*VueRoute)
 	return mc
 }
-//~ 
-//~ func (mc *MemCouche) StoreBosquet(o *VueBosquet) {
-//~ mc.BosquetsParXY[PosKey(o.X, o.Y)] = o
-//~ }
-//~ func (mc *MemCouche) StoreChamp(o *VueChamp) {
-//~ mc.ChampsParXY[PosKey(o.X, o.Y)] = o
-//~ }
-//~ func (mc *MemCouche) StoreEchoppe(o *VueEchoppe) {
-//~ mc.EchoppesParXY[PosKey(o.X, o.Y)] = o
-//~ }
-//~ func (mc *MemCouche) StoreEnvironnement(o *VueEnvironnement) {
-//~ mc.EnvironnementsParXY[PosKey(o.X, o.Y)] = o
-//~ }
-//~ func (mc *MemCouche) StorePalissade(o *VuePalissade) {
-//~ mc.PalissadesParXY[PosKey(o.X, o.Y)] = o
-//~ }
-//~ func (mc *MemCouche) StoreRoute(o *VueRoute) {
-//~ mc.RoutesParXY[PosKey(o.X, o.Y)] = o
-//~ }
+
 
 func (mc *MemCouche) Compile(mm *MemMap) (m *Couche) {
 	m = NewCouche()
@@ -119,6 +103,9 @@ func (mc *MemCouche) Compile(mm *MemMap) (m *Couche) {
 			fmt.Printf("Braldun introuvable : %d\n", e.IdBraldun)
 		}
 		m.Echoppes = append(m.Echoppes, e)
+	}
+	for _, l := range mc.LieuxParXY {
+		m.Lieux = append(m.Lieux, l)
 	}
 	for _, e := range mc.ChampsParXY {
 		// on renseigne si possible le nom du braldun

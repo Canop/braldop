@@ -15,11 +15,13 @@ type Couche struct {
 	Cases    []*Case
 	Champs   []*VueChamp
 	Echoppes []*VueEchoppe
+	Lieux []*VueLieu
 }
 
 func NewCouche() (c *Couche) {
 	c = new(Couche)
 	c.Cases = make([]*Case, 0, 40)
 	c.Echoppes = make([]*VueEchoppe, 0, 40)
+	c.Lieux = make([]*VueLieu, 0, 4)
 	return
 }

@@ -6,7 +6,7 @@
 function test_marcheAutour(actions, acteur, xc, yc, d) {
 	for (var x=xc-d; x<=xc+d; x++) {
 		for (var y=yc-d; y<=yc+d; y++) {
-			if (x!=xc||y!=yc) actions.push({Acteur:acteur, Type:0, X:x, Y:y, PA:2});
+			if (x!=xc||y!=yc) actions.push({Acteur:acteur, Type:'Marcher', X:x, Y:y, PA:2});
 		}
 	}
 }

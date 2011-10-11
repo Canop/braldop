@@ -49,7 +49,6 @@ func readLine(r *bufio.Reader) (cells []string, err os.Error) {
 	return
 }
 
-
 // renvoie le nombre de secondes depuis 1970 caché dans le chemin vers le fichier : année/mois/jour/truc-heurehminutes.csv
 // Le parsage des dates est pour moi le gros WTF du go... si quelqu'un arrive à faire plus propre...
 func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
@@ -84,10 +83,9 @@ func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
 	return 0
 }
 
-
 func IndexOfStringIn(s string, a []string) int {
-	for i, t := range(a) {
-		if s==t {
+	for i, t := range a {
+		if s == t {
 			return i
 		}
 	}
@@ -102,7 +100,7 @@ func (ls *LecteurScripts) VisitFile(path string, f *os.FileInfo) {
 		if err != nil {
 			return
 		}
-		defer f.Close()	
+		defer f.Close()
 		r := bufio.NewReader(f)
 		switch pathToken[len(pathToken)-1] {
 		case "bralduns.csv":
@@ -133,10 +131,10 @@ func (ls *LecteurScripts) VisitFile(path string, f *os.FileInfo) {
 func (ls *LecteurScripts) VisitDir(path string, f *os.FileInfo) bool {
 	pathToken := strings.Split(path, "/")
 	indexTokenPrivate := IndexOfStringIn("private", pathToken)
-	if indexTokenPrivate==-1 || indexTokenPrivate+1==len(pathToken) {
+	if indexTokenPrivate == -1 || indexTokenPrivate+1 == len(pathToken) {
 		return true
 	}
-	if IndexOfStringIn(pathToken[indexTokenPrivate+1], ls.IdBralduns)==-1 {
+	if IndexOfStringIn(pathToken[indexTokenPrivate+1], ls.IdBralduns) == -1 {
 		if ls.verbose > 0 {
 			fmt.Printf("Fichier non autorisé : %s\n", path)
 		}
@@ -157,7 +155,7 @@ func main() {
 		return
 	}
 	ls := NewLecteurScripts()
-	
+
 	startTime := time.Seconds()
 	ls.IdBralduns = strings.Split(os.Args[2], ",")
 

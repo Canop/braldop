@@ -6,18 +6,15 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* gestion correcte des intersections de vues
-* 
 
 En cours :
 ==========
 
-* le menu de la profondeur ne semble plus mis à jour lors des goto
 
 P1 :
 ====
 
-* gèrer le cas de 3 types de monstres sur une case sans braldun
+* gèrer le cas de 3 types de monstres sur une case sans braldun (j'attends que la situation se présente)
 * PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox
 * extension : ajouter un lien vers la carte de groupe
 * définition d'une API pour le blabla

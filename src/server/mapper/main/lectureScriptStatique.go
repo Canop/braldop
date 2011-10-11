@@ -16,15 +16,15 @@ func (ls *LecteurScripts) parseLigneFichierStatique(cells []string, alloue func(
 }
 func (ls *LecteurScripts) parseFichierStatique(r *bufio.Reader, alloue func() Visible) {
 	ls.NbReadFiles++
-	_,_ = readLine(r) // on saute une ligne car la première contient les en-têtes
+	_, _ = readLine(r) // on saute une ligne car la première contient les en-têtes
 	for {
 		line, err := readLine(r)
-		if err!=nil {
+		if err != nil {
 			if err != os.EOF {
 				fmt.Println("Error in parsing (parseFichierDynamique) :")
 				fmt.Println(err)
 			}
-			return			
+			return
 		}
 		ls.parseLigneFichierStatique(line, alloue)
 	}

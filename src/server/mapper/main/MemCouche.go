@@ -15,7 +15,7 @@ type MemCouche struct {
 	EchoppesParXY       map[int32]*VueEchoppe
 	PalissadesParXY     map[int32]*VuePalissade
 	EnvironnementsParXY map[int32]*VueEnvironnement
-	LieuxParXY map[int32]*VueLieu
+	LieuxParXY          map[int32]*VueLieu
 	RoutesParXY         map[int32]*VueRoute
 }
 
@@ -30,7 +30,6 @@ func NewMemCouche() (mc *MemCouche) {
 	mc.RoutesParXY = make(map[int32]*VueRoute)
 	return mc
 }
-
 
 func (mc *MemCouche) Compile(mm *MemMap) (m *Couche) {
 	m = NewCouche()

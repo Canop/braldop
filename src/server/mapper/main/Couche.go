@@ -15,7 +15,7 @@ type Couche struct {
 	Cases    []*Case
 	Champs   []*VueChamp
 	Echoppes []*VueEchoppe
-	Lieux []*VueLieu
+	Lieux    []*VueLieu
 }
 
 func NewCouche() (c *Couche) {

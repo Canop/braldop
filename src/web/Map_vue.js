@@ -230,9 +230,7 @@ Map.prototype.compileLesVues = function() {
 				}
 			}
 		}
-	}
-		
-		
+	}	
 }
 
 

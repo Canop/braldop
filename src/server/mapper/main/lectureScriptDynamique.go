@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) {
+func (ls *LecteurScripts) parseLigneFichierDynamique(cells []string, vue *Vue) {
 	if len(cells) < 3 {
 		fmt.Println("  Ligne trop courte : ", cells)
 		return
@@ -125,7 +125,9 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells [] string, vue *Vue) 
 	case "LIEU":
 		o := new(VueLieu)
 		if err := o.readCsv(cells); err != nil {
-			fmt.Printf(" Erreur lecture LIEU : %+v \n cellules : %+v", err, cells)
+			if ls.verbose > 0 {
+				fmt.Printf(" Erreur lecture LIEU : %+v \n cellules : %+v", err, cells)
+			}
 		} else {
 			//~ fmt.Printf(" LIEU : %+v\n", o)
 			ls.MemMap.StoreLieu(o)
@@ -258,12 +260,12 @@ func (ls *LecteurScripts) parseFichierDynamique(r *bufio.Reader, time int64) (vu
 	ls.NbReadFiles++
 	for {
 		line, err := readLine(r)
-		if err!=nil {
+		if err != nil {
 			if err != os.EOF {
 				fmt.Println("Error in parsing (parseFichierDynamique) :")
 				fmt.Println(err)
 			}
-			return			
+			return
 		}
 		ls.parseLigneFichierDynamique(line, vue)
 	}

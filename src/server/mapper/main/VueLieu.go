@@ -7,10 +7,10 @@ import (
 )
 
 type VueLieu struct {
-	X                 int16
-	Y                 int16
-	Z                 int16
-	Nom string
+	X          int16
+	Y          int16
+	Z          int16
+	Nom        string
 	IdTypeLieu uint
 }
 
@@ -28,4 +28,3 @@ func (o *VueLieu) readCsv(cells []string) (err os.Error) {
 	}
 	return
 }
-

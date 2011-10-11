@@ -14,6 +14,7 @@ En cours :
 P1 :
 ====
 
+* points de distinction, gredins et redresseurs
 * gèrer le cas de 3 types de monstres sur une case sans braldun (j'attends que la situation se présente)
 * PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox
 * extension : ajouter un lien vers la carte de groupe
@@ -24,8 +25,7 @@ P1 :
 * BUG : souvent des non initialisations d'images outline
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
-* points de distinction, gredins et redresseurs
-
+* maquetter l'interface totale avec les actions
 
 P2 :
 ====

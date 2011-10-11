@@ -15,7 +15,7 @@ function test_injecteActions(mapData, map) {
 	var actions = [];
 	test_marcheAutour(actions, 22, -110, 336, 2);
 	//map.setActions(22, actions, function(id, a) {console.log('Action:');console.log(a);});
-	map.setCallback('action', function(a) {console.log('Action:'); console.log(a);});
+	map.setCallback('Marcher', function(a) {console.log('Action:'); console.log(a);});
 	mapData.Actions = actions;
 }
 

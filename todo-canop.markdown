@@ -13,15 +13,14 @@ En cours :
 ==========
 
 * le menu de la profondeur ne semble plus mis à jour lors des goto
-* gestion des lieux (LIEU) vus (jusqu'à présent on ne gérait que les lieux de villes reçus par le fichier csv public
 
 P1 :
 ====
 
+* gèrer le cas de 3 types de monstres sur une case sans braldun
 * PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox
 * extension : ajouter un lien vers la carte de groupe
 * définition d'une API pour le blabla
-* BUG : quand un truc est listé dans deux vues il apparait deux fois dans les bulles -> une seule matrice pour toutes les vues ? vérif à la compil ?
 * icônes PVE/PVP devant les noms des régions
 * crevasses ?
 * dialogue/bâtiments : lien vers l'aide du bâtiment
@@ -41,6 +40,5 @@ P2 :
 * factoriser les données des bralduns, pour ne pas répéter partout leur nom (ne mettre dans les vues, champs, échoppes, que les numéros)
 * compression du json (utile ? si mod_deflate sur le serveur, ça sera compressé génériquement)
 * pour le fun, essayer de dessiner en perspective isométrique
-
 * le temps de chargement est lié à la vérification, image par image, qu'elles n'ont pas été modifiées sur le serveur. Peut-être qu'une aglomération des sprites en un seul png résoudrait le problème
 

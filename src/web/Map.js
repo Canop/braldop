@@ -362,6 +362,7 @@ Map.prototype.redraw = function() {
 			if (this.zoom>15 && this.displayGrid) {
 				this.drawGrid();
 			}
+			if (this.zoom==64) this.dessinePalissades();
 			if (this.mapData.Vues) {
 				if (this.zoom>30) {
 					this.dessineLesVues();

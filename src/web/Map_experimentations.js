@@ -16,7 +16,7 @@ Map.prototype.dessineCasePalissade = function (x, y, sides) {
 	var c = this.context;
 	var cx = this.zoom*(this.originX+x);
 	var cy = this.zoom*(this.originY-y);
-	var r = 0.8;
+	var r = 0.65;
 	var lt = imgTroncPalissade.width*r; // largeur tronc
 	var rz = this.zoom/64;
 	if (lt==0) {
@@ -85,20 +85,51 @@ Map.prototype.dessineCasePalissade = function (x, y, sides) {
 		}
 		break;
 
+		case B_RIGHT|B_BOTTOM:
+		var nbt = Math.round(64/lt)*1.57;
+		var lta = lt*0.5;
+		var angle = Math.PI*1.5;
+		for (var i=0; i<=nbt; i++) {
+			var bx = cx+(1+Math.cos(angle)*0.5)*this.zoom;
+			var by = cy+(1+Math.sin(angle)*0.5)*this.zoom;
+			c.drawImage(imgTroncPalissade, bx-lta, by-ht, rz*lt, rz*ht);
+			angle -= Math.PI*0.5/nbt;
+		}
+		break;
+
 	}
 }
 
 
 Map.prototype.dessinePalissades = function() {
 	var x0 = -11; var y0 = -4;
+	this.dessineCasePalissade(x0-1, y0, B_LEFT|B_RIGHT);
 	this.dessineCasePalissade(x0, y0, B_LEFT|B_RIGHT);
 	this.dessineCasePalissade(x0+1, y0, B_LEFT|B_BOTTOM);
+
+	this.dessineCasePalissade(x0-2, y0, B_RIGHT|B_BOTTOM);
+	
 	this.dessineCasePalissade(x0+1, y0-1, B_TOP|B_BOTTOM);
+
+	this.dessineCasePalissade(x0-4, y0-1, B_RIGHT|B_BOTTOM);
+	this.dessineCasePalissade(x0-3, y0-1, B_LEFT|B_RIGHT);
+	this.dessineCasePalissade(x0-2, y0-1, B_LEFT|B_TOP);
+	
 	this.dessineCasePalissade(x0+1, y0-2, B_TOP|B_RIGHT);
 	this.dessineCasePalissade(x0+2, y0-2, B_LEFT|B_BOTTOM);
+
+	this.dessineCasePalissade(x0-4, y0-2, B_TOP|B_BOTTOM);
+
 	this.dessineCasePalissade(x0+2, y0-3, B_TOP|B_BOTTOM);
+
+	this.dessineCasePalissade(x0-2, y0-3, B_LEFT|B_BOTTOM);
+	this.dessineCasePalissade(x0-3, y0-3, B_LEFT|B_RIGHT);
+	this.dessineCasePalissade(x0-4, y0-3, B_TOP|B_RIGHT);
+
 	this.dessineCasePalissade(x0+2, y0-4, B_TOP|B_LEFT);
 	this.dessineCasePalissade(x0+1, y0-4, B_LEFT|B_RIGHT);
 	this.dessineCasePalissade(x0, y0-4, B_LEFT|B_RIGHT);
 	this.dessineCasePalissade(x0-1, y0-4, B_LEFT|B_RIGHT);
+	this.dessineCasePalissade(x0-2, y0-4, B_TOP|B_RIGHT);
+	
 }

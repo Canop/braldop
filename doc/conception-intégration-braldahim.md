@@ -93,7 +93,7 @@ Affichage des lieux
 -------------------
 
 Je pense mettre en place le même système dans le javascript que pour la vue : précompiler la liste reçue pour associer rapidement à chaque position une case (uniquement s'il y a quelque chose dans la case). La seule différence a priori sera l'utilisation d'une map au lieu d'un tableau (mais ça ne change rien à part des économies de RAM).
-
+	
 
 Points en suspens
 =================

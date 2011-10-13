@@ -27,6 +27,7 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.displayRégions = false;
 	this.displayFog = true;
 	this.displayGrid = false;
+	this.displayExperimentation = false;
 	this.$dialog = $('#'+dialogId);
 	this.dialopIsOpen = false;
 	this.fogImg = null;
@@ -362,7 +363,7 @@ Map.prototype.redraw = function() {
 			if (this.zoom>15 && this.displayGrid) {
 				this.drawGrid();
 			}
-			if (this.zoom==64) this.dessinePalissades();
+			if (this.displayExperimentation && this.zoom==64) this.dessinePalissades();
 			if (this.mapData.Vues) {
 				if (this.zoom>30) {
 					this.dessineLesVues();

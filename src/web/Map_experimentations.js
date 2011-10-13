@@ -16,7 +16,7 @@ Map.prototype.dessineCasePalissade = function (x, y, sides) {
 	var c = this.context;
 	var cx = this.zoom*(this.originX+x);
 	var cy = this.zoom*(this.originY-y);
-	var r = 0.65;
+	var r = 0.68;
 	var lt = imgTroncPalissade.width*r; // largeur tronc
 	var rz = this.zoom/64;
 	if (lt==0) {
@@ -102,7 +102,7 @@ Map.prototype.dessineCasePalissade = function (x, y, sides) {
 
 
 Map.prototype.dessinePalissades = function() {
-	var x0 = -11; var y0 = -4;
+	var x0 = -17; var y0 = 3;
 	this.dessineCasePalissade(x0-1, y0, B_LEFT|B_RIGHT);
 	this.dessineCasePalissade(x0, y0, B_LEFT|B_RIGHT);
 	this.dessineCasePalissade(x0+1, y0, B_LEFT|B_BOTTOM);

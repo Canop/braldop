@@ -128,13 +128,13 @@ Map.prototype.compileLesVues = function() {
 			for (var y=vue.YMin; y<=vue.YMax; y++) {
 				var cell = this.getCellVue(x, y);
 				if (cell) {
+					var nbBraldunsFémininsNonKO=0; 
+					var nbBraldunsMasculinsNonKO=0;
+					var nbBraldunsKO=0;
 					//-- zone 0 : bralduns
 					if (cell.bralduns.length) {
 						var hasBraldunsCampA = false;
 						var hasBraldunsCampB = false;
-						var nbBraldunsFémininsNonKO=0; 
-						var nbBraldunsMasculinsNonKO=0;
-						var nbBraldunsKO=0;
 						for (var i=0; i<cell.bralduns.length; i++) {
 							var b = cell.bralduns[i];
 							if (b.KO) {

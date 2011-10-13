@@ -80,19 +80,7 @@ func (mc *MemCouche) Compile(mm *MemMap) (m *Couche) {
 		}
 	}
 	for _, b := range mc.PalissadesParXY {
-		key := PosKey(b.X, b.Y)
-		c, ok := cases[key]
-		if !ok {
-			c = new(Case)
-			c.X = b.X
-			c.Y = b.Y
-			cases[key] = c
-		}
-		if b.Portail {
-			c.Fond = "portail"
-		} else {
-			c.Fond = "palissade"
-		}
+		m.Palissades = append(m.Palissades, b)
 	}
 	for _, e := range mc.EchoppesParXY {
 		// on renseigne si possible le nom du braldun

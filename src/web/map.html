@@ -12,7 +12,9 @@
 	<script src="Map_dialog.js?v=4"></script>
 	<script src="Map_action.js?v=2"></script>
 	<script src="Map_test_integration.js?v=1"></script>
+	<script src="Map_experimentations.js?v=1"></script>
 	<script src="Map_env.js?v=13"></script>
+	<script src="Map_palissades.js?v=1"></script>
 	<script src="Map_vue.js?v=15"></script>
 	
 	<style type="text/css">
@@ -119,6 +121,7 @@
 		<input type=checkbox id=layer_régions><label for=layer_régions>Régions</label><br>
 		<input type=checkbox id=layer_fog><label for=layer_fog>Brouillard de guerre</label><br>
 		<input type=checkbox id=layer_grid><label for=layer_grid>Grille</label><br>
+		<input type=checkbox id=layer_experimentation><label for=layer_experimentation>Expérimentation</label><br>
 		<br>
 	</div>
 	<div id=choix_profondeur>
@@ -229,6 +232,10 @@ $(document).ready(function() {
 	});
 	$('#layer_grid').prop('checked', map.displayGrid).change(function(){
 		map.displayGrid=this.checked;
+		map.redraw();
+	});
+	$('#layer_experimentation').prop('checked', map.displayExperimentation).change(function(){
+		map.displayExperimentation=this.checked;
 		map.redraw();
 	});
 	$('#view_list').delegate('input.view', 'change', function() {

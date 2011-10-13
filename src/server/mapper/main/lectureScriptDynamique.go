@@ -248,7 +248,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells []string, vue *Vue) {
 		if err := o.readCsvTabac(cells); err != nil {
 			fmt.Printf(" Erreur lecture TABAC : %+v \n cellules : %+v", err, cells)
 		} else {
-			fmt.Printf(" TABAC : %+v\n", o)
+			//~ fmt.Printf(" TABAC : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
 	}

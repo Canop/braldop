@@ -78,6 +78,7 @@ Map.prototype.drawIcons = function(c, sx, sy, icons, hover) {
 // construit l'objet matriceVues qui contient les infos de toutes les vues visibles
 Map.prototype.compileLesVues = function() {
 	this.matricesVuesParZ = {};
+	this.matriceVues = {};
 	for (var iv=0; iv<this.mapData.Vues.length; iv++) {
 		var vue = this.mapData.Vues[iv];
 		if (!vue.active) continue;
@@ -196,7 +197,9 @@ Map.prototype.compileLesVues = function() {
 						}
 					}
 					//-- zone 2 : braldun KO
-					if (nbBraldunsKO) cell.zones[2].push(this.imgBralduns['braldunKo']);
+					if (nbBraldunsKO>0) {
+						cell.zones[2].push(this.imgBralduns['braldunKo']);
+					}
 					//-- zone 2 : cadavre
 					if (cell.cadavres.length) {
 						cell.zones[2].push(this.imgCadavre);
@@ -237,7 +240,6 @@ Map.prototype.compileLesVues = function() {
 // dessine la vue d'un Braldun (la partie intersectant this.xMin, this.xMax, etc.)
 Map.prototype.dessineLesVues = function() {
 	var c = this.context;
-		
 	for (var x=this.xMin; x<=this.xMax; x++) {
 		for (var y=this.yMin; y<=this.yMax; y++) {
 			var cell = this.getCellVue(x, y);

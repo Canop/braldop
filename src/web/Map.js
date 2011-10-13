@@ -402,7 +402,6 @@ Map.prototype.redraw = function() {
 					}
 				}
 			}
-			if (this.displayExperimentation && this.zoom==64) this.dessinePalissades();
 			if (this.mapData.Vues) {
 				if (this.zoom>30) {
 					this.dessineLesVues();

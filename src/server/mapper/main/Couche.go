@@ -16,6 +16,7 @@ type Couche struct {
 	Champs   []*VueChamp
 	Echoppes []*VueEchoppe
 	Lieux    []*VueLieu
+	Palissades []*VuePalissade
 }
 
 func NewCouche() (c *Couche) {
@@ -23,5 +24,6 @@ func NewCouche() (c *Couche) {
 	c.Cases = make([]*Case, 0, 40)
 	c.Echoppes = make([]*VueEchoppe, 0, 40)
 	c.Lieux = make([]*VueLieu, 0, 4)
+	c.Palissades = make([]*VuePalissade, 0, 4)
 	return
 }

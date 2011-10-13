@@ -30,6 +30,7 @@ P1 :
 P2 :
 ====
 
+* enlever le z inutile dans les objets palissade, champ, échoppe, etc.
 * structure générique plus propre côté js pour décrire l'accès aux images, les documentations associées
 * tag (optionnel) de cellule pour indiquer les coordonnées
 * extension braldop : déclencher les appels du script de vue (ou transmettre directement la vue ?) lors des mouvements [suivant planning intégration complète]

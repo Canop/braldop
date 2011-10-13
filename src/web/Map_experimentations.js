@@ -3,14 +3,7 @@ pour tester des trucs...
 
 */
 
-var imgTroncPalissade;
-imgTroncPalissade = new Image();
-imgTroncPalissade.src = 'img/tronc-palissade.png';
 
-var B_TOP = 1;
-var B_RIGHT = 1<<1;
-var B_BOTTOM = 1<<2;
-var B_LEFT = 1<<3;
 
 Map.prototype.dessineCasePalissade = function (x, y, sides) {
 	var c = this.context;
@@ -96,7 +89,6 @@ Map.prototype.dessineCasePalissade = function (x, y, sides) {
 			angle -= Math.PI*0.5/nbt;
 		}
 		break;
-
 	}
 }
 

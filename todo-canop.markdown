@@ -6,6 +6,8 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
+* corriger imperfection placement troncs palissades donnant recouvrement
+
 
 En cours :
 ==========
@@ -14,6 +16,9 @@ En cours :
 P1 :
 ====
 
+* essayer dart et coffeescript
+* faire de jolis dessins pour les routes
+* rangements de fichiers de src/web pour séparer ceux de l'interface et ceux du site web (pour l'instant le tri est fait dans les scripts)
 * points de distinction, gredins et redresseurs
 * gèrer le cas de 3 types de monstres sur une case sans braldun (j'attends que la situation se présente)
 * PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox

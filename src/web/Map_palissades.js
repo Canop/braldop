@@ -44,7 +44,7 @@ Map.prototype.getImagePalissade = function(sides) {
 		break;
 		
 		case B_LEFT|B_BOTTOM:
-		var nbt = Math.ceil(64/lt)*Math.PI/4;
+		var nbt = Math.ceil((64*Math.PI)/(4*lt));
 		var angle = Math.PI*1.5;
 		for (var i=0; i<=nbt; i++) {
 			angle += Math.PI*0.5/nbt;
@@ -66,7 +66,7 @@ Map.prototype.getImagePalissade = function(sides) {
 		break;
 				
 		case B_TOP|B_RIGHT:
-		var nbt = Math.ceil(64/lt)*Math.PI/4;
+		var nbt = Math.ceil((64*Math.PI)/(4*lt));
 		var angle = Math.PI;
 		for (var i=0; i<=nbt; i++) {
 			var bx = marge+(1+Math.cos(angle)*0.5)*64;
@@ -77,7 +77,7 @@ Map.prototype.getImagePalissade = function(sides) {
 		break;
 
 		case B_TOP|B_LEFT:
-		var nbt = Math.ceil(64/lt)*Math.PI/4;
+		var nbt = Math.ceil((64*Math.PI)/(4*lt));
 		var angle = 0;
 		for (var i=0; i<=nbt; i++) {
 			var bx = marge+Math.cos(angle)*32;
@@ -88,7 +88,7 @@ Map.prototype.getImagePalissade = function(sides) {
 		break;
 
 		case B_RIGHT|B_BOTTOM:
-		var nbt = Math.ceil(64/lt)*Math.PI/4;
+		var nbt = Math.ceil((64*Math.PI)/(4*lt));
 		var angle = Math.PI*1.5;
 		for (var i=0; i<=nbt; i++) {
 			var bx = marge+(1+Math.cos(angle)*0.5)*64;

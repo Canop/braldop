@@ -16,13 +16,13 @@ source config.sh
 cd $CHEMIN_BRALDOP/src/server/mapper
 gomake
 
-rsync -avz --exclude="map.html" --exclude="carte.json" $CHEMIN_BRALDOP/src/web/* $CHEMIN_DEPLOIEMENT_WEB
+rsync -avz --delete $CHEMIN_BRALDOP/src/site/* $CHEMIN_DEPLOIEMENT_WEB
 
 
 for (( i = 0 ; i < ${#NOM_GROUPE[@]} ; i++ ))
 do
 echo "======================= COMPILATION GROUPE ${NOM_GROUPE[$i]} ======================="
 mkdir -p $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
-rsync -avz --exclude="index.html" --exclude="*.crx" $CHEMIN_BRALDOP/src/web/* $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
+rsync -avz --delete $CHEMIN_BRALDOP/src/gui/* $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
 ./mapper $CHEMIN_REPERTOIRE_DONNEES ${BRALDUNS_GROUPE[$i]} $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
 done

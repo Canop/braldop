@@ -6,20 +6,23 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* corriger imperfection placement troncs palissades donnant recouvrement
+* rangements de fichiers de src/web pour séparer ceux de l'interface et ceux du site web (pour l'instant le tri est fait dans les scripts)
 
 
 En cours :
 ==========
 
+* maquetter l'interface totale avec les actions
+
 
 P1 :
 ====
 
+* essayer d'améliorer le dessin des portails
 * essayer dart et coffeescript
+* points de distinction, gredins et redresseurs [en attente : l'info n'est pas présente dans bralduns.csv]
+* recueillir les vues reçues en json depuis le serveur braldahim via l'extension braldop
 * faire de jolis dessins pour les routes
-* rangements de fichiers de src/web pour séparer ceux de l'interface et ceux du site web (pour l'instant le tri est fait dans les scripts)
-* points de distinction, gredins et redresseurs
 * gèrer le cas de 3 types de monstres sur une case sans braldun (j'attends que la situation se présente)
 * PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox
 * extension : ajouter un lien vers la carte de groupe
@@ -30,7 +33,6 @@ P1 :
 * BUG : souvent des non initialisations d'images outline
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
-* maquetter l'interface totale avec les actions
 
 P2 :
 ====

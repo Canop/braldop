@@ -1,0 +1,189 @@
+.monstre_1, .monstre_10, .monstre_12, .monstre_14, .monstre_15, .monstre_16, .monstre_18, .monstre_19, .monstre_2, .monstre_20, .monstre_21, .monstre_22, .monstre_23, .monstre_24, .monstre_25, .monstre_26, .monstre_27, .monstre_28, .monstre_29, .monstre_3, .monstre_30, .monstre_31, .monstre_32, .monstre_33, .monstre_34, .monstre_35, .monstre_36, .monstre_38, .monstre_39, .monstre_4, .monstre_40, .monstre_5, .monstre_6, .monstre_7, .monstre_9{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 0; width: 22px; height: 30px; } 
+.monstre_10a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -31px; width: 32px; height: 32px; } 
+.monstre_10b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -64px; width: 32px; height: 32px; } 
+.monstre_11a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -97px; width: 31px; height: 31px; } 
+.monstre_11b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -129px; width: 32px; height: 32px; } 
+.monstre_13a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -162px; width: 32px; height: 32px; } 
+.monstre_13b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -195px; width: 32px; height: 32px; } 
+.monstre_14a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -228px; width: 32px; height: 32px; } 
+.monstre_14b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -261px; width: 32px; height: 32px; } 
+.monstre_15a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -294px; width: 32px; height: 32px; } 
+.monstre_15b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -327px; width: 32px; height: 32px; } 
+.monstre_16a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -360px; width: 32px; height: 32px; } 
+.monstre_16b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -393px; width: 32px; height: 32px; } 
+.monstre_17a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -426px; width: 32px; height: 32px; } 
+.monstre_17b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -459px; width: 32px; height: 32px; } 
+.monstre_1a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -492px; width: 31px; height: 31px; } 
+.monstre_1b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -524px; width: 31px; height: 31px; } 
+.monstre_21a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -556px; width: 28px; height: 28px; } 
+.monstre_21b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -585px; width: 28px; height: 28px; } 
+.monstre_23a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -614px; width: 32px; height: 32px; } 
+.monstre_23b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -647px; width: 32px; height: 32px; } 
+.monstre_24a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -680px; width: 32px; height: 32px; } 
+.monstre_24b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -713px; width: 32px; height: 32px; } 
+.monstre_25a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -746px; width: 32px; height: 32px; } 
+.monstre_25b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -779px; width: 32px; height: 32px; } 
+.monstre_26a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -812px; width: 32px; height: 32px; } 
+.monstre_26b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -845px; width: 32px; height: 32px; } 
+.monstre_27a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -878px; width: 32px; height: 32px; } 
+.monstre_27b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -911px; width: 32px; height: 32px; } 
+.monstre_28a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -944px; width: 32px; height: 32px; } 
+.monstre_28b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -977px; width: 32px; height: 32px; } 
+.monstre_37a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1010px; width: 28px; height: 28px; } 
+.monstre_37b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1039px; width: 28px; height: 28px; } 
+.monstre_38a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1068px; width: 32px; height: 32px; } 
+.monstre_38b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1101px; width: 32px; height: 32px; } 
+.monstre_4a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1134px; width: 32px; height: 32px; } 
+.monstre_4b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1167px; width: 32px; height: 32px; } 
+.monstre_5a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1200px; width: 31px; height: 31px; } 
+.monstre_5b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1232px; width: 32px; height: 32px; } 
+.monstre_6a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1265px; width: 31px; height: 31px; } 
+.monstre_6b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1297px; width: 32px; height: 32px; } 
+.monstre_7a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1330px; width: 31px; height: 31px; } 
+.monstre_7b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1362px; width: 32px; height: 32px; } 
+.monstre_8a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1395px; width: 31px; height: 31px; } 
+.monstre_8b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1427px; width: 32px; height: 32px; } 
+.monstre_9a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1460px; width: 32px; height: 32px; } 
+.monstre_9b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: 0 -1493px; width: 32px; height: 32px; } 
+
+.academie{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -82px -1874px; width: 32px; height: 32px; } 
+.apothicaire{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px 0; width: 32px; height: 32px; } 
+.assembleur, .atelier, .baraquement, .bibliotheque, .grenier, .hotel, .marche, .temple, .tribunal, .tribune{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -82px; width: 32px; height: 32px; } 
+.auberge{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -164px; width: 32px; height: 32px; } 
+.ballon{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -246px; width: 32px; height: 32px; } 
+.banque, .entreegrotte, .escaliers, .postedegarde{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -328px; width: 32px; height: 32px; } 
+.batiment, .bpeaux{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -410px; width: 30px; height: 25px; } 
+.bbois{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -485px; width: 32px; height: 32px; } 
+.bminerais{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -567px; width: 32px; height: 32px; } 
+.bpartieplantes{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -649px; width: 32px; height: 32px; } 
+.braldun, .braldun_masculin{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -731px; width: 19px; height: 22px; } 
+.braldunKo{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -803px; width: 22px; height: 19px; } 
+.braldun_feminin-a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -872px; width: 22px; height: 23px; } 
+.braldun_feminin-b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -945px; width: 22px; height: 23px; } 
+.braldun_feminin{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1018px; width: 19px; height: 22px; } 
+.braldun_masculin-a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1090px; width: 24px; height: 23px; } 
+.braldun_masculin-b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1163px; width: 24px; height: 22px; } 
+.braldun_monstre{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1235px; width: 30px; height: 30px; } 
+.braldun_monstre_nid{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1315px; width: 30px; height: 30px; } 
+.braldun_nid{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1395px; width: 30px; height: 30px; } 
+.bralduns_feminin-a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1475px; width: 32px; height: 25px; } 
+.bralduns_feminin-b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1550px; width: 32px; height: 25px; } 
+.bralduns_feminin-combat, .bralduns_masculin-combat, .bralduns_masculin_feminin-combat{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1625px; width: 32px; height: 24px; } 
+.bralduns_feminin{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1699px; width: 31px; height: 25px; } 
+.bralduns_masculin-a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1774px; width: 32px; height: 25px; } 
+.bralduns_masculin-b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1849px; width: 32px; height: 25px; } 
+.bralduns_masculin{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -164px -1924px; width: 31px; height: 25px; } 
+.bralduns_masculin_feminin-a{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px 0; width: 32px; height: 26px; } 
+.bralduns_masculin_feminin-b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -76px; width: 32px; height: 26px; } 
+.bralduns_masculin_feminin{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -152px; width: 31px; height: 25px; } 
+.buisson{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -227px; width: 30px; height: 30px; } 
+.cadavre{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -307px; width: 32px; height: 32px; } 
+.cadavre_castars{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -389px; width: 32px; height: 24px; } 
+.castars{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -463px; width: 24px; height: 24px; } 
+.centreformation{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -537px; width: 32px; height: 32px; } 
+.champ{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -619px; width: 32px; height: 29px; } 
+.chaussures{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -698px; width: 10px; height: 16px; } 
+.coffre-buisson{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -764px; width: 30px; height: 30px; } 
+.coffre{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -844px; width: 28px; height: 26px; } 
+.contrat, .echangeurrune, .maisonpnj, .quete{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -920px; width: 32px; height: 32px; } 
+.cuir, .fourrure, .peau{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1002px; width: 24px; height: 24px; } 
+.cuisinier{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1076px; width: 32px; height: 30px; } 
+.elements{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1156px; width: 24px; height: 26px; } 
+.forgeron{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1232px; width: 32px; height: 31px; } 
+.gare, .haltegare{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1313px; width: 32px; height: 32px; } 
+.hall, .mairie{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1395px; width: 32px; height: 32px; } 
+.hopital, .infirmerie{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1477px; width: 32px; height: 32px; } 
+.joaillier{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1559px; width: 32px; height: 32px; } 
+.laban{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1641px; width: 23px; height: 23px; } 
+.lieumythique{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1714px; width: 22px; height: 32px; } 
+.menuisier{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1796px; width: 31px; height: 30px; } 
+.mine{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -246px -1876px; width: 32px; height: 30px; } 
+.monstre{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px 0; width: 16px; height: 30px; } 
+.monstre_nid{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -80px; width: 30px; height: 30px; } 
+.monstres{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -160px; width: 30px; height: 30px; } 
+.nid{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -240px; width: 30px; height: 30px; } 
+.notaire{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -320px; width: 32px; height: 32px; } 
+.palissade_b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -402px; width: 24px; height: 30px; } 
+.pas{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -482px; width: 10px; height: 16px; } 
+.pas2{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -548px; width: 21px; height: 33px; } 
+.pasfonce{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -631px; width: 10px; height: 16px; } 
+.planche, .rondin{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -697px; width: 24px; height: 24px; } 
+.puce_aide{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -771px; width: 12px; height: 12px; } 
+.puce_event{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -833px; width: 11px; height: 12px; } 
+.puce_marcher{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -895px; width: 22px; height: 11px; } 
+.puits{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -956px; width: 32px; height: 30px; } 
+.ration, .aliment_1, .aliment_10, .aliment_11, .aliment_12, .aliment_13, .aliment_14, .aliment_15, .aliment_16, .aliment_17, .aliment_18, .aliment_19, .aliment_2, .aliment_20, .aliment_21, .aliment_22, .aliment_23, .aliment_3, .aliment_4, .aliment_5, .aliment_6, .aliment_7, .aliment_8, .aliment_9{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1036px; width: 24px; height: 24px; } 
+.region_pve{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1110px; width: 24px; height: 24px; } 
+.region_pvp{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1184px; width: 24px; height: 24px; } 
+.route_b{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1258px; width: 30px; height: 30px; } 
+.ruine{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1338px; width: 30px; height: 26px; } 
+.rune_a_ap{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1414px; width: 40px; height: 40px; } 
+.rune_a_ba{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1504px; width: 40px; height: 40px; } 
+.rune_a_em{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1594px; width: 40px; height: 40px; } 
+.rune_a_fo{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1684px; width: 40px; height: 40px; } 
+.rune_a_ge{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1774px; width: 40px; height: 40px; } 
+.rune_a_mi{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -328px -1864px; width: 40px; height: 40px; } 
+.rune_a_ri{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px 0; width: 40px; height: 40px; } 
+.rune_a_ru{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -90px; width: 40px; height: 40px; } 
+.rune_a_va{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -180px; width: 40px; height: 40px; } 
+.rune_a_za{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -270px; width: 40px; height: 40px; } 
+.rune_b_kr{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -360px; width: 40px; height: 40px; } 
+.rune_b_ze{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -450px; width: 40px; height: 40px; } 
+.rune_c_il{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -540px; width: 40px; height: 40px; } 
+.rune_c_mu{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -630px; width: 40px; height: 40px; } 
+.rune_c_re{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -720px; width: 40px; height: 40px; } 
+.rune_d_og{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -810px; width: 40px; height: 40px; } 
+.rune_d_ox{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -900px; width: 40px; height: 40px; } 
+.rune_d_up{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -990px; width: 40px; height: 40px; } 
+.rune_inconnue{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1080px; width: 40px; height: 40px; } 
+.runes{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1170px; width: 32px; height: 21px; } 
+.tabatiere{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1241px; width: 32px; height: 32px; } 
+.tanneur{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1323px; width: 32px; height: 30px; } 
+.aliment_24, .aliment_25, .aliment_26, .aliment_27{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1403px; width: 24px; height: 24px; } 
+.equipement_1{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1477px; width: 24px; height: 24px; } 
+.equipement_10, .equipement_11{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1551px; width: 24px; height: 24px; } 
+.equipement_12, .equipement_13, .equipement_14{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1625px; width: 24px; height: 24px; } 
+.equipement_15{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1699px; width: 24px; height: 24px; } 
+.equipement_16{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1773px; width: 24px; height: 24px; } 
+.equipement_17, .equipement_18{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1847px; width: 24px; height: 24px; } 
+.equipement_19{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -418px -1921px; width: 24px; height: 24px; } 
+.equipement_2{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px 0; width: 24px; height: 24px; } 
+.equipement_20{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -74px; width: 24px; height: 24px; } 
+.equipement_21{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -148px; width: 24px; height: 24px; } 
+.equipement_22{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -222px; width: 24px; height: 24px; } 
+.equipement_23, .equipement_24{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -296px; width: 24px; height: 24px; } 
+.equipement_25, .equipement_26, .equipement_27{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -370px; width: 24px; height: 24px; } 
+.equipement_28, .equipement_29, .equipement_30{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -444px; width: 24px; height: 24px; } 
+.equipement_3, .equipement_4, .equipement_44, .equipement_5, .equipement_6{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -518px; width: 24px; height: 24px; } 
+.equipement_31, .equipement_32, .equipement_33{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -592px; width: 24px; height: 24px; } 
+.equipement_34{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -666px; width: 24px; height: 24px; } 
+.equipement_35{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -740px; width: 24px; height: 24px; } 
+.equipement_36{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -814px; width: 24px; height: 24px; } 
+.equipement_37{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -888px; width: 24px; height: 24px; } 
+.equipement_38{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -962px; width: 24px; height: 24px; } 
+.equipement_39, .equipement_40{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1036px; width: 24px; height: 24px; } 
+.equipement_41{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1110px; width: 24px; height: 24px; } 
+.equipement_42, .munition_1{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1184px; width: 24px; height: 24px; } 
+.equipement_43, .munition_2{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1258px; width: 24px; height: 24px; } 
+.equipement_7, .equipement_8, .equipement_9{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1332px; width: 24px; height: 24px; } 
+.graine_1{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1406px; width: 17px; height: 14px; } 
+.graine_2{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1470px; width: 17px; height: 14px; } 
+.graine_3{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1534px; width: 17px; height: 14px; } 
+.graine_4{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1598px; width: 17px; height: 14px; } 
+.graine_5{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1662px; width: 17px; height: 14px; } 
+.graine_6{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1726px; width: 17px; height: 14px; } 
+.graine_7, .graine_8, .graine_9{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1790px; width: 17px; height: 14px; } 
+.ingredient_10, .ingredient_11, .ingredient_12, .ingredient_13, .ingredient_14, .ingredient_8, .ingredient_9, .viande_fraiche, .viande_preparee{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1854px; width: 24px; height: 24px; } 
+.materiel_1, .materiel_10, .materiel_11, .materiel_12, .materiel_13, .materiel_2, .materiel_3, .materiel_4, .materiel_5, .materiel_6, .materiel_7, .materiel_8, .materiel_9{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -508px -1928px; width: 22px; height: 22px; } 
+.minerai_1, .minerai_2, .minerai_3, .minerai_4{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px 0; width: 24px; height: 24px; } 
+.minerai_1_p, .minerai_2_p, .minerai_3_p, .minerai_4_p{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -74px; width: 24px; height: 24px; } 
+.plante_1, .plante_1_p{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -148px; width: 24px; height: 24px; } 
+.plante_2, .plante_2_p{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -222px; width: 24px; height: 24px; } 
+.plante_3, .plante_3_p{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -296px; width: 24px; height: 24px; } 
+.plante_4, .plante_4_p{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -370px; width: 24px; height: 24px; } 
+.plante_5, .plante_5_p{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -444px; width: 24px; height: 24px; } 
+.potion_1, .potion_2, .potion_3, .potion_4, .potion_5{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -518px; width: 24px; height: 24px; } 
+.potion_10, .potion_11, .potion_12, .potion_13, .potion_14, .potion_15, .potion_16, .potion_17, .potion_18, .potion_19, .potion_20, .potion_21, .potion_22, .potion_23, .potion_24, .potion_25, .potion_26, .potion_27, .potion_6, .potion_7, .potion_8, .potion_9{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -592px; width: 24px; height: 24px; } 
+.tabac_1{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -666px; width: 24px; height: 24px; } 
+.tabac_2{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -740px; width: 24px; height: 24px; } 
+.tabac_3{display: inline-block; background: url(sprites-vuetypes.png) no-repeat top left; background-position: -598px -814px; width: 23px; height: 24px; } 

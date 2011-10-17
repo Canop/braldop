@@ -155,9 +155,9 @@ Map.prototype.compileLesVues = function() {
 							if (hasBraldunsCampA && hasBraldunsCampB) key += '-combat';
 							else if (hasBraldunsCampA) key += '-a';
 							else if (hasBraldunsCampB) key += '-b';
-							var img = this.imgBralduns[key];
+							var img = this.spritesVueTypes.get(key);
 							if (img) cell.zones[0].push(img);
-							else console.log("pas d'image de braldun pour la clé '" +key+"'");
+							//~ else console.log("pas d'image de braldun pour la clé '" +key+"'");
 						}
 					}
 					//-- zone 0 : monstres
@@ -198,11 +198,11 @@ Map.prototype.compileLesVues = function() {
 					}
 					//-- zone 2 : braldun KO
 					if (nbBraldunsKO>0) {
-						cell.zones[2].push(this.imgBralduns['braldunKo']);
+						cell.zones[2].push(this.spritesVueTypes.get('braldunko'));
 					}
 					//-- zone 2 : cadavre
 					if (cell.cadavres.length) {
-						cell.zones[2].push(this.imgCadavre);
+						cell.zones[2].push(this.spritesVueTypes.get('cadavre'));
 					}
 					//-- zones 1, 2 et 3 : objets, triés suivant leur type et orientés dans l'une des deux zones
 					if (cell.objets.length) {
@@ -220,8 +220,11 @@ Map.prototype.compileLesVues = function() {
 							if (o.Type=='castar'||o.Type=='rune') dest = cell.zones[2];
 							else if (o.Type=="ballon"||o.Type=="buisson") dest = cell.zones[1];
 							var img;
-							if (o.Type=="tabac"||o.Type=="plante"||o.Type=="potion"||o.Type=="aliment"||o.Type=="graine"||o.Type=="équipement"||o.Type=="munition") img = this.imgObjets[o.Type+'-'+o.IdType];
-							else img = this.imgObjets[o.Type];
+							if (o.Type=="tabac"||o.Type=="plante"||o.Type=="potion"||o.Type=="aliment"||o.Type=="graine"||o.Type=="équipement"||o.Type=="munition") {
+								img = this.spritesVueTypes.get(o.Type+'_'+o.IdType);
+							} else {
+								img = this.spritesVueTypes.get(o.Type);
+							}
 							if (img) {
 								dest.push(img);
 							} else {

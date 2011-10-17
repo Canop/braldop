@@ -36,6 +36,8 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.fogContext = null;
 	this.recomputeCanvasPosition();
 	var _this = this;
+	this.spritesEnv = new SpriteSet('sprites-environnements.png');
+	this.spritesVueTypes = new SpriteSet('sprites-vuetypes.png', function(){_this.compileLesVues()});
 	this.photoSatelliteOK = false;
 	this.photoSatellite.src = "http://static.braldahim.com/images/sources/harilinn/braldahim_carte4.png";
 	this.photoSatellite.onload = function(){
@@ -377,9 +379,9 @@ Map.prototype.redraw = function() {
 							screenRect.y = this.zoom*(this.originY-y);
 							var hover = this.zoom>20 && this.pointerX==x && this.pointerY==y;
 							if (cell.fond) this.drawFond(screenRect, cell.fond);
-							if (cell.champ) this.drawLieu(screenRect, cell.champ, this.champImg, hover);
-							else if (cell.échoppe) this.drawLieu(screenRect, cell.échoppe, this.echoppeImg[cell.échoppe.Métier], hover);
-							else if (cell.lieu) this.drawLieu(screenRect, cell.lieu, this.placeImg[cell.lieu.IdTypeLieu], hover);
+							if (cell.champ) this.drawLieu(screenRect, cell.champ, this.spritesVueTypes.get('champ'), hover);
+							else if (cell.échoppe) this.drawLieu(screenRect, cell.échoppe, this.spritesVueTypes.get(cell.échoppe.Métier), hover);
+							else if (cell.lieu) this.drawLieu(screenRect, cell.lieu, this.spritesVueTypes.get(this.typesBatiments[cell.lieu.IdTypeLieu]), hover);
 						}
 					}
 				}

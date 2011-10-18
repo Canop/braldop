@@ -164,8 +164,7 @@ function fetchMap(callback) {
 		if (httpRequest.readyState === 4) {
 			if (httpRequest.status === 200) {
 				var msg = eval('('+httpRequest.responseText+')');
-				console.log("reçu : ");
-				console.log(msg);
+				console.log("carte : ", msg);
 				if (callback) callback(msg);
 			}
 		}

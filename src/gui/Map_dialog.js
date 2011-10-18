@@ -96,10 +96,8 @@ Map.prototype.openCellDialog = function(x, y) {
 			html[h++] = '<table>';
 			for (var ib=0; ib<cellVue.monstres.length; ib++) {
 				var o = cellVue.monstres[ib];
-				var imgbase =  this.imgMonstres[o.IdType];	
-				var img = imgbase ? imgbase.a : this.imgMonstreInconnu;
 				html[h++] = '<tr><td>';
-				html[h++] = '<img src="'+img.src+'">';
+				html[h++] = '<span class="'+this.spritesVueTypes.css('monstre_'+o.IdType+'a')+'"/>';
 				html[h++] = '</td><td><a target=winprofil href="http://jeu.braldahim.com/voir/monstre/?monstre='+o.Id+'">'+o.Nom+' '+o.Taille+'</a>';
 				html[h++] = '</td></tr>';
 			}
@@ -125,11 +123,8 @@ Map.prototype.openCellDialog = function(x, y) {
 			html[h++] = '<table>';
 			for (var ib=0; ib<cellVue.objets.length; ib++) {
 				var o = cellVue.objets[ib];
-				var key;
-				if (o.Type=="tabac"||o.Type=="plante"||o.Type=="potion"||o.Type=="aliment"||o.Type=="graine"||o.Type=="équipement"||o.Type=="munition") key = o.Type+'_'+o.IdType;
-				else key = o.Type;
 				html[h++] = '<tr><td>';
-				if (key) html[h++] = '<span class="'+key+'"></span>';
+				html[h++] = '<span class="'+this.getObjectImgKey(o)+'"></span>';
 				html[h++] = '</td><td>';
 				html[h++] = '  '+o.Label;
 				html[h++] = '</td></tr>';

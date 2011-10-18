@@ -1,8 +1,5 @@
 
 Map.prototype.initTiles = function() {
-	var baseTilesUrl = "http://static.braldahim.com/images/";
-	var _this = this;
-
 	this.typesBatiments = []; // fait le lien entre le type numérique du batiment et le type chaine
 	this.typesBatiments[1] = "mairie";
 	this.typesBatiments[2] = "centreformation";
@@ -42,52 +39,6 @@ Map.prototype.initTiles = function() {
 	this.typesBatiments[36] = "tribune";
 	this.typesBatiments[37] = "atelier";
 	this.typesBatiments[38] = "haltegare";
-	
-	/*
-	this.imgObjets = {};
-	(this.imgObjets['ballon'] = new Image()).src = baseTilesUrl + "vue/ballon.png";
-	(this.imgObjets['buisson'] = new Image()).src = baseTilesUrl + "vue/buisson.png";
-	(this.imgObjets['castar'] = new Image()).src = baseTilesUrl + "vue/castars.png";
-	(this.imgObjets['charrette'] = new Image()).src = baseTilesUrl + "cockpit/charrette.png";
-	(this.imgObjets['cuir'] = new Image()).src = baseTilesUrl + "elements/cuir.png";
-	(this.imgObjets['fourrure'] = new Image()).src = baseTilesUrl + "elements/fourrure.png";
-	(this.imgObjets['ingrédient'] = new Image()).src = baseTilesUrl + "type_ingredient/type_ingredient_8.png"; // on fera évoluer quand le jeu proposera des icônes différentes
-	(this.imgObjets['matériel'] = new Image()).src = baseTilesUrl + "type_materiel/type_materiel_1.png"; // on fera évoluer quand le jeu proposera des icônes différentes
-	(this.imgObjets['peau'] = new Image()).src = baseTilesUrl + "elements/peau.png";
-	(this.imgObjets['planche'] = new Image()).src = baseTilesUrl + "elements/planche.png";
-	(this.imgObjets['rondin'] = new Image()).src = baseTilesUrl + "elements/rondin.png";
-	(this.imgObjets['rune'] = new Image()).src = baseTilesUrl + "vue/runes.png"; // rien pour le singulier ?
-	(this.imgObjets['tabac-1'] = new Image()).src = baseTilesUrl + "type_tabac/type_tabac_1.png";
-	(this.imgObjets['tabac-2'] = new Image()).src = baseTilesUrl + "type_tabac/type_tabac_2.png";
-	(this.imgObjets['tabac-3'] = new Image()).src = baseTilesUrl + "type_tabac/type_tabac_3.png";
-	(this.imgObjets['lingot'] = new Image()).src = baseTilesUrl + "type_minerai/type_minerai_1_p.png";
-	(this.imgObjets['minerai'] = new Image()).src = baseTilesUrl + "type_minerai/type_minerai_1.png";
-	(this.imgObjets['nid'] = new Image()).src = baseTilesUrl + "vue/nid.png";
-	for (var i=1; i<=5; i++) (this.imgObjets['plante-'+i] = new Image()).src = baseTilesUrl + "type_partieplante/type_partieplante_"+i+".png";
-	for (var i=1; i<=27; i++) (this.imgObjets['potion-'+i] = new Image()).src = baseTilesUrl + "type_potion/type_potion_"+i+".png";
-	for (var i=1; i<=27; i++) (this.imgObjets['aliment-'+i] = new Image()).src = baseTilesUrl + "type_aliment/type_aliment_"+i+".png";
-	for (var i=1; i<=9; i++) (this.imgObjets['graine-'+i] = new Image()).src = baseTilesUrl + "type_graine/type_graine_"+i+".png";
-	for (var i=1; i<=44; i++) (this.imgObjets['équipement-'+i] = new Image()).src = baseTilesUrl + "type_equipement/type_equipement_"+i+".png";
-	for (var i=1; i<=2; i++) (this.imgObjets['munition-'+i] = new Image()).src = baseTilesUrl + "type_munition/type_munition_"+i+".png";
-	*/
-	
-	var numTypeMonstres =[1, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 21, 23, 24, 25, 26, 27, 28, 37, 38];
-	this.imgMonstres = [];
-	for (var i in numTypeMonstres) {
-		var num = numTypeMonstres[i];
-		var o = {};
-		(o.a=new Image()).src = baseTilesUrl + 'type_monstre/'+num+'a.png'; // un seul
-		(o.b=new Image()).src = baseTilesUrl + 'type_monstre/'+num+'b.png'; // plusieurs
-		this.imgMonstres[num]=o;
-	}
-	(this.imgMultiMonstres=new Image()).src = baseTilesUrl + 'vue/monstres.png';
-	(this.imgMonstreInconnu=new Image()).src = baseTilesUrl + 'vue/monstre.png';
-	
-	(this.imgCadavre=new Image()).src = baseTilesUrl + 'vue/cadavre.png';
-	
-	for (tile in this.envTiles) {
-		tile.onload = function() { 	_this.redraw(); }; // on dirait que ça ne marche pas
-	}
 }
 
 // cette méthode est imparfaite : elle ne crée pas réellement un contour

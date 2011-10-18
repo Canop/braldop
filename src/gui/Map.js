@@ -36,6 +36,9 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.fogContext = null;
 	this.recomputeCanvasPosition();
 	var _this = this;
+	var onready = function(){_this.compileLesVues();_this.redraw();};
+	this.spritesEnv = new SpriteSet('sprites-environnements.png', onready);
+	this.spritesVueTypes = new SpriteSet('sprites-vuetypes.png', onready);
 	this.photoSatelliteOK = false;
 	this.photoSatellite.src = "http://static.braldahim.com/images/sources/harilinn/braldahim_carte4.png";
 	this.photoSatellite.onload = function(){
@@ -153,8 +156,6 @@ Map.prototype.setData = function(mapData) {
 	this.mapData = mapData;
 	this.matricesVuesParZ = {};
 	this.matricesVuesParZ[0]={};
-	//console.log("carte reçue");
-	//var startTime = (new Date()).getTime();
 	this.z = 0; // on va basculer forcément sur la couche zéro
 	this.couche = null; 
 	for (var ic=0; ic<this.mapData.Couches.length; ic++) {
@@ -252,7 +253,6 @@ Map.prototype.setData = function(mapData) {
 	}
 	this.compileLesVues();
 	this.matriceVues = this.matricesVuesParZ[0];
-	//console.log("carte compilée en " + ((new Date()).getTime()-startTime) + " ms");
 }
 
 // dessine le brouillard de guerre
@@ -316,6 +316,10 @@ Map.prototype.redraw = function() {
 	}
 	this.redrawStacked = false;
 	try {
+		if (!(this.spritesVueTypes.ready&&this.spritesEnv.ready)) {
+			//~ console.log('not ready for drawing');
+			return;
+		}
 		this.drawInProgress = true;
 		this.context.fillStyle="#343";
 		this.context.fillRect(0, 0, this.screenRect.w, this.screenRect.h);
@@ -342,9 +346,9 @@ Map.prototype.redraw = function() {
 							screenRect.y = this.zoom*(this.originY-y);
 							var hover = this.zoom>20 && this.pointerX==x && this.pointerY==y;
 							if (cell.fond) this.drawFond(screenRect, cell.fond);
-							if (cell.champ) this.drawLieu(screenRect, cell.champ, this.champImg, hover);
-							else if (cell.échoppe) this.drawLieu(screenRect, cell.échoppe, this.echoppeImg[cell.échoppe.Métier], hover);
-							else if (cell.lieu) this.drawLieu(screenRect, cell.lieu, this.placeImg[cell.lieu.IdTypeLieu], hover);
+							if (cell.champ) this.drawLieu(screenRect, cell.champ, this.spritesVueTypes.get('champ'), hover);
+							else if (cell.échoppe) this.drawLieu(screenRect, cell.échoppe, this.spritesVueTypes.get(cell.échoppe.Métier), hover);
+							else if (cell.lieu) this.drawLieu(screenRect, cell.lieu, this.spritesVueTypes.get(this.typesBatiments[cell.lieu.IdTypeLieu]), hover);
 						}
 					}
 				}

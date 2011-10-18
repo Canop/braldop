@@ -10,8 +10,6 @@ var B_PORTAIL = 1<<4;
 // initialise le système de palissades
 Map.prototype.initPalissades = function() {
 	(this.imgTroncPalissade = new Image()).src = 'img/tronc-palissade.png';
-	//~ (this.imgPortailFace = new Image()).src = 'img/portail-face.png';
-	//~ (this.imgPortailProfil = new Image()).src = 'img/portail-profil.png';
 	(this.imgCadenasPalissade = new Image()).src = 'img/cadenas.png';
 	this.imagesPalissades = [];
 }
@@ -32,9 +30,7 @@ Map.prototype.getImagePalissade = function(key) {
 	var cy = img.width/2;
 	var r = 0.75;
 	var lt = this.imgTroncPalissade.width*r; // largeur tronc
-	//~ var lpp = this.imgPortailProfil.width*r; // largeur portail profil
 	var ht = this.imgTroncPalissade.height*r;
-	//~ var hpp = this.imgPortailProfil.height*r;
 	switch(key) {
 		
 		case B_LEFT|B_RIGHT:

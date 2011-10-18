@@ -6,21 +6,17 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* rangements de fichiers de src/web pour séparer ceux de l'interface et ceux du site web (pour l'instant le tri est fait dans les scripts)
-
-
 En cours :
 ==========
 
 * maquetter l'interface totale avec les actions
-
 
 P1 :
 ====
 
 * essayer d'améliorer le dessin des portails
 * essayer dart et coffeescript
-* points de distinction, gredins et redresseurs [en attente : l'info n'est pas présente dans bralduns.csv]
+* points de distinction, gredins et redresseurs
 * recueillir les vues reçues en json depuis le serveur braldahim via l'extension braldop
 * faire de jolis dessins pour les routes
 * gèrer le cas de 3 types de monstres sur une case sans braldun (j'attends que la situation se présente)

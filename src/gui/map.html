@@ -2,10 +2,13 @@
 <head>
 	<title>Carte Braldop</title>
 	<meta http-equiv=content-type content="text/html; charset=UTF8"> 
+	<link rel="stylesheet" type="text/css" href="sprites-vuetypes.css"/>
+	<link rel="stylesheet" type="text/css" href="sprites-environnements.css"/>
 	<script src="jquery-1.6.3.min.js"></script>
 	<script src="util.js"></script>
 	<script src="graphic_utils.js?v=3"></script>
 	<script src="Point.js"></script>
+	<script src="SpriteSet.js"></script>
 	<script src="Rect.js?v=2"></script>
 	<script src="Map.js?v=11"></script>
 	<script src="Map_bubble.js"></script>
@@ -161,8 +164,7 @@ function fetchMap(callback) {
 		if (httpRequest.readyState === 4) {
 			if (httpRequest.status === 200) {
 				var msg = eval('('+httpRequest.responseText+')');
-				console.log("reçu : ");
-				console.log(msg);
+				console.log("carte : ", msg);
 				if (callback) callback(msg);
 			}
 		}
@@ -171,7 +173,7 @@ function fetchMap(callback) {
 	httpRequest.send();	
 }
 
-$(document).ready(function() {
+$(document).ready(function() {	
 	map = new Map("map_canvas", "posmark", "map_dialog");
 	fetchMap(function(msg){
 		teste(msg, map); // met en place des tests pour l'intégration

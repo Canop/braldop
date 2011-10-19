@@ -121,6 +121,7 @@ Map.prototype.compileLesVues = function() {
 	}
 	this.matricesVuesParZ = {};
 	this.matriceVues = {};
+	//~ var nn=0, zz=1, tt=2; // pour tests affichage points gredin et points redresseur
 	for (var iv=0; iv<this.mapData.Vues.length; iv++) {
 		var vue = this.mapData.Vues[iv];
 		if (!vue.active) continue;
@@ -139,6 +140,8 @@ Map.prototype.compileLesVues = function() {
 		}
 		for (ib in vue.Bralduns) {
 			var b = vue.Bralduns[ib];
+			//~ b.PointsGredin = ((nn++)%3)*((zz++)%3)*((tt++)%5)*((tt++)%11);
+			//~ b.PointsRedresseur = ((nn++)%7)*((zz++)%7)*((tt++)%3);
 			var cell = this.getCellVueCreate(b.X, b.Y)
 			cell.bralduns.push(b);
 		}

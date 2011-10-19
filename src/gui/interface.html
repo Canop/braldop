@@ -4,14 +4,14 @@
 	<meta http-equiv=content-type content="text/html; charset=UTF8"> 
 	<script src="jquery-1.6.3.min.js"></script>
 
-	
 	<style type="text/css">
 	body, td {
 		font-size: 12px;
 		font-family: Verdana, Geneva, sans-serif;
+		color: white;
 	}
 	body {
-		background-color: #3A3;
+		background: #4c712c url(http://static.braldahim.com/images/layout/fond.jpg) repeat-x;
 		padding:0;
 		margin:0;
 	}
@@ -20,35 +20,189 @@
 		left: 10px;
 		bottom:0;
 		width: 100px;
-		height: 20px;
-		background-color: yellow;
+		height: 16px;
+		background-color: #900;
+		border-radius: 10px 10px 0 0;
+		z-index: 10;
+		padding: 4px;
+		text-align: center;
+		cursor: pointer;
+	}
+	#bandeau_bralda {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 150px;
+	}
+	#contenu {
+		position: fixed;
+		top: 150px;
+		left: 0;
+		right: 300px;
+		bottom: 0;
+		background-color: gray;
+	}
+	#menu_actions {
+		position: fixed;
+		top: 150px;
+		right:0;
+		bottom:0;
+		width: 300px;
+		z-index:4;
+	}
+	div.titre_liste {
+		padding: 3px;
+		background-color: #050;
+		margin-top: 6px;
+		margin-left:2px;
+		margin-right:2px;
+		border-width:thin;
+		border-top-style:solid;
+		border-color: #252;
+		border-left-style:solid;
+		border-right-style:solid;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	div.liste {
+		margin-left:2px;
+		margin-right:2px;
+		border-color: #252;
+		background-color: #161;
+		border-bottom-style:solid;
+		border-left-style:solid;
+		border-right-style:solid;
+		border-width:thin;
+	}
+	div.liste a {
+		display: block;
+		color: white;
+		border-top-style:dotted;
+		border-color: #252;
+		border-width:thin;
+		padding: 3px;
+		text-decoration: none;
+	}
+	div#onglets {
+		display: inline-block;
+		position: fixed;
+		left: 10px;
+		top: 117px;
+		z-index: 3;
+		padding: 0;
+	}
+	div#onglets .onglet {
+		border-radius: 10px 10px 0 0;
+		background-color: #161;
+		margin-left:5px;
+		padding: 11px;
+		cursor: pointer;
+	}
+	div#onglets .onglet img {
+		vertical-align:middle;
+		margin-right:5px;
+	}
+	div#onglets .onglet[actif=true], div#onglets .onglet:hover {
+		background-color: #383;
 	}
 
 	</style>
 </head>
 <body>
-	
+
+<div id=bandeau_bralda>
+	<table>
+		<tr>
+			<td>
+				<img hspace=10 vspace=10 src=http://static.braldahim.com/images/logo/braldahim4.png>
+			</td>
+			<td>
+				<img hspace=10 vspace=2 src=img/maquette_elem1.png>
+			</td>
+		</tr>
+	</table>
+		
+		
+</div>
+<div id=contenu></div>
+<div id=menu_actions>les actions</div>
 <div id=poignée_blabla>Blabla !</div>
+<div id=onglets>
+	<span class=onglet id_onglet=carte actif=true><img src=img/icone_carte.png height=24>Carte</span>
+	<span class=onglet id_onglet=champs><img src=http://static.braldahim.com/images/vue/champ.png>Champs</span>
+	<span class=onglet id_onglet=événements><img src=img/icone_danger.png height=24>Evénements</span>
+	<span class=onglet id_onglet=communauté><img src=http://static.braldahim.com/images/vue/famille.png height=24>Communauté</span>
+	<span class=onglet id_onglet=soule><img src=http://static.braldahim.com/images/divers/ballon.png>Soule</span>
+	<span class=onglet id_onglet=quêtes><img src=img/icone-contrat.png height=24>Quêtes / Contrats</span>
+	<span class=onglet id_onglet=laban><img src=http://static.braldahim.com/images/cockpit/laban.png>Laban</span>
+	<span class=onglet id_onglet=charrette><img src=http://static.braldahim.com/images/cockpit/charrette.png>Charrette</span>
+	<span class=onglet id_onglet=coffre><img src=http://static.braldahim.com/images/cockpit/coffre.png>Coffre</span>
+</div>
+
 
 <script type="text/javascript">
-
 //> google analytics
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-15064357-4']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-  
-
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-15064357-4']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
 </script>
 
 <script type="text/javascript">
+var listesActions = [
+	{
+		Nom: 'Favorites',
+		Actions: [
+			{Nom:'Attaquer', PA:4, Active:true},
+			{Nom:'Connaissance des monstres à 45%', PA:1, Active:true},
+			{Nom:'Courir', PA:6, Active:false}
+		]
+	},
+	{
+		Nom: 'Basiques',
+		Actions: [
+			{Nom:'Attaquer', PA:4, Active:true},
+			{Nom:'Courir', PA:6, Active:false}
+		]
+	},
+	{
+		Nom: 'Communes',
+		Actions: [
+			{Nom:'Connaissance des monstres à 45%', PA:1, Active:true},
+			{Nom:'Identification des Runes à 12%', PA:6, Active:false}
+		]
+	}
+
+		
+];
+function construitMenuActions(listes) {
+	var html = '<center><b>Actions</b></center>';
+	for (var il=0; il<listes.length; il++) {
+		var liste = listes[il];
+		html += '<div class=titre_liste num_liste='+il+'>'+liste.Nom+'</div>';
+		html += '<div class=liste num_liste='+il+'>';
+		for (var ia=0; ia<liste.Actions.length; ia++) {
+			var action = liste.Actions[ia];
+			html += '<a href=truc>'+action.PA+' PA - '+action.Nom+'</a>';
+		}
+		html += '</div>';
+	}
+	$('#menu_actions').html(html);
+	$('.liste').hide();
+	$('.liste[num_liste="0"]').show();
+}
 $(document).ready(function() {
-	
+	construitMenuActions(listesActions);
+	$('#menu_actions').delegate('.titre_liste', 'click', function() {
+		var num = $(this).attr('num_liste');
+	$('.liste').hide();
+	$('.liste[num_liste="'+num+'"]').show();
+	});
 });
 </script>
 

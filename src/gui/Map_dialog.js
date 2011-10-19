@@ -5,7 +5,7 @@ Map.prototype.openDialog = function(startingRectInCanvas, title, content) {
 	var winWidth = $(window).width();
 	var winHeight = $(window).height();
 	var width = $canvas.width();
-	if (width>400) width=400;
+	if (width>440) width=440;
 	var wx = $canvas.offset().left+this.pointerScreenX;
 	var wy = $canvas.offset().top+this.pointerScreenY;
 	var maxHeight;
@@ -86,6 +86,9 @@ Map.prototype.openCellDialog = function(x, y) {
 				html[h++] = '</td><td><a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+b.Id+'&direct=profil">'+b.Prénom+' '+b.Nom+'</a></td><td>niv. '+b.Niveau;
 				html[h++] = '</td><td>';
 				if (b.IdCommunauté>0) html[h++] =  this.mapData.Communautés[b.IdCommunauté].Nom;
+				html[h++] = '</td><td>';
+				if (b.PointsGredin) html[h++] = '<span class=pointsGredin>'+b.PointsGredin+'</span>';
+				if (b.PointsRedresseur) html[h++] = '<span class=pointsRedresseur>'+b.PointsRedresseur+'</span>';
 				html[h++] = '</td></tr>';
 			}		
 			html[h++] = '</table>';

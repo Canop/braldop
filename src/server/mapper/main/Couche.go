@@ -11,11 +11,11 @@ type Case struct {
 }
 
 type Couche struct {
-	Z        int16
-	Cases    []*Case
-	Champs   []*VueChamp
-	Echoppes []*VueEchoppe
-	Lieux    []*VueLieu
+	Z          int16
+	Cases      []*Case
+	Champs     []*VueChamp
+	Echoppes   []*VueEchoppe
+	Lieux      []*VueLieu
 	Palissades []*VuePalissade
 }
 

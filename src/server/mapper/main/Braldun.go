@@ -14,22 +14,25 @@ import (
 )
 
 type Braldun struct {
-	Id           uint
-	X            int16
-	Y            int16
-	Prénom       string
-	Nom          string
-	Niveau       uint
-	Sexe         string // "f" ou "m"
-	KO           bool
-	Intangible   bool
-	Camp         string // équipe de soule : "a" ou "b" ou ""
-	IdCommunauté uint
+	Id                uint
+	X                 int16
+	Y                 int16
+	Prénom            string
+	Nom               string
+	Niveau            uint
+	Sexe              string // "f" ou "m"
+	KO                bool
+	Intangible        bool
+	Camp              string // équipe de soule : "a" ou "b" ou ""
+	IdCommunauté      uint
+	PointsGredin      int16 // cellule 17
+	PointsRedresseur  int16 // cellule 18
+	PointsDistinction int16 // cellule 19
 }
 
 // cette méthode est appelée pour le décodage du fichier statique
 func (o *Braldun) readCsv(cells []string) (err os.Error) {
-	if len(cells) < 13 {
+	if len(cells) < 20 {
 		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
@@ -44,6 +47,9 @@ func (o *Braldun) readCsv(cells []string) (err os.Error) {
 	}
 	o.Sexe = string(cells[4][0])
 	o.IdCommunauté, _ = strconv.Atoui(cells[12])
+	o.PointsGredin, _ = Atoi16(cells[17])
+	o.PointsRedresseur, _ = Atoi16(cells[18])
+	o.PointsDistinction, _ = Atoi16(cells[19])
 	return
 }
 

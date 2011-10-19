@@ -96,6 +96,9 @@ func (mm *MemMap) Compile() (carte *Carte) {
 				b.Niveau = mmb.Niveau
 				b.Sexe = mmb.Sexe
 				b.IdCommunauté = mmb.IdCommunauté
+				b.PointsGredin = mmb.PointsGredin
+				b.PointsRedresseur = mmb.PointsRedresseur
+				b.PointsDistinction = mmb.PointsDistinction
 			} else {
 				fmt.Printf("Braldun introuvable : %d\n", b.Id)
 			}

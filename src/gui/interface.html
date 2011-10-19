@@ -2,7 +2,23 @@
 <head>
 	<title>Maquette pour une nouvelle interface de Braldahim</title>
 	<meta http-equiv=content-type content="text/html; charset=UTF8"> 
+	<link rel="stylesheet" type="text/css" href="sprites-vuetypes.css"/>
+	<link rel="stylesheet" type="text/css" href="sprites-environnements.css"/>
 	<script src="jquery-1.6.3.min.js"></script>
+	<script src="util.js"></script>
+	<script src="graphic_utils.js?v=3"></script>
+	<script src="Point.js"></script>
+	<script src="SpriteSet.js"></script>
+	<script src="Rect.js?v=2"></script>
+	<script src="Map.js?v=11"></script>
+	<script src="Map_bubble.js"></script>
+	<script src="Map_dialog.js?v=4"></script>
+	<script src="Map_action.js?v=2"></script>
+	<script src="Map_test_integration.js?v=1"></script>
+	<script src="Map_experimentations.js?v=1"></script>
+	<script src="Map_env.js?v=13"></script>
+	<script src="Map_palissades.js?v=1"></script>
+	<script src="Map_vue.js?v=15"></script>
 
 	<style type="text/css">
 	body, td {
@@ -17,7 +33,7 @@
 	}
 	#poignée_blabla {
 		position: fixed;
-		left: 10px;
+		right: 350px;
 		bottom:0;
 		width: 100px;
 		height: 16px;
@@ -42,6 +58,7 @@
 		right: 300px;
 		bottom: 0;
 		background-color: gray;
+		display:none;
 	}
 	#menu_actions {
 		position: fixed;
@@ -68,8 +85,8 @@
 	div.liste {
 		margin-left:2px;
 		margin-right:2px;
-		border-color: #252;
 		background-color: #161;
+		border-color: #252;
 		border-bottom-style:solid;
 		border-left-style:solid;
 		border-right-style:solid;
@@ -106,6 +123,81 @@
 	div#onglets .onglet[actif=true], div#onglets .onglet:hover {
 		background-color: #383;
 	}
+	div#liens {
+		position: fixed;
+		top: 0;
+		right: 0;
+		padding: 3px;
+	}
+	div#liens a {
+		color: white
+	}
+
+
+	#map {
+		position: fixed;
+		background-color : white;
+		padding: 0;
+		left: 0;
+		top: 150px;
+		bottom: 0;
+		right: 300px;
+		-moz-user-select: none;
+		user-select: none;
+		-webkit-user-select: none;
+		border-color: #252;
+		border-top-style:solid;
+		border-right-style:solid;
+		border-width:thin;
+	}
+	#map_dialog {
+		position: fixed;
+		background-color : rgba(0, 50, 0, 0.8);
+		border-radius: 5px;
+		padding: 5px;
+		display: none;
+		color: white;
+		z-index: 10;
+	}
+	.dialog_title {
+		font-weight: bold;
+	}
+	#map_dialog td, #map_dialog a {
+		color: white;
+	}
+	#map_dialog a:hover {
+		color: yellow;
+	}
+	#map_dialog .pointsGredin {
+		background-color: #CC2121;
+		color: white;
+		border-radius: 3px;
+		margin-left: 2px;
+		padding-left: 2px;
+		padding-right: 2px;		
+	}
+	#map_dialog .pointsRedresseur {
+		background-color: #21CC21;
+		color: white;
+		border-radius: 3px;
+		margin-left: 2px;
+		padding-left: 2px;
+		padding-right: 2px;		
+	}
+	#map_canvas {
+		width:100%;
+		height:100%;
+		cursor:move;
+	}
+	#posmark {
+		position:fixed;
+		padding: 3px;
+		background-color: rgba(250, 250, 250, 0.6);
+		z-index:10;
+		bottom:20px;
+		left:100px;
+		color: black;
+	}
 
 	</style>
 </head>
@@ -122,8 +214,6 @@
 			</td>
 		</tr>
 	</table>
-		
-		
 </div>
 <div id=contenu></div>
 <div id=menu_actions>les actions</div>
@@ -139,6 +229,21 @@
 	<span class=onglet id_onglet=charrette><img src=http://static.braldahim.com/images/cockpit/charrette.png>Charrette</span>
 	<span class=onglet id_onglet=coffre><img src=http://static.braldahim.com/images/cockpit/coffre.png>Coffre</span>
 </div>
+<div id=liens>
+	<a href=trux><b>Accueil</b></a>
+	<a href=trux><b>Jouer</b></a>
+	<a href=trux><b>Le Bourg</b></a>
+	<a href=trux><b>Forum</b></a>
+	<a href=trux><b>Règles</b></a>
+	&nbsp; | &nbsp;
+	<a href=trux>Interface</a>
+	<a href=trux>Paramètres</a>
+	<a href=trux>Charte</a>
+	<a href=trux>Déconnexion</a>
+</div>
+<div id=map><canvas id=map_canvas></canvas></div>
+<div id=posmark>-</div>
+<div id=map_dialog></div>
 
 
 <script type="text/javascript">
@@ -177,9 +282,23 @@ var listesActions = [
 			{Nom:'Identification des Runes à 12%', PA:6, Active:false}
 		]
 	}
-
-		
 ];
+var map = null
+
+function fetchMap(callback) {
+	var httpRequest = new XMLHttpRequest();
+	httpRequest.onreadystatechange = function() {
+		if (httpRequest.readyState === 4) {
+			if (httpRequest.status === 200) {
+				var msg = eval('('+httpRequest.responseText+')');
+				console.log("carte : ", msg);
+				if (callback) callback(msg);
+			}
+		}
+	};
+	httpRequest.open('GET', 'carte.json?time='+(new Date().getTime()));
+	httpRequest.send();	
+}
 function construitMenuActions(listes) {
 	var html = '<center><b>Actions</b></center>';
 	for (var il=0; il<listes.length; il++) {
@@ -202,6 +321,45 @@ $(document).ready(function() {
 		var num = $(this).attr('num_liste');
 	$('.liste').hide();
 	$('.liste[num_liste="'+num+'"]').show();
+	});
+		map = new Map("map_canvas", "posmark", "map_dialog");
+	fetchMap(function(msg){
+		teste(msg, map); // met en place des tests pour l'intégration
+		map.setData(msg);
+		//> on batit le menu de choix de la profondeur
+		var html = ''
+		if (msg.Couches) {
+			html += 'Profondeur : <select id=select_profondeur>';
+			for (var i=0; i<msg.Couches.length; i++) {
+				var z = msg.Couches[i].Z;
+				html += '<option value='+z+'>'+z+'</option>';
+			}
+			html += '</select>';
+		}
+		$('#choix_profondeur').html(html);
+		//> on construit la liste des vues disponibles
+		html = "";
+		if (msg.Vues) {
+			for (i in msg.Vues) {
+				var v = msg.Vues[i];
+				v.active = true; // on active par défaut les vues
+				html += '<tr>';
+				html += '<td><input type=checkbox checked idBraldun='+v.Voyeur+' class=view id=view_'+v.Voyeur+'><label for=view_'+v.Voyeur+'>'+(v.PrénomVoyeur?v.PrénomVoyeur:v.Voyeur)+'</label></td>';
+				html += '<td valign=bottom><small>('+formatDate(1000*v.Time)+')</label></small></td>';
+				html += '<td valign=bottom><img x='+(v.XMin+v.XMax)/2+' y='+(v.YMin+v.YMax)/2+' z='+v.Z+' class=goto src=img/player_target.png></td>';
+				html += '</tr>';
+			}
+		}
+		$('#view_table tbody').html(html);
+		map.compileLesVues(); // en raison de leur activation
+		map.redraw();
+		setTimeout(function(){
+			if (msg.Vues && msg.Vues.length==1) {
+				var v = msg.Vues[0];
+				map.goto((v.XMin+v.XMax)/2, (v.YMin+v.YMax)/2, v.Z);
+			}
+			map.redraw();
+		}, 1000); // laisser ce redraw (bug pas maitrisé)
 	});
 });
 </script>

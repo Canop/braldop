@@ -13,7 +13,8 @@ function test_marcheAutour(actions, acteur, xc, yc, d) {
 
 function test_injecteActions(mapData, map) {
 	var actions = [];
-	test_marcheAutour(actions, 22, -110, 336, 2);
+	var v = mapData.Vues[0];
+	test_marcheAutour(actions, v.Voyeur, (v.XMin+v.XMax)/2, (v.YMin+v.YMax)/2, 2);
 	map.setCallback('Marcher', function(a) {console.log('Action:'); console.log(a);});
 	mapData.Actions = actions;
 }

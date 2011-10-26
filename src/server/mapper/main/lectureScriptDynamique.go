@@ -80,6 +80,14 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells []string, vue *Vue) {
 			//~ fmt.Printf(" CHARRETTE : %+v\n", o)
 			vue.Objets = append(vue.Objets, o)
 		}
+	case "CREVASSE":
+		o := new(VueCrevasse)
+		if err := o.readCsv(cells); err != nil {
+			fmt.Printf(" Erreur lecture VueCrevasse : %+v \n cellules : %+v\n", err, cells)
+		} else {
+			//~ fmt.Printf(" VueCrevasse : %+v\n", o)
+			ls.MemMap.StoreCrevasse(o)
+		}
 	case "ECHOPPE":
 		o := new(VueEchoppe)
 		if err := o.readCsv(cells); err != nil {

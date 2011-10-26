@@ -12,6 +12,7 @@ type MemCouche struct {
 	Z                   int16
 	BosquetsParXY       map[int32]*VueBosquet
 	ChampsParXY         map[int32]*VueChamp
+	CrevassesParXY      map[int32]*VueCrevasse
 	EchoppesParXY       map[int32]*VueEchoppe
 	PalissadesParXY     map[int32]*VuePalissade
 	EnvironnementsParXY map[int32]*VueEnvironnement
@@ -23,6 +24,7 @@ func NewMemCouche() (mc *MemCouche) {
 	mc = new(MemCouche)
 	mc.BosquetsParXY = make(map[int32]*VueBosquet)
 	mc.ChampsParXY = make(map[int32]*VueChamp)
+	mc.CrevassesParXY = make(map[int32]*VueCrevasse)
 	mc.EchoppesParXY = make(map[int32]*VueEchoppe)
 	mc.EnvironnementsParXY = make(map[int32]*VueEnvironnement)
 	mc.PalissadesParXY = make(map[int32]*VuePalissade)
@@ -77,6 +79,16 @@ func (mc *MemCouche) Compile(mm *MemMap) (m *Couche) {
 			c.Fond = "pave"
 		case "ruine":
 			c.Fond = "pave"
+		}
+	}
+	for _, r := range mc.CrevassesParXY {
+		key := PosKey(r.X, r.Y)
+		c, ok := cases[key]
+		if !ok {
+			fmt.Println("Crevasse sans case en ", r.X, ", ", r.Y, ", ", r.Z)
+		} else {
+			fmt.Println("Crevasse OK")
+			c.Fond = c.Fond + "-crevasse"
 		}
 	}
 	for _, b := range mc.PalissadesParXY {

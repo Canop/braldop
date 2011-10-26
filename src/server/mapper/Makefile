@@ -6,6 +6,7 @@ GOFILES=\
 	main/VueBosquet.go\
 	main/VueCadavre.go\
 	main/VueChamp.go\
+	main/VueCrevasse.go\
 	main/VueEchoppe.go\
 	main/VueEnvironnement.go\
 	main/VueLieu.go\

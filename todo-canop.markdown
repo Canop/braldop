@@ -6,16 +6,15 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* points de gredins et redresseurs
 
 En cours :
 ==========
 
-* maquetter l'interface totale avec les actions
 
 P1 :
 ====
 
+* affichage des crevasses
 * protection par mot de passe et interface de sélection de la carte
 * intégrer les nouveaux dessins (carottes, au moins)
 * essayer d'améliorer le dessin des portails

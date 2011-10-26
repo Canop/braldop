@@ -49,6 +49,9 @@ func (mm *MemMap) StoreBosquet(o *VueBosquet) {
 func (mm *MemMap) StoreChamp(o *VueChamp) {
 	mm.GetCouche(o.Z).ChampsParXY[PosKey(o.X, o.Y)] = o
 }
+func (mm *MemMap) StoreCrevasse(o *VueCrevasse) {
+	mm.GetCouche(o.Z).CrevassesParXY[PosKey(o.X, o.Y)] = o
+}
 func (mm *MemMap) StoreEchoppe(o *VueEchoppe) {
 	mm.GetCouche(o.Z).EchoppesParXY[PosKey(o.X, o.Y)] = o
 }

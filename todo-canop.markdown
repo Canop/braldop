@@ -21,6 +21,7 @@ P1 :
 * envoi des vues (json) depuis l'extension braldop
 * ajout d'un onglet pour la carte grace à l'extension
 
+* ordonner les profondeurs dans le menu de sélection
 * affichage des dates d'auto-destruction des palissades
 * palissades indestructibles à représenter différemment ?
 * protection par mot de passe et interface de sélection de la carte

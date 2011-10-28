@@ -154,6 +154,7 @@ func main() {
 		fmt.Println(os.EINVAL)
 		return
 	}
+	cheminRepertoireExport := os.Args[3]
 	ls := NewLecteurScripts()
 
 	startTime := time.Seconds()
@@ -175,16 +176,22 @@ func main() {
 	carte := ls.MemMap.Compile()
 
 	//> export de la carte compilée
-	cheminFichierJson := os.Args[3] + "/carte.json"
+	cheminFichierJson := cheminRepertoireExport + "/carte.json"
 	f, err := os.Create(cheminFichierJson)
 	if err != nil {
 		fmt.Printf("Erreur à la création du fichier : %s", cheminFichierJson)
 		return
 	}
-	fmt.Printf("Carte compilée : %s\n", f.Name())
 	defer f.Close()
 	bout, _ := json.Marshal(carte)
 	f.Write(bout)
+
+	//> export des images PNG
+	for _, couche := range carte.Couches {
+		couche.ConstruitPNG(cheminRepertoireExport)
+	}
+
+	fmt.Printf("Carte compilée dans %s\n", cheminRepertoireExport)
 
 	//> affichage d'un petit bilan
 	fmt.Printf("Fini en %d secondes\n Fichiers lus : %d\n", time.Seconds()-startTime, ls.NbReadFiles)

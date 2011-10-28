@@ -81,7 +81,10 @@ function Map(canvasId, posmarkid, dialogId) {
 }
 
 Map.prototype.updatePosDiv = function() {
-	this.posmarkdiv.innerHTML='Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
+	var html = 'Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
+	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
+	if (cell) html += ' ' + cell.fond;
+	this.posmarkdiv.innerHTML=html;
 }
 
 Map.prototype.changeProfondeur = function(z) {
@@ -163,6 +166,8 @@ Map.prototype.setData = function(mapData) {
 		var couche = this.mapData.Couches[ic];
 		if (couche.Z==0) this.couche = couche;
 		couche.matrix = {};//new Array(); // todo benchmarker pour comparer les effets en ram et cpu de la version map et de la version table
+		couche.fond = new Image();
+		couche.fond.src = "couche"+couche.Z+".png";
 		if (couche.Cases) {
 			for (var i=couche.Cases.length; i-->0;) {
 				var o = couche.Cases[i];
@@ -352,7 +357,7 @@ Map.prototype.redraw = function() {
 				if (this.yMin>500) this.yMin=500;
 			}
 
-			if (this.zoom>1 || this.displayALot) {
+			if (this.zoom>2) {
 				var screenRect = new Rect();
 				screenRect.w = this.zoom;
 				screenRect.h = this.zoom;
@@ -370,6 +375,16 @@ Map.prototype.redraw = function() {
 						}
 					}
 				}
+			} else if (this.couche.fond.width) {
+				var sw = this.xMax-this.xMin;
+				var sh = this.yMax-this.yMin;
+				this.context.drawImage(
+					this.couche.fond,
+					this.xMin+800, 500-this.yMax, sw, sh,
+					this.zoom*(this.originX+this.xMin), this.zoom*(this.originY-this.yMax), this.zoom*sw, this.zoom*sh
+				);
+			} else {
+				console.log('image de couche non chargée', this.couche.fond);
 			}
 			if (this.zoom>15 && this.displayGrid) {
 				this.drawGrid();

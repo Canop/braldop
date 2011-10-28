@@ -25,6 +25,7 @@ GOFILES=\
 	main/Vue.go\
 	main/MemMap.go\
 	main/MemCouche.go\
+	main/pngCouche.go\
 	main/lectureScriptDynamique.go\
 	main/lectureScriptStatique.go\
 	main/LecteurScripts.go\

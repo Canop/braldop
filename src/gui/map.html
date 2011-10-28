@@ -140,7 +140,7 @@
 		<input type=checkbox id=layer_régions><label for=layer_régions>Régions</label><br>
 		<input type=checkbox id=layer_fog><label for=layer_fog>Brouillard de guerre</label><br>
 		<input type=checkbox id=layer_grid><label for=layer_grid>Grille</label><br>
-		<input type=checkbox id=layer_alot><label for=layer_alot>Riche mais lent</label><br>
+		<!--<input type=checkbox id=layer_alot><label for=layer_alot>Riche mais lent</label><br>-->
 		<!--<input type=checkbox id=layer_experimentation><label for=layer_experimentation>Expérimentation</label><br>-->
 		<br>
 	</div>
@@ -219,6 +219,7 @@ $(document).ready(function() {
 				html += '</tr>';
 			}
 		}
+		$('#select_profondeur').val(0);
 		$('#view_table tbody').html(html);
 		map.setCallback('profondeur', function(z) {
 			$('#select_profondeur').val(z);

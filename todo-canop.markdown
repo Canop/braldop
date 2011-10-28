@@ -6,7 +6,6 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* affichage des crevasses
 
 En cours :
 ==========
@@ -15,10 +14,13 @@ En cours :
 P1 :
 ====
 
+* option pour afficher les fonds à toutes les résolutions
+* compilation des fonds sous forme d'image pour accélérer (et préparer 
 * serveur avec login (mdp restreint) pour la réception des vues
 * envoi des vues (json) depuis l'extension braldop
 * ajout d'un onglet pour la carte grace à l'extension
 
+* affichage des dates d'auto-destruction des palissades
 * palissades indestructibles à représenter différemment ?
 * protection par mot de passe et interface de sélection de la carte
 * intégrer les nouveaux dessins (carottes, au moins)

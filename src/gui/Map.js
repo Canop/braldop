@@ -28,6 +28,7 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.displayRégions = false;
 	this.displayFog = true;
 	this.displayGrid = false;
+	this.displayALot = false; // si true alors on se fiche un peu de la lenteur du dessin, y compris à basse résolution
 	this.displayExperimentation = false;
 	this.$dialog = $('#'+dialogId);
 	this.dialopIsOpen = false;
@@ -334,7 +335,7 @@ Map.prototype.redraw = function() {
 			this.yMin = -Math.floor(this.screenRect.h/this.zoom-this.originY);
 			this.yMax = Math.ceil(this.originY);
 
-			if (this.zoom>1) {
+			if (this.zoom>1 || this.displayALot) {
 				var screenRect = new Rect();
 				screenRect.w = this.zoom;
 				screenRect.h = this.zoom;

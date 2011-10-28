@@ -18,9 +18,7 @@ func (o *VueRoute) readCsv(cells []string) (err os.Error) {
 		return
 	}
 	o.readCsvPoint(cells)
-	if o.IdRoute, err = strconv.Atoui(cells[4]); err != nil {
-		return
-	}
+	o.IdRoute, _ = strconv.Atoui(cells[4])
 	o.TypeRoute = cells[5]
 	return
 }

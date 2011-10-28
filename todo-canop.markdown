@@ -6,6 +6,7 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
+* affichage des crevasses
 
 En cours :
 ==========
@@ -14,7 +15,11 @@ En cours :
 P1 :
 ====
 
-* affichage des crevasses
+* serveur avec login (mdp restreint) pour la réception des vues
+* envoi des vues (json) depuis l'extension braldop
+* ajout d'un onglet pour la carte grace à l'extension
+
+* palissades indestructibles à représenter différemment ?
 * protection par mot de passe et interface de sélection de la carte
 * intégrer les nouveaux dessins (carottes, au moins)
 * essayer d'améliorer le dessin des portails

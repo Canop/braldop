@@ -88,6 +88,7 @@ Map.prototype.getObjectImgKey = function(o) {
 
 		case "aliment":
 		case "graine":
+		case "matériel":
 		case "minerai":
 		case "munition":
 		case "potion":
@@ -236,7 +237,7 @@ Map.prototype.compileLesVues = function() {
 					}
 					//-- zone 2 : braldun KO
 					if (nbBraldunsKO>0) {
-						cell.zones[2].push(this.spritesVueTypes.get('braldunko'));
+						cell.zones[2].push(this.spritesVueTypes.get('braldunKo'));
 					}
 					//-- zone 2 : cadavre
 					if (cell.cadavres.length) {

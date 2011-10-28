@@ -6,6 +6,8 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
+* option pour afficher les fonds à toutes les résolutions
+* BUG : on dessine à côté de la carte
 
 En cours :
 ==========
@@ -14,7 +16,6 @@ En cours :
 P1 :
 ====
 
-* option pour afficher les fonds à toutes les résolutions
 * compilation des fonds sous forme d'image pour accélérer (et préparer 
 * serveur avec login (mdp restreint) pour la réception des vues
 * envoi des vues (json) depuis l'extension braldop

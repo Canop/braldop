@@ -335,6 +335,23 @@ Map.prototype.redraw = function() {
 			this.yMin = -Math.floor(this.screenRect.h/this.zoom-this.originY);
 			this.yMax = Math.ceil(this.originY);
 
+			if (this.xMin<-800) {
+				this.xMin=-800;
+				if (this.xMax<-800) this.xMax=-800;
+			}
+			if (this.xMax>800) {
+				this.xMax=800;
+				if (this.xMin>800) this.xMin=800;
+			}
+			if (this.yMin<-500) {
+				this.yMin=-500;
+				if (this.yMax<-500) this.xMax=-500;
+			}
+			if (this.yMax>500) {
+				this.yMax=500;
+				if (this.yMin>500) this.yMin=500;
+			}
+
 			if (this.zoom>1 || this.displayALot) {
 				var screenRect = new Rect();
 				screenRect.w = this.zoom;

@@ -31,10 +31,8 @@ P1 :
 * recueillir les vues reçues en json depuis le serveur braldahim via l'extension braldop
 * gèrer le cas de 3 types de monstres sur une case sans braldun (j'attends que la situation se présente)
 * PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox
-* extension : ajouter un lien vers la carte de groupe
 * définition d'une API pour le blabla
 * icônes PVE/PVP devant les noms des régions
-* crevasses ?
 * dialogue/bâtiments : lien vers l'aide du bâtiment
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
@@ -44,8 +42,6 @@ P2 :
 
 * enlever le z inutile dans les objets palissade, champ, échoppe, etc.
 * tag (optionnel) de cellule pour indiquer les coordonnées
-* bug : divers algos ne sont pas adaptés (affichage par exemple, ou getBralduns) si plusieurs vues affichées se recoupent
 * factoriser les données des bralduns, pour ne pas répéter partout leur nom (ne mettre dans les vues, champs, échoppes, que les numéros)
 * compression du json (utile ? si mod_deflate sur le serveur, ça sera compressé génériquement)
-* pour le fun, essayer de dessiner en perspective isométrique
 

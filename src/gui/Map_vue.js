@@ -237,7 +237,7 @@ Map.prototype.compileLesVues = function() {
 					}
 					//-- zone 2 : braldun KO
 					if (nbBraldunsKO>0) {
-						cell.zones[2].push(this.spritesVueTypes.get('braldunKo'));
+						cell.zones[2].push(this.spritesVueTypes.get('braldunko'));
 					}
 					//-- zone 2 : cadavre
 					if (cell.cadavres.length) {

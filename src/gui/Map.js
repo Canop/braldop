@@ -383,8 +383,6 @@ Map.prototype.redraw = function() {
 					this.xMin+800, 500-this.yMax, sw, sh,
 					this.zoom*(this.originX+this.xMin), this.zoom*(this.originY-this.yMax), this.zoom*sw, this.zoom*sh
 				);
-			} else {
-				console.log('image de couche non chargée', this.couche.fond);
 			}
 			if (this.zoom>15 && this.displayGrid) {
 				this.drawGrid();

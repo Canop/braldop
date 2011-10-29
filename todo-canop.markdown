@@ -6,8 +6,7 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* option pour afficher les fonds à toutes les résolutions
-* BUG : on dessine à côté de la carte
+* compilation des fonds sous forme d'image pour accélérer (et préparer l'architecture de stockage des cartes sur Braldahim)
 
 En cours :
 ==========
@@ -16,20 +15,20 @@ En cours :
 P1 :
 ====
 
-* compilation des fonds sous forme d'image pour accélérer (et préparer 
+* faire de jolis dessins pour les routes
+* affichage des dates d'auto-destruction des palissades
+* palissades indestructibles à représenter différemment
+
 * serveur avec login (mdp restreint) pour la réception des vues
 * envoi des vues (json) depuis l'extension braldop
 * ajout d'un onglet pour la carte grace à l'extension
 
 * ordonner les profondeurs dans le menu de sélection
-* affichage des dates d'auto-destruction des palissades
-* palissades indestructibles à représenter différemment ?
 * protection par mot de passe et interface de sélection de la carte
 * intégrer les nouveaux dessins (carottes, au moins)
 * essayer d'améliorer le dessin des portails
 * essayer dart et coffeescript
 * recueillir les vues reçues en json depuis le serveur braldahim via l'extension braldop
-* faire de jolis dessins pour les routes
 * gèrer le cas de 3 types de monstres sur une case sans braldun (j'attends que la situation se présente)
 * PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox
 * extension : ajouter un lien vers la carte de groupe

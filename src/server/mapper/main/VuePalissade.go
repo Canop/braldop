@@ -6,6 +6,7 @@ palissade ou portail
 import (
 	"fmt"
 	"os"
+	"time"
 )
 
 type VuePalissade struct {
@@ -13,6 +14,8 @@ type VuePalissade struct {
 	Y       int16
 	Z       int16
 	Portail bool
+	Destructible bool
+	DateFin int64 // secondes depuis 1970 (0 si pas de date)
 }
 
 func (o *VuePalissade) readCsv(cells []string, estPortail bool) (err os.Error) {
@@ -24,5 +27,13 @@ func (o *VuePalissade) readCsv(cells []string, estPortail bool) (err os.Error) {
 	o.Y, _ = Atoi16(cells[2])
 	o.Z, _ = Atoi16(cells[3])
 	o.Portail = estPortail
+	
+	o.Destructible = cells[5]=="oui"
+	if len(cells)>=7 {
+		t, terr := time.Parse("2006-01-02 15:04:05 MST", cells[6]+" CEST")
+		if terr==nil {
+			o.DateFin = t.Seconds()
+		}
+	}
 	return
 }

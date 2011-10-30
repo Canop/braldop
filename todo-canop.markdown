@@ -6,23 +6,23 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* compilation des fonds sous forme d'image pour accélérer (et préparer l'architecture de stockage des cartes sur Braldahim)
 
 En cours :
 ==========
 
+* affichage des dates d'auto-destruction des palissades
+* palissades indestructibles à représenter différemment
 
 P1 :
 ====
 
 * faire de jolis dessins pour les routes
-* affichage des dates d'auto-destruction des palissades
-* palissades indestructibles à représenter différemment
 
 * serveur avec login (mdp restreint) pour la réception des vues
 * envoi des vues (json) depuis l'extension braldop
 * ajout d'un onglet pour la carte grace à l'extension
 
+* extension : système de chat avec les bralduns en vue (avec invitations possibles d'autres bralduns)
 * ordonner les profondeurs dans le menu de sélection
 * protection par mot de passe et interface de sélection de la carte
 * intégrer les nouveaux dessins (carottes, au moins)

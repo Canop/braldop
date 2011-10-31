@@ -35,11 +35,10 @@ Map.prototype.getImagePalissade = function(key) {
 	var r = 0.75;
 	var li = imgTronc.width*r; // largeur image
 	var lt = li; // largeur tronc
-	var ht = imgTronc.height*r; // hauteur image (todo : renommer)
+	var ht = imgTronc.height*r; // hauteur image
 	switch(key&~(B_PORTAIL|B_INDESTRUCTIBLE)) {
 		
 		case B_LEFT|B_BOTTOM:
-		case B_LEFT|B_BOTTOM|B_PORTAIL:
 		var nbt = Math.ceil((64*Math.PI)/(4*lt));
 		var angle = Math.PI*1.5;
 		for (var i=0; i<=nbt; i++) {
@@ -51,7 +50,6 @@ Map.prototype.getImagePalissade = function(key) {
 		break;
 						
 		case B_TOP|B_RIGHT:
-		case B_TOP|B_RIGHT|B_PORTAIL:
 		var nbt = Math.ceil((64*Math.PI)/(4*lt));
 		var angle = Math.PI;
 		for (var i=0; i<=nbt; i++) {
@@ -63,7 +61,6 @@ Map.prototype.getImagePalissade = function(key) {
 		break;
 
 		case B_TOP|B_LEFT:
-		case B_TOP|B_LEFT|B_PORTAIL:
 		var nbt = Math.ceil((64*Math.PI)/(4*lt));
 		var angle = 0;
 		for (var i=0; i<=nbt; i++) {
@@ -75,7 +72,6 @@ Map.prototype.getImagePalissade = function(key) {
 		break;
 
 		case B_RIGHT|B_BOTTOM:
-		case B_RIGHT|B_BOTTOM|B_PORTAIL:
 		var nbt = Math.ceil((64*Math.PI)/(4*lt));
 		var angle = Math.PI*1.5;
 		for (var i=0; i<=nbt; i++) {

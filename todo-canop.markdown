@@ -6,12 +6,13 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
+* palissades indestructibles représentées différemment
+
 
 En cours :
 ==========
 
 * affichage des dates d'auto-destruction des palissades
-* palissades indestructibles à représenter différemment
 
 P1 :
 ====

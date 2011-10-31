@@ -28,6 +28,7 @@ Map.prototype.getCellVueCreate = function(x, y) {
 		cell.cadavres = [];
 		cell.objets = [];
 		cell.monstres = [];
+        cell.actions = [];
 		cell.nbBraldunsFémininsNonKO=0; 
 		cell.nbBraldunsMasculinsNonKO=0;
 		cell.zones = [[], [], [], []]; // 4 zones : haut-gauche, centre, bas-gauche et bas-droit (haut-droit n'est pas géré dans la vue et correspond au lieu)
@@ -166,8 +167,10 @@ Map.prototype.compileLesVues = function() {
 			for (var i=0; i<vue.actions.length; i++) {
 				var a = vue.actions[i];
 				var cell = this.getCellVueCreate(a.X, a.Y);
-				cell.action = a; // une action max par case pour l'instant
-				cell.zones[1].push(this.typesActions[a.Type].iconeCase);
+				cell.actions.push(a); // pour la popup, plusieurs actions possibles
+                if (this.typesActions[a.Type].isIconeMap) { // affichage de l'icône ou non sur la case
+                    cell.zones[1].push(this.typesActions[a.Type].icone);
+                }
 			}
 		}
 		//> pour chaque cellule on construit les tableaux d'images par zones

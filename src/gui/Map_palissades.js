@@ -5,11 +5,13 @@ var B_RIGHT = 1<<1;
 var B_BOTTOM = 1<<2;
 var B_LEFT = 1<<3;
 var B_PORTAIL = 1<<4;
+var B_INDESTRUCTIBLE = 1<<5;
 
 
 // initialise le système de palissades
 Map.prototype.initPalissades = function() {
 	(this.imgTroncPalissade = new Image()).src = 'img/tronc-palissade.png';
+	(this.imgTroncPalissadeIndestructible = new Image()).src = 'img/tronc-palissade-indestructible.png';
 	(this.imgCadenasPalissade = new Image()).src = 'img/cadenas.png';
 	this.imagesPalissades = [];
 }
@@ -25,13 +27,16 @@ Map.prototype.getImagePalissade = function(key) {
 	img = document.createElement('canvas');
 	img.width = 64+2*marge;
 	img.height = 64+2*marge;
+	var imgTronc = (key&B_INDESTRUCTIBLE) ? this.imgTroncPalissadeIndestructible : this.imgTroncPalissade;
+	
 	var c = img.getContext('2d');
 	var cx = img.width/2;
 	var cy = img.width/2;
 	var r = 0.75;
-	var lt = this.imgTroncPalissade.width*r; // largeur tronc
-	var ht = this.imgTroncPalissade.height*r;
-	switch(key) {
+	var li = imgTronc.width*r; // largeur image
+	var lt = li; // largeur tronc
+	var ht = imgTronc.height*r; // hauteur image (todo : renommer)
+	switch(key&~(B_PORTAIL|B_INDESTRUCTIBLE)) {
 		
 		case B_LEFT|B_BOTTOM:
 		case B_LEFT|B_BOTTOM|B_PORTAIL:
@@ -41,7 +46,7 @@ Map.prototype.getImagePalissade = function(key) {
 			angle += Math.PI*0.5/nbt;
 			var bx = marge+(Math.cos(angle))*32;
 			var by = marge+(1+Math.sin(angle)*0.5)*64;
-			c.drawImage(this.imgTroncPalissade, bx-lt*0.5, by+lt/2-ht, lt, ht);
+			c.drawImage(imgTronc, bx-li*0.5, by+lt/2-ht, li, ht);
 		}
 		break;
 						
@@ -52,7 +57,7 @@ Map.prototype.getImagePalissade = function(key) {
 		for (var i=0; i<=nbt; i++) {
 			var bx = marge+(1+Math.cos(angle)*0.5)*64;
 			var by = marge+Math.sin(angle)*32;
-			c.drawImage(this.imgTroncPalissade, bx-lt/2, by-ht+lt/2, lt, ht);
+			c.drawImage(imgTronc, bx-li/2, by-ht+lt/2, li, ht);
 			angle -= Math.PI*0.5/nbt;
 		}
 		break;
@@ -64,7 +69,7 @@ Map.prototype.getImagePalissade = function(key) {
 		for (var i=0; i<=nbt; i++) {
 			var bx = marge+Math.cos(angle)*32;
 			var by = marge+Math.sin(angle)*32;
-			c.drawImage(this.imgTroncPalissade, bx-lt/2, by-ht+lt/2, lt, ht);
+			c.drawImage(imgTronc, bx-li/2, by-ht+lt/2, li, ht);
 			angle += Math.PI*0.5/nbt;
 		}
 		break;
@@ -76,58 +81,57 @@ Map.prototype.getImagePalissade = function(key) {
 		for (var i=0; i<=nbt; i++) {
 			var bx = marge+(1+Math.cos(angle)*0.5)*64;
 			var by = marge+(1+Math.sin(angle)*0.5)*64;
-			c.drawImage(this.imgTroncPalissade, bx-lt/2, by-ht+lt/2, lt, ht);
+			c.drawImage(imgTronc, bx-li/2, by-ht+lt/2, li, ht);
 			angle -= Math.PI*0.5/nbt;
 		}
 		break;
 
 		case 0: // case de palissade isolée
-		c.drawImage(this.imgTroncPalissade, cx-lt/2, cy+lt/2-ht, lt, ht);
+		c.drawImage(imgTronc, cx-li/2, cy+lt/2-ht, li, ht);
 		break;
 
 		default:
 		// on va dessiner des demi-segments vers le centre
 		if (key&B_TOP) {
 			var nbt = Math.ceil(64/lt);
-			var bx = cx-lt*0.5;
+			var bx = cx-li*0.5;
 			var by = marge;
 			var lta = 64/nbt;
 			for (var i=0; i<=nbt/2; i++) {
-				c.drawImage(this.imgTroncPalissade, bx, by+lt/2-ht, lt, ht);
+				c.drawImage(imgTronc, bx, by+lt/2-ht, li, ht);
 				by += lta;
 			}
 		}
 		if (key&B_LEFT) {
-			var nbt = Math.ceil(64/lt);
-			var by = cy-ht+lt/2;
+			var nbt = Math.ceil(32/lt);
+			var by = cy-ht+li*0.5;
 			var bx = marge;
-			var lta = 64/nbt;
-			for (var i=0; i<=nbt/2; i++) {
-				c.drawImage(this.imgTroncPalissade, bx-lt*0.5, by, lt, ht);
+			var lta = 32/nbt;
+			for (var i=0; i<=nbt; i++) {
+				c.drawImage(imgTronc, bx-li*0.5, by, li, ht);
 				bx += lta;
 			}
 		}
 		if (key&B_RIGHT) {
-			var nbt = Math.ceil(64/lt);
-			var by = cy-ht+lt/2;
+			var nbt = Math.ceil(32/lt);
+			var by = cy-ht+li*0.5;
 			var bx = cx;
-			var lta = 64/nbt;
-			for (var i=0; i<=nbt/2; i++) {
-				c.drawImage(this.imgTroncPalissade, bx-lt*0.5, by, lt, ht);
+			var lta = 32/nbt;
+			for (var i=0; i<=nbt; i++) {
+				c.drawImage(imgTronc, bx-li*0.5, by, li, ht);
 				bx += lta;
 			}
 		}
 		if (key&B_BOTTOM) {
 			var nbt = Math.ceil(64/lt);
-			var bx = cx-lt*0.5;
+			var bx = cx-li*0.5;
 			var by = cy;
 			var lta = 64/nbt;
 			for (var i=0; i<=nbt/2; i++) {
-				c.drawImage(this.imgTroncPalissade, bx, by+lt/2-ht, lt, ht);
+				c.drawImage(imgTronc, bx, by+lt/2-ht, li, ht);
 				by += lta;
 			}
 		}
-
 	}
 	
 	this.imagesPalissades[key] = img;
@@ -140,6 +144,7 @@ Map.prototype.drawPalissade = function(screenRect, palissade, hover) {
 	var cy = screenRect.y+0.5*screenRect.h;
 	var key = palissade.sides;
 	if (palissade.Portail) key |= B_PORTAIL;
+	if (!palissade.Destructible) key |= B_INDESTRUCTIBLE;
 	var img = this.getImagePalissade(key);
 	if (img) {
 		if (this.zoom==64) {

@@ -16,6 +16,8 @@ En cours :
 P1 :
 ====
 
+* faire converger bulle et menu
+
 * faire de jolis dessins pour les routes
 
 * serveur avec login (mdp restreint) pour la réception des vues

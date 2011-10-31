@@ -168,9 +168,9 @@ Map.prototype.compileLesVues = function() {
 				var a = vue.actions[i];
 				var cell = this.getCellVueCreate(a.X, a.Y);
 				cell.actions.push(a); // pour la popup, plusieurs actions possibles
-                if (this.typesActions[a.Type].isIconeMap) { // affichage de l'icône ou non sur la case
-                    cell.zones[1].push(this.typesActions[a.Type].icone);
-                }
+				if (this.typesActions[a.Type].isIconeMap) { // affichage de l'icône ou non sur la case
+					cell.zones[1].push(this.typesActions[a.Type].icone);
+				}
 			}
 		}
 		//> pour chaque cellule on construit les tableaux d'images par zones

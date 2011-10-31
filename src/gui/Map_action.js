@@ -20,8 +20,8 @@ Map.prototype.initTypesActions = function() {
 	}
 	this.typesActions = [];
 	this.typesActions['Marcher'] = {nom:'Marcher', icone:icon('vue/pas'), isIconeMap:true};
-    this.typesActions['Lieu'] = {nom:'Entrer dans le lieu', icone:icon('vue/pas'), isIconeMap:true};
-    this.typesActions['Transbahuter'] = {nom:'Transbahuter', icone:icon('vue/laban'), isIconeMap:false};
+	this.typesActions['Lieu'] = {nom:'Entrer dans le lieu', icone:icon('vue/pas'), isIconeMap:true};
+	this.typesActions['Transbahuter'] = {nom:'Transbahuter', icone:icon('vue/laban'), isIconeMap:false};
 	this.actions = []; // un tableau de toutes les actions
 }
 

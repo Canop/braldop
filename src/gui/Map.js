@@ -543,13 +543,13 @@ Map.prototype.mouseMove = function(e) {
 		this.originX = this.dragStartOriginX + dx;
 		this.originY = this.dragStartOriginY + dy;
 		this.redraw();		
-	} else {
+	} else if (!(this.dialogIsOpen&&this.dialogIsFixed)){
 		var newHoverObject = this.objectOn(this.pointerX, this.pointerY);
 		if (newHoverObject!=this.hoverObject) {
 			this.hoverObject = newHoverObject;
 			if (newHoverObject) {
 				this.openCellDialog(this.pointerX, this.pointerY, false);
-			} else if (this.dialogIsOpen && !this.dialogIsFixed) {
+			} else if (this.dialogIsOpen) {
 				this.$dialog.hide();
 				this.dialogIsOpen = false;
 			}

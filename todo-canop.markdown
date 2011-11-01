@@ -6,18 +6,16 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* palissades indestructibles représentées différemment
-
+* affichage des dates d'auto-destruction des palissades
+* faire converger bulle et menu
 
 En cours :
 ==========
 
-* affichage des dates d'auto-destruction des palissades
 
 P1 :
 ====
 
-* faire converger bulle et menu
 
 * faire de jolis dessins pour les routes
 

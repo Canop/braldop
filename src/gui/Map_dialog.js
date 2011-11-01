@@ -50,7 +50,16 @@ Map.prototype.openCellDialog = function(x, y) {
 	var html = [];
 	var h=0;
 	var empty = false;
-	if (cell.champ) {
+	console.log(cell);
+	if (cell.palissade) {
+		empty = false;
+		html[h++] = "<b>Palissade";
+		if (!cell.palissade.Destructible) html[h++] = " indestructible";
+		html[h++] = "</b>";
+		if (cell.palissade.Destructible && cell.palissade.DateFin) {
+			html[h++] = ' (date de fin : ' + formatDate(cell.palissade.DateFin*1000, true) + ')';
+		}
+	} else if (cell.champ) {
 		html[h++] = '<table><tr><td><span class="champ"/></td><td>';
 		html[h++] = 'Champ de <a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+cell.champ.IdBraldun+'&direct=profil">'+cell.champ.NomCompletBraldun+'</a></td></tr></table>';
 		html[h++] = '</td></tr></table>';
@@ -138,7 +147,6 @@ Map.prototype.openCellDialog = function(x, y) {
 				html[h++] = '</td></tr>';
 			}
 			html[h++] = '</table>';
-
 		}
 	}
 	if (empty) html[h++] = "<i>Il n'y a rien ici</i>";

@@ -519,7 +519,7 @@ Map.prototype.mouseLeave = function(e) {
 Map.prototype.objectOn = function(x,y) {
 	if (this.zoom<10) return null;
 	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
-	if (cell && (cell.champ||cell.échoppe||cell.lieu)) return cell;
+	if (cell && (cell.champ||cell.échoppe||cell.lieu||cell.palissade)) return cell;
 	var cell = this.getCellVue(x, y);
 	if (cell) {
 		return cell;

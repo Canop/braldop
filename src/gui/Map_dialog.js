@@ -1,5 +1,14 @@
-Map.prototype.openDialog = function(startingRectInCanvas, title, content) {
-	this.dialopIsOpen = true;
+Map.prototype.openDialog = function(startingRectInCanvas, title, content, fixed) {
+	if (!this.$dialog) {
+		this.$dialog = $('<div id=map_dialog><span id=map_dialog_title></span><hr><div id=map_dialog_content></div><hr><span id=map_dialog_footer></span></div>');
+		this.$dialog.prependTo('body');
+		this.$dialogTitle = this.$dialog.find('#map_dialog_title');
+		this.$dialogContent = this.$dialog.find('#map_dialog_content');
+		this.$dialogContent.css('overflow', 'auto');
+		this.$dialogFooter = this.$dialog.find('#map_dialog_footer');
+	}
+	this.dialogIsOpen = true;
+	this.dialogIsFixed = fixed;
 	var $canvas = $(this.canvas);
 	var $win = $(window);
 	var winWidth = $(window).width();
@@ -25,22 +34,19 @@ Map.prototype.openDialog = function(startingRectInCanvas, title, content) {
 		this.$dialog.css('top', '');
 		this.$dialog.css('bottom', (winHeight-wy+20)+'px');
 	}
-	var html = [];
-	var h=0;
-	html[h++] = '<span class=dialog_title>';
-	html[h++] = title;
-	html[h++] = '</span><hr>';
-	html[h++] = '<div id=dialog_content></div>';
-	html[h++] = '<hr><small>Cliquez pour fermer ce menu</small>';
-	this.$dialog.html(html.join(''));
+	this.$dialogTitle.html(title);
+	this.$dialogContent.css('max-height', maxHeight);
+	this.$dialogContent.html(content);
+	this.$dialogFooter.html(fixed ? 'Cliquez pour fermer ce menu' : 'Cliquez pour fixer ce menu');
 	this.$dialog.show();
-	$content = $('#dialog_content');
-	$content.css('max-height', maxHeight);
-	$content.css('overflow', 'auto');
-	$content.html(content);
 }
 
-Map.prototype.openCellDialog = function(x, y) {
+Map.prototype.fixDialog = function() {
+	this.dialogIsFixed = true;
+	this.$dialogFooter.html('Cliquez pour fermer ce menu');
+}
+
+Map.prototype.openCellDialog = function(x, y, fixed) {
 	var cell = this.getCell(this.couche, x, y);
 	var screenRect = new Rect();
 	screenRect.w = this.zoom;
@@ -50,7 +56,6 @@ Map.prototype.openCellDialog = function(x, y) {
 	var html = [];
 	var h=0;
 	var empty = false;
-	console.log(cell);
 	if (cell.palissade) {
 		empty = false;
 		html[h++] = "<b>Palissade";
@@ -150,5 +155,5 @@ Map.prototype.openCellDialog = function(x, y) {
 		}
 	}
 	if (empty) html[h++] = "<i>Il n'y a rien ici</i>";
-	this.openDialog(screenRect, x+","+y, html.join(''));
+	this.openDialog(screenRect, x+","+y, html.join(''), fixed);
 }

@@ -72,7 +72,7 @@
 		color: white;
 		z-index: 10;
 	}
-	.dialog_title {
+	#map_dialog_title {
 		font-weight: bold;
 	}
 	#map_dialog td, #map_dialog a {
@@ -153,7 +153,6 @@
 </div>
 <div id=map><canvas id=map_canvas></canvas></div>
 <div id=posmark>-</div>
-<div id=map_dialog></div>
 
 
 <script type="text/javascript">
@@ -191,7 +190,7 @@ function fetchMap(callback) {
 }
 
 $(document).ready(function() {	
-	map = new Map("map_canvas", "posmark", "map_dialog");
+	map = new Map("map_canvas", "posmark");
 	fetchMap(function(msg){
 		//teste(msg, map); // met en place des tests pour l'intégration
 		map.setData(msg);

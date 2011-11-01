@@ -28,9 +28,9 @@ Map.prototype.initTypesActions = function() {
 
 function mapDoAction(key) {
 	var action = currentMap.actions[key];
-	if (currentMap.dialopIsOpen) {
+	if (currentMap.dialogIsOpen) {
 		currentMap.$dialog.hide();
-		currentMap.dialopIsOpen = false;
+		currentMap.dialogIsOpen = false;
 	}
 	var callback = currentMap.callbacks[action.Type];
 	if (callback) {

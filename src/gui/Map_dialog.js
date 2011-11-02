@@ -46,6 +46,13 @@ Map.prototype.fixDialog = function() {
 	this.$dialogFooter.html('Cliquez pour fermer ce menu');
 }
 
+Map.prototype.closeDialog = function() {
+	if (this.dialogIsOpen) {
+		this.$dialog.hide();
+		this.dialogIsOpen = false;
+	}
+}
+
 Map.prototype.openCellDialog = function(x, y, fixed) {
 	var cell = this.getCell(this.couche, x, y);
 	var screenRect = new Rect();

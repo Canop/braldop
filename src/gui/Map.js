@@ -56,9 +56,9 @@ function Map(canvasId, posmarkid, dialogId) {
 
 	this.canvas.addEventListener("mousedown", function(e) {_this.mouseDown(e)}, false);
 	this.canvas.addEventListener("mouseup", function(e) {_this.mouseUp(e)}, false);
-	this.canvas.addEventListener("mouseleave", function(e) {_this.mouseLeave(e)}, false);
+	$(this.canvas).mouseleave(function(e) {_this.mouseLeave(e)});
 	this.canvas.addEventListener("mousemove", function(e) {_this.mouseMove(e)}, false);
-	if (this.canvas.addEventListener) this.canvas.addEventListener("DOMMouseScroll", function(e) {e.preventDefault(), _this.mouseWheel(e)}, false); // firefox
+	this.canvas.addEventListener("DOMMouseScroll", function(e) {e.preventDefault(), _this.mouseWheel(e)}, false); // firefox
 	this.canvas.onmousewheel = function(e) {e.preventDefault(), _this.mouseWheel(e)}; // chrome
 	$(window).resize(function(){
 		_this.recomputeCanvasPosition();
@@ -497,6 +497,7 @@ Map.prototype.mouseUp = function(e) {
 Map.prototype.mouseLeave = function(e) {
 	this.mouseIsDown = false;
 	this.hoverObject = null;
+	if (this.dialogIsOpen && !this.dialogIsFixed) this.closeDialog();
 	this.redraw();
 }
 

@@ -528,8 +528,7 @@ Map.prototype.mouseMove = function(e) {
 	this.updatePosDiv();
 	if (this.mouseIsDown) {
 		if (this.dialogIsOpen) {
-			this.$dialog.hide();
-			this.dialogIsOpen = false;
+			this.closeDialog();
 		}
 		var dx = (mouseX-this.dragStartPageX)/this.zoom;
 		var dy = (mouseY-this.dragStartPageY)/this.zoom;

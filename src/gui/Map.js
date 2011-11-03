@@ -416,6 +416,9 @@ Map.prototype.redraw = function() {
 }
 Map.prototype.mouseWheel = function(e) {
 	if (this.mouseIsDown) return;
+	if (this.dialogIsOpen) {
+		this.closeDialog();
+	}
 	var delta = 0;
 	if (!e) e=window.e;
 	if (e.wheelDelta) {

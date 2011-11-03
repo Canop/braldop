@@ -6,7 +6,7 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* améliorations du comportement des bulles (en particulier en intégré dans Braldahim)
+* BUG : je ne récupère pas l'image css pour les monstres que je n'ai pas affichés auparavant dans le canvas
 
 En cours :
 ==========

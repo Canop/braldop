@@ -96,7 +96,9 @@ SpriteSet.prototype.get = function(key, alternateKey) {
 
 // renvoie une clef css correspondant à la clef.
 // Ceci peut être le alternateKey fourni lors d'un appel précédent à get.
-SpriteSet.prototype.css = function(key) {
+SpriteSet.prototype.css = function(key, alternateKey) {
 	var img = this.sprites[key];
+	if (img) return img.cssSelector;
+	img = this.get(key, alternateKey);
 	if (img) return img.cssSelector;
 }

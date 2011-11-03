@@ -135,7 +135,7 @@ Map.prototype.openCellDialog = function(x, y, fixed) {
 			for (var ib=0; ib<cellVue.monstres.length; ib++) {
 				var o = cellVue.monstres[ib];
 				html[h++] = '<tr><td>';
-				html[h++] = '<span class="'+this.spritesVueTypes.css('monstre_'+o.IdType+'a')+'"/>';
+				html[h++] = '<span class="'+this.spritesVueTypes.css('monstre_'+o.IdType+'a', 'monstre')+'"/>';
 				html[h++] = '</td><td><a target=winprofil href="http://jeu.braldahim.com/voir/monstre/?monstre='+o.Id+'">'+o.Nom+' '+o.Taille+'</a>';
 				html[h++] = '</td></tr>';
 			}

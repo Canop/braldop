@@ -368,7 +368,6 @@ function construitMenuActions() {
 		}
 		html += '</div>';
 	}
-	console.log(html);
 	$('#menu_actions').html(html);
 	$('.liste').hide();
 	$('.liste[tag="Favorites"]').show();
@@ -397,7 +396,6 @@ $(document).ready(function() {
 	});
 	map = new Map("map_canvas", "posmark");
 	fetchMap(function(msg){
-		test_injecteActions(msg, map);
 		map.setData(msg);
 		//> on batit le menu de choix de la profondeur
 		if (msg.Vues) {

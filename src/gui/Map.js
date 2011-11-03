@@ -522,7 +522,6 @@ Map.prototype.mouseMove = function(e) {
 	this.pointerScreenY = mouseY;
 	this.pointerX = Math.floor(mouseX/this.zoom-this.originX);
 	this.pointerY = -Math.floor(mouseY/this.zoom-this.originY);
-	this.updatePosDiv();
 	if (this.mouseIsDown) {
 		if (this.dialogIsOpen) {
 			this.closeDialog();
@@ -533,6 +532,7 @@ Map.prototype.mouseMove = function(e) {
 		this.originY = this.dragStartOriginY + dy;
 		this.redraw();		
 	} else if (!(this.dialogIsOpen&&this.dialogIsFixed)){
+		this.updatePosDiv();
 		var newHoverObject = this.objectOn(this.pointerX, this.pointerY);
 		if (newHoverObject!=this.hoverObject) {
 			this.hoverObject = newHoverObject;

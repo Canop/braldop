@@ -7,9 +7,10 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.initTypesActions();
 	this.callbacks = {};
 	this.initPalissades();
+	this.initEnv();
 	this.screenRect = new Rect();
 	this.rect = new Rect(); // le rectangle englobant le contenu que l'on veut montrer
-	this.originX=0; // coin haut gauche de la grotte au centre de l'écran
+	this.originX=0; // coin haut gauche de la case au centre de l'écran
 	this.originY=0;
 	this.scales = [0.5, 1, 2, 4, 8, 16, 32, 48, 64]; // éliminé : 92
 	this.zoom = 64;
@@ -56,7 +57,7 @@ function Map(canvasId, posmarkid, dialogId) {
 
 	this.canvas.addEventListener("mousedown", function(e) {_this.mouseDown(e)}, false);
 	this.canvas.addEventListener("mouseup", function(e) {_this.mouseUp(e)}, false);
-	$(this.canvas).mouseleave(function(e) {_this.mouseLeave(e)});
+	$(this.canvas).mouseleave(function(e) {_this.mouseLeave(e)}); // l'événement mouseleave n'est pas standard (IE only), on passe par jquery qui l'émule dans les autres browsers
 	this.canvas.addEventListener("mousemove", function(e) {_this.mouseMove(e)}, false);
 	this.canvas.addEventListener("DOMMouseScroll", function(e) {e.preventDefault(), _this.mouseWheel(e)}, false); // firefox
 	this.canvas.onmousewheel = function(e) {e.preventDefault(), _this.mouseWheel(e)}; // chrome
@@ -68,9 +69,14 @@ function Map(canvasId, posmarkid, dialogId) {
 }
 
 Map.prototype.updatePosDiv = function() {
-	var html = 'Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
+	//~ var html = 'Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
+	var html = 'X='+this.pointerX+' &nbsp; Y='+this.pointerY;
 	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
-	if (cell) html += ' ' + cell.fond;
+	if (cell) {
+		var env = this.environnements[cell.fond];
+		if (env) html += ' ' + env.nom + ', ' + env.description;
+		else console.log('env inconnu : ' + cell.fond); // notons qu'on a des undefined quand il n'y a pas de terrain sous des palissades par exemple
+	}
 	this.posmarkdiv.innerHTML=html;
 }
 
@@ -90,9 +96,9 @@ Map.prototype.changeProfondeur = function(z) {
 	this.updatePosDiv();
 }
 
-// calcule l'index 2D de la cellule
+// calcule l'index 2D de la cellule (clef de hash pouvant être utilisée dans des map ou bien dans un tableau (de dimension (2W)²)
 Map.prototype.getIndex = function(x, y) {
-	return ((x+this.W)%(2*this.W))+2*this.W*(y+this.W);
+	return ((x+this.W)%(this.W*2))+(this.W*2)*(y+this.W);
 }
 
 // centre l'écran sur la case de coordonnées (x, y, z)
@@ -116,15 +122,13 @@ Map.prototype.getCellCreate = function(couche, x, y) {
 	}
 	return cell;
 }
-// renvoie une cellule (en la créant si nécessaire, ne pas utiliser cette méthode en simple lecture)
+// renvoie une cellule ou null s'il n'y en a pas en (x,y) pour cette couche
 Map.prototype.getCell = function(couche, x, y) {
 	return couche.matrix[this.getIndex(x, y)];
 }
 
 Map.prototype.recomputeCanvasPosition = function() {
 	var pos = $(this.canvas).offset();
-	this.canvas_position_x = pos.left;
-	this.canvas_position_y = pos.top;
 	this.screenRect = new Rect();
 	this.screenRect.x = 0;
 	this.screenRect.y = 0;
@@ -165,14 +169,12 @@ Map.prototype.setData = function(mapData) {
 			for (var i=couche.Champs.length; i-->0;) {
 				var o = couche.Champs[i];
 				o.Nom = "Champ";
-				o.détails = "Propriétaire : "+o.NomCompletBraldun;
 				this.getCellCreate(couche, o.X, o.Y).champ=o;
 			}
 		}
 		if (couche.Echoppes) {
 			for (var i=couche.Echoppes.length; i-->0;) {
 				var o = couche.Echoppes[i];
-				o.détails = o.Métier+" : "+o.NomCompletBraldun;
 				this.getCellCreate(couche, o.X, o.Y).échoppe=o;
 			}
 		}
@@ -214,7 +216,7 @@ Map.prototype.setData = function(mapData) {
 	this.mapData.Vues.sort(function(a, b) {
 		return a.Time-b.Time;
 	});
-	//  les lieux de ville (pour l'instant ?) n'ont pas de profondeur explicite mais ne concerne que la surface. On les met dans la couche zéro
+	//  les lieux de ville (pour l'instant ?) n'ont pas de profondeur explicite mais ne concernent que la surface. On les met dans la couche zéro
 	if (this.mapData.LieuxVilles) {
 		for (var i=this.mapData.LieuxVilles.length; i-->0;) {
 			var o = this.mapData.LieuxVilles[i];
@@ -240,7 +242,7 @@ Map.prototype.setData = function(mapData) {
 				console.log('Vue non trouvée pour action');
 				continue;
 			}
-			if (!vue.actions) vue.actions = [];
+			if (!vue.actions) vue.actions = []; // les actions seront attachées à leur case d'effet éventuelle dans compileLesVues
 			vue.actions.push(a);
 		}
 	}
@@ -269,7 +271,6 @@ Map.prototype.drawFog = function() {
 		for (var i=this.mapData.Vues.length; i-->0;) {
 			var vue = this.mapData.Vues[i];
 			if (vue.active && vue.Z==this.z) {
-				//var hole = holes[i];
 				var hole = new Rect();
 				hole.x = rz*(this.originX+vue.XMin);
 				hole.y = rz*(this.originY-vue.YMin+1);
@@ -279,7 +280,6 @@ Map.prototype.drawFog = function() {
 				if (!Rect_intersect(hole, this.screenRect)) {
 					continue;
 				}
-				if (!hole) continue;
 				c.clearRect(hole.x, hole.y, hole.w, hole.h);
 			}
 		}
@@ -303,16 +303,15 @@ Map.prototype.drawGrid = function() {
 
 // redessine la page. Peut-être appelée de n'importe quel contexte, y compris depuis une méthode de dessin (pour par exemple faire une animation)
 Map.prototype.redraw = function() {
+	if (!(this.spritesVueTypes.ready&&this.spritesEnv.ready)) {
+		return;
+	}
 	if (this.drawInProgress) {
 		this.redrawStacked = true;
 		return;
 	}
 	this.redrawStacked = false;
 	try {
-		if (!(this.spritesVueTypes.ready&&this.spritesEnv.ready)) {
-			//~ console.log('not ready for drawing');
-			return;
-		}
 		this.drawInProgress = true;
 		this.context.fillStyle="#343";
 		this.context.fillRect(0, 0, this.screenRect.w, this.screenRect.h);
@@ -321,11 +320,12 @@ Map.prototype.redraw = function() {
 				this.naturalRectToScreenRect(this.photoSatelliteRect, this.photoSatelliteScreenRect);
 				this.photoSatelliteScreenRect.drawImage(this.context, this.photoSatellite);
 			}
+			
+			// un carambar au premier qui pourra me réduire le paragraphe qui suit sans diminuer les perfs
 			this.xMin = Math.floor(-this.originX);
 			this.xMax = Math.ceil(this.screenRect.w/this.zoom-this.originX);
 			this.yMin = -Math.floor(this.screenRect.h/this.zoom-this.originY);
 			this.yMax = Math.ceil(this.originY);
-
 			if (this.xMin<-800) {
 				this.xMin=-800;
 				if (this.xMax<-800) this.xMax=-800;
@@ -344,7 +344,7 @@ Map.prototype.redraw = function() {
 			}
 
 			if (this.zoom>2) {
-				var screenRect = new Rect();
+				var screenRect = new Rect(); // rectangle d'une cellule en coordonnées canvas
 				screenRect.w = this.zoom;
 				screenRect.h = this.zoom;
 				for (var x=this.xMin; x<=this.xMax; x++) {
@@ -361,7 +361,7 @@ Map.prototype.redraw = function() {
 						}
 					}
 				}
-			} else if (this.couche.fond.width) {
+			} else if (this.couche.fond.width) { // si l'image de fond obtenue du serveur est disponible, on l'utilise pour les basses résolutions
 				var sw = this.xMax-this.xMin;
 				var sh = this.yMax-this.yMin;
 				this.context.drawImage(
@@ -373,7 +373,7 @@ Map.prototype.redraw = function() {
 			if (this.zoom>15 && this.displayGrid) {
 				this.drawGrid();
 			}
-			if (this.zoom>4) {
+			if (this.zoom>2) { // on dessine les palissades après avoir dessiné la grille pour qu'elle ne les recouvre pas
 				var screenRect = new Rect();
 				screenRect.w = this.zoom;
 				screenRect.h = this.zoom;
@@ -383,7 +383,7 @@ Map.prototype.redraw = function() {
 						if (cell && cell.palissade) {
 							screenRect.x = this.zoom*(this.originX+x);
 							screenRect.y = this.zoom*(this.originY-y);
-							this.drawPalissade(screenRect, cell.palissade, hover);
+							this.drawPalissade(screenRect, cell.palissade);
 						}
 					}
 				}
@@ -475,8 +475,7 @@ Map.prototype.mouseUp = function(e) {
 	this.mouseIsDown = false;
 	if (this.dialogIsOpen) {
 		if (this.dialogIsFixed) {
-			this.$dialog.hide();
-			this.dialogIsOpen = false;
+			this.closeDialog();
 		} else {
 			this.fixDialog();
 		}
@@ -488,9 +487,6 @@ Map.prototype.mouseUp = function(e) {
 		mouseX = e.layerX; // FF
 		mouseY = e.layerY; // FF
 	}
-	//~ if (Math.abs(mouseX-this.dragStartPageX)<5 && Math.abs(mouseY-this.dragStartPageY)<5 && this.hoverObject) {
-		//~ this.openCellDialog(this.pointerX, this.pointerY, true);
-	//~ }
 	this.redraw();
 }
 
@@ -509,10 +505,8 @@ Map.prototype.objectOn = function(x,y) {
 	if (this.zoom<10) return null;
 	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
 	if (cell && (cell.champ||cell.échoppe||cell.lieu||cell.palissade)) return cell;
-	var cell = this.getCellVue(x, y);
-	if (cell) {
-		return cell;
-	}
+	cell = this.getCellVue(x, y);
+	if (cell) return cell;
 	return null;
 }
 
@@ -580,7 +574,6 @@ Map.prototype.naturalRectToScreenRect = function(naturalRect, screenRect) {
 
 // permet de spécifier un callback pour une clef
 // - 'profondeur' : appelé en cas de changement de profondeur. L'argument de la méthode sera la profondeur z
-// - 'action' : appelé en cas d'action, avec pour paramètre l'action
 Map.prototype.setCallback = function(key, f) {
 	this.callbacks[key] = f;
 }

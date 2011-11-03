@@ -35,17 +35,6 @@ function tokenize(text) {
 	return text.trim().split(new RegExp("[ /|\t\n\r\f,.:=()]+", "g"));	
 }
 
-// remplace la fonction parseInt, trop capricieuse ( parseInt("05")=5 mais parseInt("08")=0 ) (pb de radix ?)
-// Traite aussi des cas spéciaux de Chrall.
-function atoi(s) {
-	if (!s) return undefined; // à valider
-	s = s.trim();
-	while(s.charAt(0)=='0' || s.charAt(0)==':') {
-		s = s.substring(1, s.length);
-		if (s.length==0) return 0;
-	 }
-	return parseInt(s);
-}
 
 
 

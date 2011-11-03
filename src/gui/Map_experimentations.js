@@ -1,5 +1,0 @@
-/*
-pour tester des trucs...
-
-*/
-

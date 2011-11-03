@@ -57,13 +57,13 @@ SpriteSet.prototype.get = function(key, alternateKey) {
 			found = true;
 			var atoi = function(s){
 				if (StringEndsWith(s, 'px')) s=s.substring(0, s.length-2);
-				return parseInt(s);
+				return parseInt(s, 10);
 			}
-			var width = atoi(rule.style.getPropertyValue('width'));
-			var height = atoi(rule.style.getPropertyValue('height'));
+			var width = parseInt(rule.style.getPropertyValue('width'), 10);
+			var height = parseInt(rule.style.getPropertyValue('height'), 10);
 			var posStr = rule.style.getPropertyValue('background-position').split(' ');
-			var x = -atoi(posStr[0]);
-			var y = -atoi(posStr[1]);
+			var x = -parseInt(posStr[0], 10);
+			var y = -parseInt(posStr[1], 10);
 			img = document.createElement('canvas');
 			img.width = width;
 			img.height = height;

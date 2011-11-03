@@ -13,8 +13,6 @@
 	<script src="Map.js?v=12"></script>
 	<script src="Map_dialog.js?v=5"></script>
 	<script src="Map_action.js?v=3"></script>
-	<script src="Map_test_integration.js?v=1"></script>
-	<script src="Map_experimentations.js?v=1"></script>
 	<script src="Map_env.js?v=14"></script>
 	<script src="Map_palissades.js?v=2"></script>
 	<script src="Map_vue.js?v=16"></script>
@@ -270,7 +268,7 @@ $(document).ready(function() {
 	});
 	$('#view_table').delegate('.goto', 'click', function() {
 		if (map.zoom<32) map.zoom=32;
-		map.goto(parseInt($(this).attr('x')), parseInt($(this).attr('y')), parseInt($(this).attr('z')));
+		map.goto(parseInt($(this).attr('x'), 10), parseInt($(this).attr('y'), 10), parseInt($(this).attr('z'), 10));
 	});
 	$('#select_profondeur').live('change', function() {
 		map.changeProfondeur(parseInt($(this).val()));

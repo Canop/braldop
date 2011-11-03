@@ -6,17 +6,18 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* affichage des dates d'auto-destruction des palissades
-* faire converger bulle et menu
+* améliorations du comportement des bulles (en particulier en intégré dans Braldahim)
 
 En cours :
 ==========
 
+* détails des environnements en bas à gauche
 
 P1 :
 ====
 
-
+* BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
+	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
 * faire de jolis dessins pour les routes
 
 * serveur avec login (mdp restreint) pour la réception des vues
@@ -28,15 +29,11 @@ P1 :
 * protection par mot de passe et interface de sélection de la carte
 * intégrer les nouveaux dessins (carottes, au moins)
 * essayer d'améliorer le dessin des portails
-* essayer dart et coffeescript
-* recueillir les vues reçues en json depuis le serveur braldahim via l'extension braldop
+* essayer coffeescript
 * gèrer le cas de 3 types de monstres sur une case sans braldun (j'attends que la situation se présente)
 * PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox
-* définition d'une API pour le blabla
 * icônes PVE/PVP devant les noms des régions
 * dialogue/bâtiments : lien vers l'aide du bâtiment
-* BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
-	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
 
 P2 :
 ====

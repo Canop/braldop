@@ -70,7 +70,7 @@ function Map(canvasId, posmarkid, dialogId) {
 
 Map.prototype.updatePosDiv = function() {
 	//~ var html = 'Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
-	var html = 'X='+this.pointerX+' &nbsp; Y='+this.pointerY;
+	var html = 'X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
 	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
 	if (cell) {
 		var env = this.environnements[cell.fond];

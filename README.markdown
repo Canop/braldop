@@ -5,7 +5,7 @@ Présentation :
 
 Il s'agit tout à la fois :
 
-* d'une librairie cartographique et visuelle, [Goût-Gueule](http://forum.braldahim.com/viewtopic.php?f=30&t=1223), en cours d'[intégration](http://forum.braldahim.com/viewtopic.php?f=30&t=1236) dans le jeu lui-même et disponible pour tous ceux qui souhaitent augmenter leur interface tactique de groupe
+* d'une librairie cartographique et visuelle, [Goût-Gueule](http://forum.braldahim.com/viewtopic.php?f=30&t=1223), [maintenant intégrée](http://forum.braldahim.com/viewtopic.php?f=30&t=1236) dans le jeu lui-même et disponible pour tous ceux qui souhaitent augmenter leur interface tactique de groupe
 * d'un système tout prêt de partage de vues et cartes, pour les joueurs solo ou les groupes
 * d'une extension pour le navigateur Chrome, totalement indépendante des deux autres points
 
@@ -25,7 +25,7 @@ Vous disposez d'une machine linux visible sur internet et sur laquelle vous pouv
 * vous récupérez le présent machin via git
 * vous configurez *scripts/config.sh*
 * vous lancez *scripts/update.sh* ou *scripts/update-vue.sh*
-* si ça marche, vous le mettez dans un cron, avec exécution toutes les 8 ou 12h
+* si ça marche, vous le mettez dans un cron, avec exécution régulière
 * sinon, ben vous me contactez en irc/gtalk/fofo...
 
 Cas 2 :

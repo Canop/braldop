@@ -23,7 +23,7 @@ Map.prototype.getImagePalissade = function(key) {
 	var img = this.imagesPalissades[key];
 	if (img) return img;
 	var imgTronc = (key&B_INDESTRUCTIBLE) ? this.imgTroncPalissadeIndestructible : this.imgTroncPalissade;
-	if (!this.imgTronc.width) return null;
+	if (!imgTronc.width) return null;
 	var marge = 41; // marge pour le dépassement en dehors de la case
 	img = document.createElement('canvas');
 	img.width = 64+2*marge;

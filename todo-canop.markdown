@@ -6,16 +6,16 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* BUG : je ne récupère pas l'image css pour les monstres que je n'ai pas affichés auparavant dans le canvas
+* détails des environnements en bas à gauche
 
 En cours :
 ==========
 
-* détails des environnements en bas à gauche
 
 P1 :
 ====
 
+* garder le halo or pour les objets de la carte correspondant au menu
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
 * faire de jolis dessins pour les routes

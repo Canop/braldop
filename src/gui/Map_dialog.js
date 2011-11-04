@@ -4,7 +4,7 @@
 // Un fichier css doit définir le style graphique. Les styles de positionnement et dimensions sont définis automatiquemtn
 // par la méthode openDialog en fonction de la position de la souris dans le canvas.
 
-Map.prototype.openDialog = function(startingRectInCanvas, title, content, fixed) {
+Map.prototype.openDialog = function(title, content, fixed) {
 	if (!this.$dialog) {
 		this.$dialog = $('<div id=map_dialog><span id=map_dialog_title></span><hr><div id=map_dialog_content></div><hr><span id=map_dialog_footer></span></div>');
 		this.$dialog.prependTo('body');
@@ -171,5 +171,5 @@ Map.prototype.openCellDialog = function(x, y, fixed) {
 		}
 	}
 	if (empty) html[h++] = "<i>Il n'y a rien ici</i>";
-	this.openDialog(screenRect, x+","+y, html.join(''), fixed);
+	this.openDialog(x+","+y, html.join(''), fixed);
 }

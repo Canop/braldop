@@ -448,8 +448,16 @@ $(document).ready(function() {
 		var pat = $(this).val().trim().toLowerCase();
 		if (pat.length>0) {
 			$('#clear_action').show();
-			for (var i=0; i<actions.length; i++) {
-				if (actions[i].Nom.toLowerCase().indexOf(pat)==0) résultats.push(actions[i]);
+			console.log(pat-0==pat);
+			if (pat.length==1 && pat-0==pat) { // test : est-ce un chiffre ?
+				var pamax = pat-0;
+				for (var i=0; i<actions.length; i++) {
+					if (actions[i].PA<=pamax) résultats.push(actions[i]);
+				}
+			} else {
+				for (var i=0; i<actions.length; i++) {
+					if (actions[i].Nom.toLowerCase().indexOf(pat)==0) résultats.push(actions[i]);
+				}
 			}
 		} else {
 			$('#clear_action').hide();

@@ -17,12 +17,13 @@ Map.prototype.openDialog = function(title, content, fixed) {
 	this.dialogIsFixed = fixed;
 	var $canvas = $(this.canvas);
 	var $win = $(window);
-	var winWidth = $(window).width();
-	var winHeight = $(window).height();
+	var winWidth = $win.width();
+	var winHeight = $win.height();
+	var $doc = $(document);
 	var width = $canvas.width();
 	if (width>440) width=440;
-	var wx = $canvas.offset().left+this.pointerScreenX;
-	var wy = $canvas.offset().top+this.pointerScreenY;
+	var wx = $canvas.offset().left+this.pointerScreenX-$doc.scrollLeft();
+	var wy = $canvas.offset().top+this.pointerScreenY-$doc.scrollTop();
 	var maxHeight;
 	if (wx<winWidth/2) {
 		this.$dialog.css('left', (wx+40)+'px');

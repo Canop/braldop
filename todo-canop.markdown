@@ -7,10 +7,12 @@ Fait :
 ======
 
 * détails des environnements en bas à gauche
+* correction d'un problème de positionnement du dialogue dans le cas où le canvas a été scrollé en partie en dehors de la zone visible.
 
 En cours :
 ==========
 
+* maquettage lancement d'action au clavier
 
 P1 :
 ====

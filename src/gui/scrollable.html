@@ -1,0 +1,281 @@
+<html>
+<head>
+	<title>Carte Braldop dans un layout scrollable</title>
+	<!--
+	
+	Cette page bizarre me sert simplement à tester certaines propriétés
+	 pour des contextes d'inclusion de la carte dans une page scrollable.
+	
+	
+	-->
+	<meta http-equiv=content-type content="text/html; charset=UTF8">
+	<link rel="stylesheet" type="text/css" href="sprites-vuetypes.css"/>
+	<link rel="stylesheet" type="text/css" href="sprites-environnements.css"/>
+	<script src="jquery-1.6.3.min.js"></script>
+	<script src="util.js?v=2"></script>
+	<script src="graphic_utils.js?v=3"></script>
+	<script src="Point.js"></script>
+	<script src="SpriteSet.js"></script>
+	<script src="Rect.js?v=2"></script>
+	<script src="Map.js?v=12"></script>
+	<script src="Map_dialog.js?v=5"></script>
+	<script src="Map_action.js?v=3"></script>
+	<script src="Map_env.js?v=14"></script>
+	<script src="Map_palissades.js?v=2"></script>
+	<script src="Map_vue.js?v=16"></script>
+	
+	<style type="text/css">
+	body, td {
+		font-size: 12px;
+		font-family: Verdana, Geneva, sans-serif;
+	}
+	body {
+		background-color: #3A3;
+		padding:0;
+		margin:0;
+	}
+	#map_settings {
+		background-color : white;
+		box-shadow: 0 3px 6px #666;
+		padding: 0 0 0 5px;
+		width:200px;
+		border-style: solid;
+		border-width: 1px;
+		border-color: black;
+		overflow: auto;
+	}
+	#map_settings h3 {
+		margin: 5px 0 2px 0px;
+	}
+	#map {
+		background-color : white;
+		box-shadow: 0 3px 6px #666;
+		padding: 0px;
+		width: 800px;
+		height:800px;
+		border-style: solid;
+		border-width: 1px;
+		border-color: black;
+		-moz-user-select: none;
+		user-select: none;
+		-webkit-user-select: none;
+	}
+	#map_dialog {
+		position: fixed;
+		background-color : rgba(0, 50, 0, 0.8);
+		border-radius: 5px;
+		padding: 5px;
+		display: none;
+		color: white;
+		z-index: 1001;
+	}
+	#map_dialog_title {
+		font-weight: bold;
+	}
+	#map_dialog td, #map_dialog a {
+		color: white;
+	}
+	#map_dialog a:hover {
+		color: yellow;
+	}
+	#map_dialog .pointsGredin {
+		background-color: #CC2121;
+		color: white;
+		border-radius: 3px;
+		margin-left: 2px;
+		padding-left: 2px;
+		padding-right: 2px;		
+	}
+	#map_dialog .pointsRedresseur {
+		background-color: #21CC21;
+		color: white;
+		border-radius: 3px;
+		margin-left: 2px;
+		padding-left: 2px;
+		padding-right: 2px;		
+	}
+	a.layer {
+		display: block;
+		cursor: pointer;
+		padding:2px;
+	}
+	a.layer:hover {
+		background-color: #F3F6FF;
+	}
+	a.layer[selected] {
+		background-color: #E6F4FF;
+	}
+	#map_canvas {
+		width:100%;
+		height:100%;
+		cursor:move;
+	}
+	#posmark {
+		padding: 3px;
+		background-color: rgba(250, 250, 250, 0.6);
+		z-index:10;
+		position:fixed;
+		bottom:20;
+		left:240;	
+	}
+	.error {
+		color: red;
+	}
+	td img.goto:hover {
+		border-radius: 8px;
+		box-shadow: 0px 0px 3px green;
+		cursor: pointer;
+	}
+	</style>
+</head>
+<body>
+
+<div id=map_settings>
+	<h3>Carte</h3>
+	<div id=layer_list>
+		<input type=checkbox id=layer_satellite><label for=layer_satellite>Photo Satellite</label><br>
+		<input type=checkbox id=layer_régions><label for=layer_régions>Régions</label><br>
+		<input type=checkbox id=layer_fog><label for=layer_fog>Brouillard de guerre</label><br>
+		<input type=checkbox id=layer_grid><label for=layer_grid>Grille</label><br>
+		<!--<input type=checkbox id=layer_alot><label for=layer_alot>Riche mais lent</label><br>-->
+		<!--<input type=checkbox id=layer_experimentation><label for=layer_experimentation>Expérimentation</label><br>-->
+		<br>
+	</div>
+	<div id=choix_profondeur>
+	</div>
+	<h3>Vues</h3>
+	<div id=view_list>
+		<table id=view_table><tbody></tbody></table>
+	</div>
+</div>
+<div id=map><canvas id=map_canvas></canvas></div>
+<div id=posmark>-</div>
+
+
+<script type="text/javascript">
+
+//> google analytics
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15064357-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  
+</script>
+
+<script type="text/javascript">
+	
+var map = null
+
+function fetchMap(callback) {
+	var httpRequest = new XMLHttpRequest();
+	httpRequest.onreadystatechange = function() {
+		if (httpRequest.readyState === 4) {
+			if (httpRequest.status === 200) {
+				var msg = eval('('+httpRequest.responseText+')');
+				console.log("carte : ", msg);
+				if (callback) callback(msg);
+			}
+		}
+	};
+	httpRequest.open('GET', 'carte.json?time='+(new Date().getTime()));
+	httpRequest.send();	
+}
+
+$(document).ready(function() {	
+	map = new Map("map_canvas", "posmark");
+	fetchMap(function(msg){
+		//teste(msg, map); // met en place des tests pour l'intégration
+		map.setData(msg);
+		//> on batit le menu de choix de la profondeur
+		var html = ''
+		if (msg.Couches) {
+			html += 'Profondeur : <select id=select_profondeur>';
+			for (var i=0; i<msg.Couches.length; i++) {
+				var z = msg.Couches[i].Z;
+				html += '<option value='+z+'>'+z+'</option>';
+			}
+			html += '</select>';
+		}
+		$('#choix_profondeur').html(html);
+		//> on construit la liste des vues disponibles
+		html = "";
+		if (msg.Vues) {
+			for (i in msg.Vues) {
+				var v = msg.Vues[i];
+				v.active = true; // on active par défaut les vues
+				html += '<tr>';
+				html += '<td><input type=checkbox checked idBraldun='+v.Voyeur+' class=view id=view_'+v.Voyeur+'><label for=view_'+v.Voyeur+'>'+(v.PrénomVoyeur?v.PrénomVoyeur:v.Voyeur)+'</label></td>';
+				html += '<td valign=bottom><small>('+formatDate(1000*v.Time)+')</label></small></td>';
+				html += '<td valign=bottom><img x='+(v.XMin+v.XMax)/2+' y='+(v.YMin+v.YMax)/2+' z='+v.Z+' class=goto src=img/player_target.png></td>';
+				html += '</tr>';
+			}
+		}
+		$('#select_profondeur').val(0);
+		$('#view_table tbody').html(html);
+		map.setCallback('profondeur', function(z) {
+			$('#select_profondeur').val(z);
+		});
+		map.compileLesVues(); // en raison de leur activation
+		map.redraw();
+		setTimeout(function(){
+			if (msg.Vues && msg.Vues.length==1) {
+				var v = msg.Vues[0];
+				map.goto((v.XMin+v.XMax)/2, (v.YMin+v.YMax)/2, v.Z);
+			}
+			map.redraw();
+		}, 1000); // laisser ce redraw (bug pas maitrisé)
+	});
+	$('#layer_satellite').prop('checked', map.displayPhotoSatellite).change(function(){
+		map.displayPhotoSatellite=this.checked;
+		map.redraw();
+	});
+	$('#layer_régions').prop('checked', map.displayRégions).change(function(){
+		map.displayRégions=this.checked;
+		map.redraw();
+	});
+	$('#layer_fog').prop('checked', map.displayFog).change(function(){
+		map.displayFog=this.checked;
+		map.redraw();
+	});
+	$('#layer_grid').prop('checked', map.displayGrid).change(function(){
+		map.displayGrid=this.checked;
+		map.redraw();
+	});
+	$('#layer_experimentation').prop('checked', map.displayExperimentation).change(function(){
+		map.displayExperimentation=this.checked;
+		map.redraw();
+	});
+	$('#layer_alot').prop('checked', map.displayALot).change(function(){
+		map.displayALot=this.checked;
+		map.redraw();
+	});
+	$('#view_list').delegate('input.view', 'change', function() {
+		var idBraldun = $(this).attr('idBraldun');
+		for (i in map.mapData.Vues) {
+			var v = map.mapData.Vues[i];
+			if (v.Voyeur==idBraldun) {
+				v.active=this.checked;
+				break;
+			}
+		}
+		map.compileLesVues();
+		map.redraw();
+	});
+	$('#view_table').delegate('.goto', 'click', function() {
+		if (map.zoom<32) map.zoom=32;
+		map.goto(parseInt($(this).attr('x'), 10), parseInt($(this).attr('y'), 10), parseInt($(this).attr('z'), 10));
+	});
+	$('#select_profondeur').live('change', function() {
+		map.changeProfondeur(parseInt($(this).val()));
+		map.redraw();
+	});
+});
+</script>
+
+</body>
+</html>

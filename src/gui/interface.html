@@ -82,7 +82,7 @@
 		width: 300px;
 		z-index:4;
 	}
-	div.titre_liste {
+	div.titre_liste, #titre_résultats_recherche {
 		padding: 3px;
 		background-color: #050;
 		margin-top: 6px;
@@ -96,7 +96,7 @@
 		font-weight: bold;
 		cursor: pointer;
 	}
-	div.liste {
+	div.liste, #résultats_recherche {
 		margin-left:2px;
 		margin-right:2px;
 		background-color: #161;
@@ -106,7 +106,7 @@
 		border-right-style:solid;
 		border-width:thin;
 	}
-	div.liste a {
+	div.liste a, #résultats_recherche a {
 		display: block;
 		color: white;
 		border-top-style:dotted;
@@ -230,6 +230,23 @@
 		bottom:20px;
 		left:100px;
 		color: black;
+	}
+	#actionneur {
+		background-color: #9D9;
+		width: 120px;
+		font-size:90%;
+		margin-left:5px;
+		margin-top:-1px;
+		margin-bottom:-1px;
+		color: white;
+	}
+	#clear_action {
+		max-height: 23px;
+		vertical-align:middle;
+		margin-top:-4px;
+		margin-bottom:-2px;
+		display: none;
+		cursor: pointer;
 	}
 
 	</style>
@@ -356,7 +373,8 @@ function construitMenuActions() {
 		}
 		listesActions[action.Tag].push(action);
 	}
-	var html = '<center><b>Actions</b></center>';
+	var html = '<center><b>Actions </b></center>';
+	html += '<div id=titre_résultats_recherche>Recherche <input id=actionneur> <img id=clear_action src=img/clear-left-icone.png></div><div id=résultats_recherche></div>';
 	for (var it in tags) {
 		var tag = tags[it];
 		var liste = listesActions[tag];
@@ -420,6 +438,28 @@ $(document).ready(function() {
 	$('#icon_grid').click(function() {
 		map.displayGrid=!map.displayGrid;
 		map.redraw();
+	});
+	$('#clear_action').click(function(){
+		$('#actionneur').val('');
+		$('#résultats_recherche').html('');
+	});
+	$('#actionneur').keyup(function(){
+		var résultats = [];
+		var pat = $(this).val().trim().toLowerCase();
+		if (pat.length>0) {
+			$('#clear_action').show();
+			for (var i=0; i<actions.length; i++) {
+				if (actions[i].Nom.toLowerCase().indexOf(pat)==0) résultats.push(actions[i]);
+			}
+		} else {
+			$('#clear_action').hide();
+		}
+		var html = '';
+		for (var i=0; i<résultats.length; i++) {
+			var action = résultats[i];
+			html += '<a><img class="étoile" id_action='+action.id+' src="http://static.braldahim.com/images/layout/etoile_'+(action.Favorite?'pleine':'vide')+'.png" height=14/> '+action.PA+' PA - '+action.Nom+'</a>';			
+		}
+		$('#résultats_recherche').html(html);
 	});
 	
 });

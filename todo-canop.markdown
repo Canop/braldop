@@ -6,16 +6,16 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* détails des environnements en bas à gauche
-* correction d'un problème de positionnement du dialogue dans le cas où le canvas a été scrollé en partie en dehors de la zone visible.
+* maquettage lancement d'action au clavier
+* stocker et rétablir l'état de la grille
 
 En cours :
 ==========
 
-* maquettage lancement d'action au clavier
 
 P1 :
 ====
+
 
 * garder le halo or pour les objets de la carte correspondant au menu
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)

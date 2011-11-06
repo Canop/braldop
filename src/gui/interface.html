@@ -437,6 +437,7 @@ $(document).ready(function() {
 	});
 	$('#icon_grid').click(function() {
 		map.displayGrid=!map.displayGrid;
+		localStorage['grid']=''+map.displayGrid;
 		map.redraw();
 	});
 	$('#clear_action').click(function(){

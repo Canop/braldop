@@ -244,6 +244,7 @@ $(document).ready(function() {
 	});
 	$('#layer_grid').prop('checked', map.displayGrid).change(function(){
 		map.displayGrid=this.checked;
+		localStorage['grid']=''+map.displayGrid;
 		map.redraw();
 	});
 	$('#layer_experimentation').prop('checked', map.displayExperimentation).change(function(){

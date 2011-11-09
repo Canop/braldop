@@ -1,21 +1,22 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Carte Braldop</title>
-	<meta http-equiv=content-type content="text/html; charset=UTF8">
+	<meta http-equiv=content-type content="text/html; charset=UTF-8">
 	<link rel="stylesheet" type="text/css" href="sprites-vuetypes.css"/>
 	<link rel="stylesheet" type="text/css" href="sprites-environnements.css"/>
 	<script src="jquery-1.6.3.min.js"></script>
 	<script src="util.js?v=2"></script>
 	<script src="graphic_utils.js?v=3"></script>
 	<script src="Point.js"></script>
-	<script src="SpriteSet.js"></script>
-	<script src="Rect.js?v=2"></script>
-	<script src="Map.js?v=12"></script>
-	<script src="Map_dialog.js?v=5"></script>
-	<script src="Map_action.js?v=3"></script>
-	<script src="Map_env.js?v=14"></script>
-	<script src="Map_palissades.js?v=2"></script>
-	<script src="Map_vue.js?v=16"></script>
+	<script src="SpriteSet.js" charset="utf-8"></script>
+	<script src="Rect.js?v=2" charset="utf-8"></script>
+	<script src="Map.js?v=12" charset="utf-8"></script>
+	<script src="Map_dialog.js?v=5" charset="utf-8"></script>
+	<script src="Map_action.js?v=3" charset="utf-8"></script>
+	<script src="Map_env.js?v=14" charset="utf-8"></script>
+	<script src="Map_palissades.js?v=2" charset="utf-8"></script>
+	<script src="Map_vue.js?v=16" charset="utf-8"></script>
 	
 	<style type="text/css">
 	body, td {
@@ -134,7 +135,7 @@
 	<h3>Carte</h3>
 	<div id=layer_list>
 		<input type=checkbox id=layer_satellite><label for=layer_satellite>Photo Satellite</label><br>
-		<input type=checkbox id=layer_régions><label for=layer_régions>Régions</label><br>
+		<input type=checkbox id=layer_regions><label for=layer_regions>Régions</label><br>
 		<input type=checkbox id=layer_fog><label for=layer_fog>Brouillard de guerre</label><br>
 		<input type=checkbox id=layer_grid><label for=layer_grid>Grille</label><br>
 		<!--<input type=checkbox id=layer_alot><label for=layer_alot>Riche mais lent</label><br>-->
@@ -167,7 +168,7 @@
   
 </script>
 
-<script type="text/javascript">
+<script type="text/javascript" charset="utf-8">
 	
 var map = null
 
@@ -234,7 +235,7 @@ $(document).ready(function() {
 		map.displayPhotoSatellite=this.checked;
 		map.redraw();
 	});
-	$('#layer_régions').prop('checked', map.displayRégions).change(function(){
+	$('#layer_regions').prop('checked', map.displayRégions).change(function(){
 		map.displayRégions=this.checked;
 		map.redraw();
 	});

@@ -6,6 +6,7 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
+* BUG: le halo doré des objets sélectionnés disparait si on passe la souris dans le menu
 
 En cours :
 ==========
@@ -13,6 +14,7 @@ En cours :
 
 P1 :
 ====
+
 
 * serveur avec login (mdp restreint) pour la réception des vues
 

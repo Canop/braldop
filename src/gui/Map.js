@@ -4,7 +4,6 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.context = this.canvas.getContext("2d");
 	this.context.mozImageSmoothingEnabled = false; // contourne un bug de FF qui rend floues les images même à taille naturelle
 	this.$posmarkdiv = $('#'+posmarkid);
-	console.log(this.$posmarkdiv);
 	this.initTypesActions();
 	this.callbacks = {};
 	this.initPalissades();
@@ -133,7 +132,6 @@ Map.prototype.getCell = function(couche, x, y) {
 // en fonction de ses nouvelles position et dimension
 Map.prototype.recomputeCanvasPosition = function() {
 	var pos = $(this.canvas).offset();
-	console.log(pos);
 	this.screenRect = new Rect();
 	this.screenRect.x = 0;
 	this.screenRect.y = 0;
@@ -499,9 +497,7 @@ Map.prototype.mouseUp = function(e) {
 
 Map.prototype.mouseLeave = function(e) {
 	this.mouseIsDown = false;
-	this.hoverObject = null;
 	if (this.dialogIsOpen && !this.dialogIsFixed) this.closeDialog();
-	this.redraw();
 }
 
 // renvoie un "objet" à la position (x,y) dans le référetiel Braldahim :

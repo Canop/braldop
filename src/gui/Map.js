@@ -494,7 +494,6 @@ Map.prototype.mouseUp = function(e) {
 	}
 	this.redraw();
 }
-
 Map.prototype.mouseLeave = function(e) {
 	this.mouseIsDown = false;
 	if (this.dialogIsOpen && !this.dialogIsFixed) this.closeDialog();
@@ -523,29 +522,34 @@ Map.prototype.mouseMove = function(e) {
 	}
 	this.pointerScreenX = mouseX;
 	this.pointerScreenY = mouseY;
-	this.pointerX = Math.floor(mouseX/this.zoom-this.originX);
-	this.pointerY = -Math.floor(mouseY/this.zoom-this.originY);
-	if (this.mouseIsDown) {
-		if (this.dialogIsOpen) {
-			this.closeDialog();
-		}
-		var dx = (mouseX-this.dragStartPageX)/this.zoom;
-		var dy = (mouseY-this.dragStartPageY)/this.zoom;
-		this.originX = this.dragStartOriginX + dx;
-		this.originY = this.dragStartOriginY + dy;
-		this.redraw();		
-	} else if (!(this.dialogIsOpen&&this.dialogIsFixed)){
-		this.updatePosDiv();
-		var newHoverObject = this.objectOn(this.pointerX, this.pointerY);
-		if (newHoverObject!=this.hoverObject) {
-			this.hoverObject = newHoverObject;
-			if (newHoverObject) {
-				this.openCellDialog(this.pointerX, this.pointerY, false);
-			} else if (this.dialogIsOpen) {
-				this.$dialog.hide();
-				this.dialogIsOpen = false;
+	if (this.dialogIsOpen&&this.dialogIsFixed) {
+		// menu ouvert : on ne fait pas grand chose et surtout on ne met pas à jour la position
+		// de la souris dans le référentiel de la carte
+	} else {
+		this.pointerX = Math.floor(mouseX/this.zoom-this.originX);
+		this.pointerY = -Math.floor(mouseY/this.zoom-this.originY);
+		if (this.mouseIsDown) {
+			if (this.dialogIsOpen) {
+				this.closeDialog();
 			}
-			this.redraw();
+			var dx = (mouseX-this.dragStartPageX)/this.zoom;
+			var dy = (mouseY-this.dragStartPageY)/this.zoom;
+			this.originX = this.dragStartOriginX + dx;
+			this.originY = this.dragStartOriginY + dy;
+			this.redraw();		
+		} else {
+			this.updatePosDiv();
+			var newHoverObject = this.objectOn(this.pointerX, this.pointerY);
+			if (newHoverObject!=this.hoverObject) {
+				this.hoverObject = newHoverObject;
+				if (newHoverObject) {
+					this.openCellDialog(this.pointerX, this.pointerY, false);
+				} else if (this.dialogIsOpen) {
+					this.$dialog.hide();
+					this.dialogIsOpen = false;
+				}
+				this.redraw();
+			}
 		}
 	}
 }

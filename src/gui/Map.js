@@ -3,7 +3,8 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.canvas = document.getElementById(canvasId);
 	this.context = this.canvas.getContext("2d");
 	this.context.mozImageSmoothingEnabled = false; // contourne un bug de FF qui rend floues les images même à taille naturelle
-	this.posmarkdiv = document.getElementById(posmarkid);
+	this.$posmarkdiv = $('#'+posmarkid);
+	console.log(this.$posmarkdiv);
 	this.initTypesActions();
 	this.callbacks = {};
 	this.initPalissades();
@@ -78,7 +79,7 @@ Map.prototype.updatePosDiv = function() {
 		if (env) html += ' ' + env.nom + ', ' + env.description;
 		else console.log('env inconnu : ' + cell.fond); // notons qu'on a des undefined quand il n'y a pas de terrain sous des palissades par exemple
 	}
-	this.posmarkdiv.innerHTML=html;
+	this.$posmarkdiv.html(html);
 }
 
 Map.prototype.changeProfondeur = function(z) {
@@ -128,8 +129,11 @@ Map.prototype.getCell = function(couche, x, y) {
 	return couche.matrix[this.getIndex(x, y)];
 }
 
+// appelée initialement et en cas de redimensionnement, cette fonction réadapte le canvas et d'autres trucs
+// en fonction de ses nouvelles position et dimension
 Map.prototype.recomputeCanvasPosition = function() {
 	var pos = $(this.canvas).offset();
+	console.log(pos);
 	this.screenRect = new Rect();
 	this.screenRect.x = 0;
 	this.screenRect.y = 0;
@@ -141,6 +145,8 @@ Map.prototype.recomputeCanvasPosition = function() {
 	this.originY = (this.screenRect.h/2)/this.zoom;
 	this.fogImg = null;
 	this.fogContext = null;
+	// on repositionne la postmarkdiv
+	this.$posmarkdiv.css({left:pos.left+5, top:pos.top+5});
 }
 
 // l'objet passé, reçu en json, devient le fournisseur des données de carte et de vue.

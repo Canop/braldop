@@ -6,8 +6,6 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* maquettage lancement d'action au clavier
-* stocker et rétablir l'état de la grille
 
 En cours :
 ==========
@@ -18,8 +16,6 @@ P1 :
 
 * serveur avec login (mdp restreint) pour la réception des vues
 
-
-* garder le halo or pour les objets de la carte correspondant au menu
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
 * faire de jolis dessins pour les routes

@@ -24,5 +24,5 @@ do
 echo "======================= COMPILATION GROUPE ${NOM_GROUPE[$i]} ======================="
 mkdir -p $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
 rsync -az --delete $CHEMIN_BRALDOP/src/gui/* $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
-./mapper -in $CHEMIN_REPERTOIRE_DONNEES -bralduns ${BRALDUNS_GROUPE[$i]} -out $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
+./mapper ${MAPPER_ARGS_GROUPE[$i]} -in $CHEMIN_REPERTOIRE_DONNEES -bralduns ${BRALDUNS_GROUPE[$i]} -out $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
 done

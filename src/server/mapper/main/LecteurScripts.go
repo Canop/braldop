@@ -155,7 +155,7 @@ func main() {
 	cheminRepertoireExport := flag.String("out", "", "répertoire d'export")
 	idBraldunsBruts := flag.String("bralduns", "", "ids des bralduns, séparés par des virgules")
 	flag.Parse()
-	
+
 	ls := NewLecteurScripts()
 
 	startTime := time.Seconds()

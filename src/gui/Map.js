@@ -59,8 +59,8 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.canvas.addEventListener("mouseup", function(e) {_this.mouseUp(e)}, false);
 	$(this.canvas).mouseleave(function(e) {_this.mouseLeave(e)}); // l'événement mouseleave n'est pas standard (IE only), on passe par jquery qui l'émule dans les autres browsers
 	this.canvas.addEventListener("mousemove", function(e) {_this.mouseMove(e)}, false);
-	this.canvas.addEventListener("DOMMouseScroll", function(e) {e.preventDefault(), _this.mouseWheel(e)}, false); // firefox
-	this.canvas.onmousewheel = function(e) {e.preventDefault(), _this.mouseWheel(e)}; // chrome
+	this.canvas.addEventListener("DOMMouseScroll", function(e) {e.preventDefault(); _this.mouseWheel(e)}, false); // firefox
+	this.canvas.onmousewheel = function(e) {e.preventDefault(); _this.mouseWheel(e)}; // chrome
 	$(window).resize(function(){
 		_this.recomputeCanvasPosition();
 		_this.redraw();

@@ -192,10 +192,7 @@ func main() {
 		couche.ConstruitPNG(*cheminRepertoireExport)
 	}
 
-	fmt.Printf("Carte compilée dans %s\n", *cheminRepertoireExport)
-
 	//> affichage d'un petit bilan
-	fmt.Printf("Fini en %d secondes\n Fichiers lus : %d\n", time.Seconds()-startTime, ls.NbReadFiles)
-	fmt.Println()
+	fmt.Printf("Fichiers lus : %d\nCarte compilée dans %s en %d secondes\n\n", ls.NbReadFiles, *cheminRepertoireExport, time.Seconds()-startTime)
 
 }

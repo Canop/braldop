@@ -64,10 +64,12 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 	}
 	png.Encode(f, img)
 
-	fmt.Println("Fonds manquants :")
-	for fond, nb := range nbAbsences {
-		fmt.Println(fond, " : ", nb)
+	if len(nbAbsences)>0 {
+		fmt.Println("Fonds manquants :")
+		for fond, nb := range nbAbsences {
+			fmt.Println(fond, " : ", nb)
+		}
 	}
-
+	
 	fmt.Printf("Construction carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
 }

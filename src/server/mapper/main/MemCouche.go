@@ -87,7 +87,6 @@ func (mc *MemCouche) Compile(mm *MemMap) (m *Couche) {
 		if !ok {
 			fmt.Println("Crevasse sans case en ", r.X, ", ", r.Y, ", ", r.Z)
 		} else {
-			fmt.Println("Crevasse OK")
 			c.Fond = c.Fond + "-crevasse"
 		}
 	}

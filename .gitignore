@@ -1,4 +1,7 @@
 
+# fichiers de profiling
+*.prof
+
 # spécifique Canop
 deploy-canop.sh
 bestof

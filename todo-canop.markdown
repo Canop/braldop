@@ -11,11 +11,14 @@ Fait :
 En cours :
 ==========
 
+* structure de profiling du code go
 
 P1 :
 ====
 
+* pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
 
+* ne pas transmettre les env en json mais les lire dans la carte png (en comportement optionnel pour la compatibilité Braldahim)
 * serveur avec login (mdp restreint) pour la réception des vues
 
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)

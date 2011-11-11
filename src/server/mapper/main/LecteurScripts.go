@@ -18,7 +18,9 @@ import (
 	"flag"
 	"fmt"
 	"json"
+	"log"
 	"os"
+	"runtime/pprof"
 	"strings"
 	"time"
 )
@@ -154,7 +156,17 @@ func main() {
 	cheminFichiersCsv := flag.String("in", "", "répertoire des fichiers csv")
 	cheminRepertoireExport := flag.String("out", "", "répertoire d'export")
 	idBraldunsBruts := flag.String("bralduns", "", "ids des bralduns, séparés par des virgules")
+	cpuprofile := flag.String("cpuprofile", "", "fichier dans lequel écrire un bilan de profiling cpu")
 	flag.Parse()
+	
+	if *cpuprofile != "" {
+        fp, err := os.Create(*cpuprofile)
+        if err != nil {
+            log.Fatal(err)
+        }
+        pprof.StartCPUProfile(fp)
+        defer pprof.StopCPUProfile()
+    }
 	
 	ls := NewLecteurScripts()
 

@@ -15,6 +15,7 @@ package main
 import (
 	"bufio"
 	"path/filepath"
+	"flag"
 	"fmt"
 	"json"
 	"os"
@@ -150,18 +151,18 @@ func (ls *LecteurScripts) VisitDir(path string, f *os.FileInfo) bool {
  *  - chemin du répertoire dans lequel écrire les fichiers de sortie
  */
 func main() {
-	if len(os.Args) < 4 {
-		fmt.Println(os.EINVAL)
-		return
-	}
-	cheminRepertoireExport := os.Args[3]
+	cheminFichiersCsv := flag.String("in", "", "répertoire des fichiers csv")
+	cheminRepertoireExport := flag.String("out", "", "répertoire d'export")
+	idBraldunsBruts := flag.String("bralduns", "", "ids des bralduns, séparés par des virgules")
+	flag.Parse()
+	
 	ls := NewLecteurScripts()
 
 	startTime := time.Seconds()
-	ls.IdBralduns = strings.Split(os.Args[2], ",")
+	ls.IdBralduns = strings.Split(*idBraldunsBruts, ",")
 
 	//> lecture des fichiers csv
-	filepath.Walk(os.Args[1], func(path string, info *os.FileInfo, err os.Error) os.Error {
+	filepath.Walk(*cheminFichiersCsv, func(path string, info *os.FileInfo, err os.Error) os.Error {
 		if info.IsDirectory() {
 			if !ls.VisitDir(path, info) {
 				return filepath.SkipDir
@@ -176,7 +177,7 @@ func main() {
 	carte := ls.MemMap.Compile()
 
 	//> export de la carte compilée
-	cheminFichierJson := cheminRepertoireExport + "/carte.json"
+	cheminFichierJson := *cheminRepertoireExport + "/carte.json"
 	f, err := os.Create(cheminFichierJson)
 	if err != nil {
 		fmt.Printf("Erreur à la création du fichier : %s", cheminFichierJson)
@@ -188,10 +189,10 @@ func main() {
 
 	//> export des images PNG
 	for _, couche := range carte.Couches {
-		couche.ConstruitPNG(cheminRepertoireExport)
+		couche.ConstruitPNG(*cheminRepertoireExport)
 	}
 
-	fmt.Printf("Carte compilée dans %s\n", cheminRepertoireExport)
+	fmt.Printf("Carte compilée dans %s\n", *cheminRepertoireExport)
 
 	//> affichage d'un petit bilan
 	fmt.Printf("Fini en %d secondes\n Fichiers lus : %d\n", time.Seconds()-startTime, ls.NbReadFiles)

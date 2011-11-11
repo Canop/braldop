@@ -6,12 +6,15 @@ import (
 	"image/color"
 	"image/png"
 	"os"
+	"time"
 )
 
 const SEMI_LARGEUR = 800
 const SEMI_HAUTEUR = 500
 
 func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
+	startTime := time.Nanoseconds()
+
 	img := image.NewRGBA(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2))
 
 	couleurs := make(map[string]color.RGBA)
@@ -65,4 +68,6 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 	for fond, nb := range nbAbsences {
 		fmt.Println(fond, " : ", nb)
 	}
+
+	fmt.Printf("Construction carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
 }

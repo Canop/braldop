@@ -12,9 +12,11 @@ import (
 const SEMI_LARGEUR = 800
 const SEMI_HAUTEUR = 500
 
-func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
-	startTime := time.Nanoseconds()
+var palette color.Palette
+var indexes = make(map[string]uint8) // donne les index des couleurs par type d'environnement
 
+// initialise la palette de couleurs des cartes PNG
+func init() {
 	// attention : Les couleurs suivantes doivent impérativement être toutes différentes.
 	//             Elles seront utilisées par le client pour connaitre le terrain.
 	couleurs := make(map[string]color.RGBA)                     // donne les couleurs par type d'environnement
@@ -42,8 +44,7 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 	couleurs["caverne-crevasse"] = color.RGBA{78, 65, 100, 255} // #4e4164
 	couleurs["caverne"] = color.RGBA{163, 145, 159, 255}        // #a3919f
 
-	palette := make(color.Palette, len(couleurs)+1)
-	indexes := make(map[string]uint8) // donne les index des couleurs par type d'environnement
+	palette = make(color.Palette, len(couleurs)+1)
 	palette[0] = color.RGBA{0, 0, 0, 0} 
 	index := 1
 	for env, couleur := range(couleurs) {
@@ -51,6 +52,11 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 		palette[index]=couleur
 		index++
 	}
+}
+
+// construit l'image PNG d'une couche
+func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
+	startTime := time.Nanoseconds()
 
 	img := image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
 

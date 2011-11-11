@@ -54,7 +54,7 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 		fmt.Printf("Erreur à la création du fichier : %s", cheminFichierImage)
 		return
 	}
-	png.Encode(f, img)
+	png.Encode(f, img) // cette opération est très très longue...
 
 	fmt.Println("Fonds manquants :")
 	for fond, nb := range nbAbsences {

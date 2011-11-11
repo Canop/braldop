@@ -11,10 +11,12 @@ Fait :
 En cours :
 ==========
 
+* structure de profiling du code go
 
 P1 :
 ====
 
+* pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
 
 * serveur avec login (mdp restreint) pour la réception des vues
 

@@ -160,6 +160,7 @@ func main() {
 	flag.Parse()
 	
 	if *cpuprofile != "" {
+		fmt.Println("Profiling actif, résultats dans le fichier ", *cpuprofile)
         fp, err := os.Create(*cpuprofile)
         if err != nil {
             log.Fatal(err)

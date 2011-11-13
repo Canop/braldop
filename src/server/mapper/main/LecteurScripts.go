@@ -146,12 +146,7 @@ func (ls *LecteurScripts) VisitDir(path string, f *os.FileInfo) bool {
 	return true
 }
 
-/*
- * Paramètres :
- *  - chemin d'un répertoire contenant dans des sous répertoires les fichiers csv
- *  - liste des id des bralduns séparés par des virgules
- *  - chemin du répertoire dans lequel écrire les fichiers de sortie
- */
+
 func main() {
 	cheminFichiersCsv := flag.String("in", "", "répertoire des fichiers csv")
 	cheminRepertoireExport := flag.String("out", "", "répertoire d'export")

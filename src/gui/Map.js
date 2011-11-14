@@ -318,6 +318,10 @@ Map.prototype.redraw = function() {
 	this.redrawStacked = false;
 	try {
 		this.drawInProgress = true;
+		if (this.onload) {
+			this.onload();
+			this.onload = null;
+		}
 		this.context.fillStyle="#343";
 		this.context.fillRect(0, 0, this.screenRect.w, this.screenRect.h);
 		if (this.mapData) {

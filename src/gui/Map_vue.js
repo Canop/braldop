@@ -114,6 +114,7 @@ Map.prototype.compileLesVues = function() {
 	}
 	this.matricesVuesParZ = {};
 	this.matriceVues = {};
+	if (!this.mapData) return;
 	for (var iv=0; iv<this.mapData.Vues.length; iv++) {
 		var vue = this.mapData.Vues[iv];
 		if (!vue.active) continue;

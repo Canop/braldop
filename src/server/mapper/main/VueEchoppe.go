@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -17,9 +17,9 @@ type VueEchoppe struct {
 	NomCompletBraldun string
 }
 
-func (o *VueEchoppe) readCsv(cells []string) (err os.Error) {
+func (o *VueEchoppe) readCsv(cells []string) (err error) {
 	if len(cells) < 9 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	o.X, _ = Atoi16(cells[1])

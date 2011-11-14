@@ -4,8 +4,8 @@ palissade ou portail
 */
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"time"
 )
 
@@ -18,9 +18,9 @@ type VuePalissade struct {
 	DateFin      int64 // secondes depuis 1970 (0 si pas de date)
 }
 
-func (o *VuePalissade) readCsv(cells []string, estPortail bool) (err os.Error) {
+func (o *VuePalissade) readCsv(cells []string, estPortail bool) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	o.X, _ = Atoi16(cells[1])

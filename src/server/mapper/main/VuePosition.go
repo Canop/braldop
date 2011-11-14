@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -17,9 +17,9 @@ type VuePosition struct {
 	VueBm      int
 }
 
-func (o *VuePosition) readCsv(cells []string) (err os.Error) {
+func (o *VuePosition) readCsv(cells []string) (err error) {
 	if len(cells) < 11 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	o.readCsvPoint(cells)

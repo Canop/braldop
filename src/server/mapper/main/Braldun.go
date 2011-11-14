@@ -8,8 +8,8 @@ Certains champs peuvent provenir du fichier statique, d'autres du dynamique (de 
 */
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -31,9 +31,9 @@ type Braldun struct {
 }
 
 // cette méthode est appelée pour le décodage du fichier statique
-func (o *Braldun) readCsv(cells []string) (err os.Error) {
+func (o *Braldun) readCsv(cells []string) (err error) {
 	if len(cells) < 20 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.Id, err = strconv.Atoui(cells[0]); err != nil {
@@ -54,9 +54,9 @@ func (o *Braldun) readCsv(cells []string) (err os.Error) {
 }
 
 // cette méthode est appelée pour le décodage du fichier dynamique
-func (o *Braldun) readCsvDynamique(cells []string) (err os.Error) {
+func (o *Braldun) readCsvDynamique(cells []string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {

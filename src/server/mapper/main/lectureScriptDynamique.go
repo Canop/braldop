@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"io"
 )
 
 func (ls *LecteurScripts) parseLigneFichierDynamique(cells []string, vue *Vue) {
@@ -269,7 +269,7 @@ func (ls *LecteurScripts) parseFichierDynamique(r *bufio.Reader, time int64) (vu
 	for {
 		line, err := readLine(r)
 		if err != nil {
-			if err != os.EOF {
+			if err != io.EOF {
 				fmt.Println("Error in parsing (parseFichierDynamique) :")
 				fmt.Println(err)
 			}

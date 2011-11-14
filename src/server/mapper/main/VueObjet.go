@@ -10,10 +10,11 @@ package main
  */
 
 import (
+	"errors"
 	"fmt"
-	"os"
-	"strings"
+
 	"strconv"
+	"strings"
 )
 
 type VueObjet struct {
@@ -25,9 +26,9 @@ type VueObjet struct {
 	IdType   uint
 }
 
-func (o *VueObjet) readCsvSimple(cells []string, Type string, Label string) (err os.Error) {
+func (o *VueObjet) readCsvSimple(cells []string, Type string, Label string) (err error) {
 	if len(cells) < 5 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -41,9 +42,9 @@ func (o *VueObjet) readCsvSimple(cells []string, Type string, Label string) (err
 	return
 }
 
-func (o *VueObjet) readCsvSimpleLabel(cells []string, Type string) (err os.Error) {
+func (o *VueObjet) readCsvSimpleLabel(cells []string, Type string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -58,9 +59,9 @@ func (o *VueObjet) readCsvSimpleLabel(cells []string, Type string) (err os.Error
 }
 
 // quantité, label, butin
-func (o *VueObjet) readCsvQLB(cells []string, Type string) (err os.Error) {
+func (o *VueObjet) readCsvQLB(cells []string, Type string) (err error) {
 	if len(cells) < 7 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -77,9 +78,9 @@ func (o *VueObjet) readCsvQLB(cells []string, Type string) (err os.Error) {
 	return
 }
 
-func (o *VueObjet) readCsvGraine(cells []string) (err os.Error) {
+func (o *VueObjet) readCsvGraine(cells []string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -103,9 +104,9 @@ func (o *VueObjet) readCsvGraine(cells []string) (err os.Error) {
 	return
 }
 
-func (o *VueObjet) readCsvTabac(cells []string) (err os.Error) {
+func (o *VueObjet) readCsvTabac(cells []string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -129,9 +130,9 @@ func (o *VueObjet) readCsvTabac(cells []string) (err os.Error) {
 	return
 }
 
-func (o *VueObjet) readCsvLingot(cells []string) (err os.Error) {
+func (o *VueObjet) readCsvLingot(cells []string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -155,9 +156,9 @@ func (o *VueObjet) readCsvLingot(cells []string) (err os.Error) {
 	return
 }
 
-func (o *VueObjet) readCsvMinerai(cells []string) (err os.Error) {
+func (o *VueObjet) readCsvMinerai(cells []string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -181,9 +182,9 @@ func (o *VueObjet) readCsvMinerai(cells []string) (err os.Error) {
 	return
 }
 
-func (o *VueObjet) readCsvElement(cells []string) (err os.Error) {
+func (o *VueObjet) readCsvElement(cells []string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -206,9 +207,9 @@ func (o *VueObjet) readCsvElement(cells []string) (err os.Error) {
 	}
 	return
 }
-func (o *VueObjet) readCsvMunition(cells []string) (err os.Error) {
+func (o *VueObjet) readCsvMunition(cells []string) (err error) {
 	if len(cells) < 8 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -224,9 +225,9 @@ func (o *VueObjet) readCsvMunition(cells []string) (err os.Error) {
 	return
 }
 
-func (o *VueObjet) readCsvRune(cells []string) (err os.Error) {
+func (o *VueObjet) readCsvRune(cells []string) (err error) {
 	if len(cells) < 3 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -240,9 +241,9 @@ func (o *VueObjet) readCsvRune(cells []string) (err os.Error) {
 	return
 }
 
-func (o *VueObjet) readCsvPlante(cells []string, brut bool) (err os.Error) {
+func (o *VueObjet) readCsvPlante(cells []string, brut bool) (err error) {
 	if len(cells) < 8 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -271,9 +272,9 @@ func (o *VueObjet) readCsvPlante(cells []string, brut bool) (err os.Error) {
 	return
 }
 
-func (o *VueObjet) readCsvPotion(cells []string) (err os.Error) {
+func (o *VueObjet) readCsvPotion(cells []string) (err error) {
 	if len(cells) < 8 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {
@@ -290,9 +291,9 @@ func (o *VueObjet) readCsvPotion(cells []string) (err os.Error) {
 	return
 }
 
-func (o *VueObjet) readCsvAliment(cells []string) (err os.Error) {
+func (o *VueObjet) readCsvAliment(cells []string) (err error) {
 	if len(cells) < 8 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {

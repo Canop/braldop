@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"os"
 )
 
 type VueEnvironnement struct {
@@ -11,9 +11,9 @@ type VueEnvironnement struct {
 	NomEnvironnement        string
 }
 
-func (o *VueEnvironnement) readCsv(cells []string) (err os.Error) {
+func (o *VueEnvironnement) readCsv(cells []string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	o.readCsvPoint(cells)

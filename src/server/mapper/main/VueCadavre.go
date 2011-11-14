@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -14,9 +14,9 @@ type VueCadavre struct {
 	Taille string
 }
 
-func (o *VueCadavre) readCsv(cells []string) (err os.Error) {
+func (o *VueCadavre) readCsv(cells []string) (err error) {
 	if len(cells) < 7 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.X, err = Atoi16(cells[1]); err != nil {

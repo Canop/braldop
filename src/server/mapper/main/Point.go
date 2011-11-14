@@ -1,9 +1,6 @@
 package main
 
-import (
-	"os"
-	"strconv"
-)
+import "strconv"
 
 type Point struct {
 	X int16
@@ -12,7 +9,7 @@ type Point struct {
 }
 
 // pas le plus efficace mais j'ai pas envie de refaire le boulot fait dans strconv.Btoui64...
-func Atoi16(s string) (i16 int16, err os.Error) {
+func Atoi16(s string) (i16 int16, err error) {
 	i, err := strconv.Atoi(s)
 	i16 = int16(i)
 	return

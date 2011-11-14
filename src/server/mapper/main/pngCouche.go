@@ -45,11 +45,11 @@ func init() {
 	couleurs["caverne"] = color.RGBA{163, 145, 159, 255}        // #a3919f
 
 	palette = make(color.Palette, len(couleurs)+1)
-	palette[0] = color.RGBA{0, 0, 0, 0} 
+	palette[0] = color.RGBA{0, 0, 0, 0}
 	index := 1
-	for env, couleur := range(couleurs) {
-		indexes[env]=uint8(index)
-		palette[index]=couleur
+	for env, couleur := range couleurs {
+		indexes[env] = uint8(index)
+		palette[index] = couleur
 		index++
 	}
 }

@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -14,9 +14,9 @@ type VueChamp struct {
 	NomCompletBraldun string
 }
 
-func (o *VueChamp) readCsv(cells []string) (err os.Error) {
+func (o *VueChamp) readCsv(cells []string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	o.X, _ = Atoi16(cells[1])

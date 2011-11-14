@@ -14,12 +14,12 @@ package main
 
 import (
 	"bufio"
-	"path/filepath"
+	"encoding/json"
 	"flag"
 	"fmt"
-	"json"
 	"log"
 	"os"
+	"path/filepath"
 	"runtime/pprof"
 	"strings"
 	"time"
@@ -33,7 +33,7 @@ type LecteurScripts struct {
 }
 
 type Visible interface {
-	readCsv(cells []string) (err os.Error)
+	readCsv(cells []string) (err error)
 	store(mm *MemMap)
 }
 
@@ -43,7 +43,7 @@ func NewLecteurScripts() (ls *LecteurScripts) {
 	return ls
 }
 
-func readLine(r *bufio.Reader) (cells []string, err os.Error) {
+func readLine(r *bufio.Reader) (cells []string, err error) {
 	var line string
 	if line, err = r.ReadString('\n'); err == nil {
 		line = line[0 : len(line)-1]
@@ -146,31 +146,30 @@ func (ls *LecteurScripts) VisitDir(path string, f *os.FileInfo) bool {
 	return true
 }
 
-
 func main() {
 	cheminFichiersCsv := flag.String("in", "", "répertoire des fichiers csv")
 	cheminRepertoireExport := flag.String("out", "", "répertoire d'export")
 	idBraldunsBruts := flag.String("bralduns", "", "ids des bralduns, séparés par des virgules")
 	cpuprofile := flag.String("cpuprofile", "", "fichier dans lequel écrire un bilan de profiling cpu")
 	flag.Parse()
-	
+
 	if *cpuprofile != "" {
 		fmt.Println("Profiling actif, résultats dans le fichier ", *cpuprofile)
-        fp, err := os.Create(*cpuprofile)
-        if err != nil {
-            log.Fatal(err)
-        }
-        pprof.StartCPUProfile(fp)
-        defer pprof.StopCPUProfile()
-    }
-	
+		fp, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(fp)
+		defer pprof.StopCPUProfile()
+	}
+
 	ls := NewLecteurScripts()
 
 	startTime := time.Seconds()
 	ls.IdBralduns = strings.Split(*idBraldunsBruts, ",")
 
 	//> lecture des fichiers csv
-	filepath.Walk(*cheminFichiersCsv, func(path string, info *os.FileInfo, err os.Error) os.Error {
+	filepath.Walk(*cheminFichiersCsv, func(path string, info *os.FileInfo, err error) error {
 		if info.IsDirectory() {
 			if !ls.VisitDir(path, info) {
 				return filepath.SkipDir

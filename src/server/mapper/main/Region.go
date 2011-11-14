@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -16,9 +16,9 @@ type Région struct {
 	EstPvp bool
 }
 
-func (o *Région) readCsv(cells []string) (err os.Error) {
+func (o *Région) readCsv(cells []string) (err error) {
 	if len(cells) < 7 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.Id, err = strconv.Atoui(cells[0]); err != nil {

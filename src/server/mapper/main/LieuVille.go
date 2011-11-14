@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -14,9 +14,9 @@ type LieuVille struct {
 	Y          int16
 }
 
-func (o *LieuVille) readCsv(cells []string) (err os.Error) {
+func (o *LieuVille) readCsv(cells []string) (err error) {
 	if len(cells) < 8 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	if o.Id, err = strconv.Atoui(cells[0]); err != nil {

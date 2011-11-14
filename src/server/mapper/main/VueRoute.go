@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -12,9 +12,9 @@ type VueRoute struct {
 	TypeRoute string
 }
 
-func (o *VueRoute) readCsv(cells []string) (err os.Error) {
+func (o *VueRoute) readCsv(cells []string) (err error) {
 	if len(cells) < 6 {
-		err = os.NewError(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
+		err = errors.New(fmt.Sprintf("pas assez de champs (%d)", len(cells)))
 		return
 	}
 	o.readCsvPoint(cells)

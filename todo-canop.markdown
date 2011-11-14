@@ -6,17 +6,16 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* BUG: le halo doré des objets sélectionnés disparait si on passe la souris dans le menu
+* structure de profiling du code go
 
 En cours :
 ==========
 
-* structure de profiling du code go
+* pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
 
 P1 :
 ====
 
-* pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
 
 * ne pas transmettre les env en json mais les lire dans la carte png (en comportement optionnel pour la compatibilité Braldahim)
 * serveur avec login (mdp restreint) pour la réception des vues

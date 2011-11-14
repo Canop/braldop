@@ -143,8 +143,6 @@ Map.prototype.recomputeCanvasPosition = function() {
 	this.originY = (this.screenRect.h/2)/this.zoom;
 	this.fogImg = null;
 	this.fogContext = null;
-	// on repositionne la postmarkdiv
-	this.$posmarkdiv.css({left:pos.left+3, top:pos.top+3});
 }
 
 // l'objet passé, reçu en json, devient le fournisseur des données de carte et de vue.

@@ -243,17 +243,14 @@ $(document).ready(function() {
 			$('#select_profondeur').val(z);
 		});
 		map.compileLesVues(); // en raison de leur activation
-		map.redraw();
 		map.onload = function() {
-			$('#loading').fadeOut(3000);
-		};
-		setTimeout(function(){
 			if (msg.Vues && msg.Vues.length==1) {
 				var v = msg.Vues[0];
 				map.goto((v.XMin+v.XMax)/2, (v.YMin+v.YMax)/2, v.Z);
 			}
 			map.redraw();
-		}, 1000); // laisser ce redraw (bug pas maitrisé)
+			$('#loading').fadeOut(3000);
+		};
 	});
 	$('#layer_satellite').prop('checked', map.displayPhotoSatellite).change(function(){
 		map.displayPhotoSatellite=this.checked;

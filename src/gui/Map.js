@@ -320,9 +320,9 @@ Map.prototype.redraw = function() {
 			this.onload();
 			this.onload = null;
 		}
-		this.context.fillStyle="#343";
-		this.context.fillRect(0, 0, this.screenRect.w, this.screenRect.h);
 		if (this.mapData) {
+			this.context.fillStyle="#343";
+			this.context.fillRect(0, 0, this.screenRect.w, this.screenRect.h);
 			if (this.displayPhotoSatellite && this.photoSatelliteOK) {
 				this.naturalRectToScreenRect(this.photoSatelliteRect, this.photoSatelliteScreenRect);
 				this.photoSatelliteScreenRect.drawImage(this.context, this.photoSatellite);

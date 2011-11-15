@@ -60,7 +60,7 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 
 	img := image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
 
-	nbAbsences := make(map[string]uint)
+	nbAbsences := make(map[string]uint) // je note les fonds manquants dans ma palette, ils peuvent correspondre à des évolutions du jeu Braldahim
 	for _, c := range couche.Cases {
 		if colorIndex, ok := indexes[c.Fond]; ok {
 			x, y := int(c.X)+SEMI_LARGEUR, SEMI_HAUTEUR-int(c.Y)
@@ -73,7 +73,7 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {
-		fmt.Printf("Erreur à la création du fichier : %s", cheminFichierImage)
+		fmt.Println("Erreur à la création du fichier ", cheminFichierImage)
 		return
 	}
 	png.Encode(f, img)
@@ -81,7 +81,7 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 	if len(nbAbsences) > 0 {
 		fmt.Println("Fonds manquants :")
 		for fond, nb := range nbAbsences {
-			fmt.Println(fond, " : ", nb)
+			fmt.Println(" ", fond, " : ", nb)
 		}
 	}
 

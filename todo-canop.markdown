@@ -6,14 +6,12 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* structure de profiling du code go
-* ne pas transmettre les env en json mais les lire dans la carte png (en comportement optionnel pour la compatibilité Braldahim)
+* BUG : la méthode redraw() est appelée au moins une fois, depuis je ne sais où, sur un objet map dont les objets sprites n'existent pas encore
 
 En cours :
 ==========
 
 * pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
-* pb de flash dans initBraldopFetch https://github.com/braldahim/braldahim/blob/master/braldahim-static/public/js/braldop/main.js
 
 P1 :
 ====
@@ -31,9 +29,7 @@ P1 :
 * extension : système de chat avec les bralduns en vue (avec invitations possibles d'autres bralduns)
 * ordonner les profondeurs dans le menu de sélection
 * protection par mot de passe et interface de sélection de la carte
-* intégrer les nouveaux dessins (carottes, au moins)
 * essayer d'améliorer le dessin des portails
-* essayer coffeescript
 * gèrer le cas de 3 types de monstres sur une case sans braldun (j'attends que la situation se présente)
 * PB : certaines icônes, en particulier les braldûns, sont floues sur Firefox
 * icônes PVE/PVP devant les noms des régions
@@ -42,6 +38,7 @@ P1 :
 P2 :
 ====
 
+* intégrer optipng au processus de génération des couches png ?
 * enlever le z inutile dans les objets palissade, champ, échoppe, etc.
 * tag (optionnel) de cellule pour indiquer les coordonnées
 * factoriser les données des bralduns, pour ne pas répéter partout leur nom (ne mettre dans les vues, champs, échoppes, que les numéros)

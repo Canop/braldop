@@ -318,10 +318,6 @@ Map.prototype.redraw = function() {
 		return;
 	}
 	this.redrawStacked = false;
-	if (!this.spritesVueTypes) {
-		console.log('hu ?'); // je ne comprends pas comment ça arrive. En débug lorsque ça se produit il n'y a pas d'appels antérieur sur la stacktrace
-		return; 
-	}
 	if (!(this.spritesVueTypes.ready&&this.spritesEnv.ready)) {
 		return;
 	}
@@ -436,7 +432,8 @@ Map.prototype.redraw = function() {
 		this.drawInProgress = false;
 	}
 	if (this.redrawStacked) {
-		setTimeout(this.redraw, 40); 
+		var _this = this;
+		setTimeout(function(){_this.redraw();}, 40); 
 	}
 }
 Map.prototype.mouseWheel = function(e) {

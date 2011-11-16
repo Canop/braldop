@@ -7,6 +7,7 @@ Fait :
 ======
 
 * structure de profiling du code go
+* ne pas transmettre les env en json mais les lire dans la carte png (en comportement optionnel pour la compatibilité Braldahim)
 
 En cours :
 ==========
@@ -18,7 +19,6 @@ P1 :
 ====
 
 
-* ne pas transmettre les env en json mais les lire dans la carte png (en comportement optionnel pour la compatibilité Braldahim)
 * serveur avec login (mdp restreint) pour la réception des vues
 
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)

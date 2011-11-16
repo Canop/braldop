@@ -247,9 +247,10 @@ $(document).ready(function() {
 			if (msg.Vues && msg.Vues.length==1) {
 				var v = msg.Vues[0];
 				map.goto((v.XMin+v.XMax)/2, (v.YMin+v.YMax)/2, v.Z);
+			} else {
+				map.redraw();
 			}
-			map.redraw();
-			$('#loading').fadeOut(3000);
+			$('#loading').fadeOut(1000);
 		};
 	});
 	$('#layer_satellite').prop('checked', map.displayPhotoSatellite).change(function(){

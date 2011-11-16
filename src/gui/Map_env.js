@@ -1,3 +1,31 @@
+// carte des environnements en fonction de la couleur du pixel généré par mapper.
+// Cette carte est exploitée uniquement si l'image PNG a été reçue et si la couche
+//  ne contient pas les cases
+color2envs = {
+	0: null,
+	4877977: "profonde",
+	5128548: "caverne-crevasse",
+	6197187: "lac",
+	6589635: "peuprofonde",
+	7117918: "chenes",
+	7916106: "gazon",
+	8029769: "hetres-gr",
+	9551989: "plaine-gr",
+	9951580: "peupliers",
+	10255739: "mine",
+	10719647: "caverne",
+	11185755: "hetres",
+	11310219: "montagne-gr",
+	11830875: "erables",
+	12049793: "plaine",
+	12097633: "tunnel",
+	12116936: "marais",
+	12381606: "gazon-gr",
+	13026235: "route",
+	13810090: "montagne",
+	13880266: "pave"
+};
+
 
 Map.prototype.initEnv = function() {
 	//> petite base de données des environnements
@@ -70,13 +98,38 @@ Map.prototype.getOutlineImg = function(img) {
 	return img.outline;
 }
 
+// assure, si cela est possible, que la couche contient les pixels du fond (imageData)
+//  lesquels pourront être utilisés pour déterminer l'environnement de chaque case.
+// Renvoie true ssi les pixels du fond sont disponibles.
+Map.prototype.initializePixelsFond = function(couche) {
+	if (couche.getFond) return true;
+	if (couche.fond.width) {
+		var tempCanvas = document.createElement('canvas');
+		tempCanvas.width = 1600;
+		tempCanvas.height = 1000;
+		var context = tempCanvas.getContext('2d');
+		context.drawImage(couche.fond, 0, 0);
+		var pixels = context.getImageData(0, 0, 1600, 1000).data;
+		couche.getFond = function(x, y) {
+			var i = 4*(x+800+1600*(500-y)); // 4 pour les 4 composantes rgba
+			//if (pixels[i+3]==0) return null;
+			var color = (pixels[i]<<16) + (pixels[i+1]<<8) + (pixels[i+2]);
+			//~ console.log(pixels[i], pixels[i+1], pixels[i+2], '  ->  ', color, color2envs[color]);
+			return color2envs[color];
+		};
+		return true;
+	}
+	return false;
+}
+
+
 // dessine une case d'environnement
 Map.prototype.drawFond = function(screenRect, fond) {
 	var envTile = this.spritesEnv.get('env-'+fond);
 	if (envTile) {
 		screenRect.drawImage(this.context, envTile);
 	} else {
-		//~ console.log('fond introuvable : ' + fond);
+		console.log('fond introuvable : ' + fond);
 		//~ screenRect.fill(this.context, "red");
 	}
 }

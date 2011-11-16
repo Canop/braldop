@@ -4,6 +4,7 @@ function Map(canvasId, posmarkid, dialogId) {
 	this.context = this.canvas.getContext("2d");
 	this.context.mozImageSmoothingEnabled = false; // contourne un bug de FF qui rend floues les images même à taille naturelle
 	this.$posmarkdiv = $('#'+posmarkid);
+	this.drawInProgress = true; // pour verrouiller et éviter les dessins durant l'init
 	this.initTypesActions();
 	this.callbacks = {};
 	this.initPalissades();
@@ -66,17 +67,17 @@ function Map(canvasId, posmarkid, dialogId) {
 		_this.redraw();
 	});
 	currentMap = this;
+	this.drawInProgress = false;
 }
 
 
 Map.prototype.updatePosDiv = function() {
-	//~ var html = 'Zoom='+this.zoom+' &nbsp; X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
 	var html = 'X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
 	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
 	if (cell) {
 		var env = this.environnements[cell.fond];
 		if (env) html += ' ' + env.nom + ', ' + env.description;
-		else console.log('env inconnu : ' + cell.fond); // notons qu'on a des undefined quand il n'y a pas de terrain sous des palissades par exemple
+		//~ else console.log('env inconnu : ' + cell.fond); // notons qu'on a des undefined quand il n'y a pas de terrain sous des palissades par exemple
 	}
 	this.$posmarkdiv.html(html);
 }
@@ -99,7 +100,7 @@ Map.prototype.changeProfondeur = function(z) {
 
 // calcule l'index 2D de la cellule (clef de hash pouvant être utilisée dans des map ou bien dans un tableau (de dimension (2W)²)
 Map.prototype.getIndex = function(x, y) {
-	return ((x+this.W)%(this.W*2))+(this.W*2)*(y+this.W);
+	return ((x+this.W))+(this.W*2)*(y+this.W);
 }
 
 // centre l'écran sur la case de coordonnées (x, y, z)
@@ -155,13 +156,17 @@ Map.prototype.setData = function(mapData) {
 	this.matricesVuesParZ = {};
 	this.matricesVuesParZ[0]={};
 	this.z = 0; // on va basculer forcément sur la couche zéro
-	this.couche = null; 
+	this.couche = null;
+	var _this = this;
 	for (var ic=0; ic<this.mapData.Couches.length; ic++) {
 		var couche = this.mapData.Couches[ic];
 		if (couche.Z==0) this.couche = couche;
 		couche.matrix = {};//new Array(); // todo benchmarker pour comparer les effets en ram et cpu de la version map et de la version table
 		couche.fond = new Image();
 		couche.fond.src = "couche"+couche.Z+".png";
+		couche.fond.onload = function(){
+			_this.redraw();
+		}
 		if (couche.Cases) {
 			for (var i=couche.Cases.length; i-->0;) {
 				var o = couche.Cases[i];
@@ -304,16 +309,22 @@ Map.prototype.drawGrid = function() {
 	}
 }
 
+//~ var colorMap = {};
+
 // redessine la page. Peut-être appelée de n'importe quel contexte, y compris depuis une méthode de dessin (pour par exemple faire une animation)
 Map.prototype.redraw = function() {
-	if (!(this.spritesVueTypes.ready&&this.spritesEnv.ready)) {
-		return;
-	}
 	if (this.drawInProgress) {
 		this.redrawStacked = true;
 		return;
 	}
 	this.redrawStacked = false;
+	if (!this.spritesVueTypes) {
+		console.log('hu ?'); // je ne comprends pas comment ça arrive. En débug lorsque ça se produit il n'y a pas d'appels antérieur sur la stacktrace
+		return; 
+	}
+	if (!(this.spritesVueTypes.ready&&this.spritesEnv.ready)) {
+		return;
+	}
 	try {
 		this.drawInProgress = true;
 		if (this.onload) {
@@ -349,25 +360,32 @@ Map.prototype.redraw = function() {
 				this.yMax=500;
 				if (this.yMin>500) this.yMin=500;
 			}
-
 			if (this.zoom>2) {
+				var envInPngAvailable = false;
+				if (!this.couche.Cases) envInPngAvailable = this.initializePixelsFond(this.couche);
 				var screenRect = new Rect(); // rectangle d'une cellule en coordonnées canvas
 				screenRect.w = this.zoom;
 				screenRect.h = this.zoom;
 				for (var x=this.xMin; x<=this.xMax; x++) {
 					for (var y=this.yMax; y>=this.yMin; y--) { // on balaie en commencant par le haut de l'écran (plus "loin" en perspective)
+						screenRect.x = this.zoom*(this.originX+x);
+						screenRect.y = this.zoom*(this.originY-y);
+						if (envInPngAvailable) {
+							var fond = this.couche.getFond(x, y);
+							if (fond) this.drawFond(screenRect, fond);
+						//~ } else if (cell.fond) {
+							//~ this.drawFond(screenRect, cell.fond);
+						}
 						var cell = this.getCell(this.couche, x, y);
 						if (cell) {
-							screenRect.x = this.zoom*(this.originX+x);
-							screenRect.y = this.zoom*(this.originY-y);
 							var hover = this.zoom>20 && this.pointerX==x && this.pointerY==y;
-							if (cell.fond) this.drawFond(screenRect, cell.fond);
 							if (cell.champ) this.drawLieu(screenRect, cell.champ, this.spritesVueTypes.get('champ'), hover);
 							else if (cell.échoppe) this.drawLieu(screenRect, cell.échoppe, this.spritesVueTypes.get(cell.échoppe.Métier), hover);
 							else if (cell.lieu) this.drawLieu(screenRect, cell.lieu, this.spritesVueTypes.get('lieu_' + cell.lieu.IdTypeLieu), hover);
 						}
 					}
 				}
+				//~ console.log(colorMap);
 			} else if (this.couche.fond.width) { // si l'image de fond obtenue du serveur est disponible, on l'utilise pour les basses résolutions
 				var sw = this.xMax-this.xMin;
 				var sh = this.yMax-this.yMin;

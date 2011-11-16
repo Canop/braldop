@@ -151,6 +151,7 @@ func main() {
 	cheminRepertoireExport := flag.String("out", "", "répertoire d'export")
 	idBraldunsBruts := flag.String("bralduns", "", "ids des bralduns, séparés par des virgules")
 	cpuprofile := flag.String("cpuprofile", "", "fichier dans lequel écrire un bilan de profiling cpu")
+	exportEnv := flag.Bool("exportenv", false, "exporte les environnements dans le json (fichier plus gros, false par défaut)")
 	flag.Parse()
 
 	if *cpuprofile != "" {
@@ -183,6 +184,15 @@ func main() {
 	//> compilation de la carte
 	carte := ls.MemMap.Compile()
 
+	//> export des images PNG
+	//  et on supprime les cases de fond (maintenant inutile : on encode dans le png)
+	for _, couche := range carte.Couches {
+		couche.ConstruitPNG(*cheminRepertoireExport)
+		if !*exportEnv {
+			couche.Cases = nil
+		}
+	}	
+
 	//> export de la carte compilée
 	cheminFichierJson := *cheminRepertoireExport + "/carte.json"
 	f, err := os.Create(cheminFichierJson)
@@ -193,11 +203,6 @@ func main() {
 	defer f.Close()
 	bout, _ := json.Marshal(carte)
 	f.Write(bout)
-
-	//> export des images PNG
-	for _, couche := range carte.Couches {
-		couche.ConstruitPNG(*cheminRepertoireExport)
-	}
 
 	//> affichage d'un petit bilan
 	fmt.Printf("Fichiers lus : %d\nCarte compilée dans %s en %d secondes\n\n", ls.NbReadFiles, *cheminRepertoireExport, time.Seconds()-startTime)

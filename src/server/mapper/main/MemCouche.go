@@ -37,6 +37,7 @@ func (mc *MemCouche) Compile(mm *MemMap) (m *Couche) {
 	m = NewCouche()
 	m.Z = mc.Z
 	cases := make(map[int32]*Case) // map suivant PosKey(x,y)
+	
 	for _, e := range mc.EnvironnementsParXY {
 		key := PosKey(e.X, e.Y)
 		c, ok := cases[key]
@@ -90,6 +91,7 @@ func (mc *MemCouche) Compile(mm *MemMap) (m *Couche) {
 			c.Fond = c.Fond + "-crevasse"
 		}
 	}
+	
 	for _, b := range mc.PalissadesParXY {
 		m.Palissades = append(m.Palissades, b)
 	}

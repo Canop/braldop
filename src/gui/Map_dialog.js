@@ -71,29 +71,33 @@ Map.prototype.openCellDialog = function(x, y, fixed) {
 	screenRect.y = this.zoom*(this.originY-y);
 	var html = [];
 	var h=0;
-	var empty = false;
-	if (cell.palissade) {
-		empty = false;
-		html[h++] = "<b>Palissade";
-		if (!cell.palissade.Destructible) html[h++] = " indestructible";
-		html[h++] = "</b>";
-		if (cell.palissade.Destructible && cell.palissade.DateFin) {
-			html[h++] = ' (date de fin : ' + formatDate(cell.palissade.DateFin*1000, true) + ')';
+	var empty = true;
+	if (cell) {
+		if (cell.palissade) {
+			empty = false;
+			html[h++] = "<b>Palissade";
+			if (!cell.palissade.Destructible) html[h++] = " indestructible";
+			html[h++] = "</b>";
+			if (cell.palissade.Destructible && cell.palissade.DateFin) {
+				html[h++] = ' (date de fin : ' + formatDate(cell.palissade.DateFin*1000, true) + ')';
+			}
+			html[h++] = '<br>';
+			empty=false;
+		} else if (cell.champ) {
+			html[h++] = '<table><tr><td><span class="champ"/></td><td>';
+			html[h++] = 'Champ de <a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+cell.champ.IdBraldun+'&direct=profil">'+cell.champ.NomCompletBraldun+'</a></td></tr></table>';
+			html[h++] = '</td></tr></table>';
+			empty=false;
+		} else if (cell.échoppe) {
+			html[h++] = '<table><tr><td><span class="'+cell.échoppe.Métier+'"/></td><td>';
+			html[h++] = cell.échoppe.Nom+'<br>';
+			html[h++] = cell.échoppe.Métier+' : <a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+cell.échoppe.IdBraldun+'&direct=profil">'+cell.échoppe.NomCompletBraldun+'</a></td></tr></table>';
+			html[h++] = '</td></tr></table>';
+			empty=false;
+		} else if (cell.lieu) {
+			html[h++] = '<table><tr><td><span class="lieu_'+cell.lieu.IdTypeLieu+'"/></td><td> '+cell.lieu.Nom+'</td></tr></table>';
+			empty=false;
 		}
-		html[h++] = '<br>';
-	} else if (cell.champ) {
-		html[h++] = '<table><tr><td><span class="champ"/></td><td>';
-		html[h++] = 'Champ de <a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+cell.champ.IdBraldun+'&direct=profil">'+cell.champ.NomCompletBraldun+'</a></td></tr></table>';
-		html[h++] = '</td></tr></table>';
-	} else if (cell.échoppe) {
-		html[h++] = '<table><tr><td><span class="'+cell.échoppe.Métier+'"/></td><td>';
-		html[h++] = cell.échoppe.Nom+'<br>';
-		html[h++] = cell.échoppe.Métier+' : <a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+cell.échoppe.IdBraldun+'&direct=profil">'+cell.échoppe.NomCompletBraldun+'</a></td></tr></table>';
-		html[h++] = '</td></tr></table>';
-	} else if (cell.lieu) {
-		html[h++] = '<table><tr><td><span class="lieu_'+cell.lieu.IdTypeLieu+'"/></td><td> '+cell.lieu.Nom+'</td></tr></table>';
-	} else {
-		empty = true;
 	}
 	var cellVue = this.getCellVue(x, y);
 	if (cellVue) {

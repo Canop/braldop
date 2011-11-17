@@ -191,7 +191,7 @@ func main() {
 		if !*exportEnv {
 			couche.Cases = nil
 		}
-	}	
+	}
 
 	//> export de la carte compilée
 	cheminFichierJson := *cheminRepertoireExport + "/carte.json"

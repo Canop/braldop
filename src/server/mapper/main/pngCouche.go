@@ -76,6 +76,7 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 		fmt.Println("Erreur à la création du fichier ", cheminFichierImage)
 		return
 	}
+	defer f.Close()
 	png.Encode(f, img)
 
 	if len(nbAbsences) > 0 {

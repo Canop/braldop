@@ -309,8 +309,6 @@ Map.prototype.drawGrid = function() {
 	}
 }
 
-//~ var colorMap = {};
-
 // redessine la page. Peut-être appelée de n'importe quel contexte, y compris depuis une méthode de dessin (pour par exemple faire une animation)
 Map.prototype.redraw = function() {
 	if (this.drawInProgress) {

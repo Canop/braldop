@@ -1,9 +1,4 @@
-/*
- contient des fonctions liées à l'interface générale
- et des utilitaires. Contient aussi la constante donnant la version courante de Braldop
-*/
 
-var extVersion = "1.1";
 
 function getUrlParameter(name, defaultValue) {
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
@@ -19,7 +14,6 @@ function getUrlParameter(name, defaultValue) {
 /**
  * injecte un fichier javascript présent dans l'extension, de telle sorte
  *  qu'il soit exécuté dans le contexte de la page et non celui de l'extension
- * 
  */
 function inject(fileName) {
 	$.getScript(chrome.extension.getURL(fileName));

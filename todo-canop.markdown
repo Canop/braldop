@@ -39,6 +39,7 @@ P2 :
 ====
 
 * intégrer optipng au processus de génération des couches png ?
+* utiliser webp au lieu de png lorsque ce sera intégré dans firefox (vérifier performances)
 * enlever le z inutile dans les objets palissade, champ, échoppe, etc.
 * tag (optionnel) de cellule pour indiquer les coordonnées
 * factoriser les données des bralduns, pour ne pas répéter partout leur nom (ne mettre dans les vues, champs, échoppes, que les numéros)

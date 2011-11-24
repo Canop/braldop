@@ -1,0 +1,13 @@
+
+# les applications compilées
+mapper
+mapserver
+*.8
+*.6
+
+# les fichiers de logs
+*.out
+*.err
+*.out-old
+*.err-old
+

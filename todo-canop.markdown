@@ -6,24 +6,24 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* BUG : la méthode redraw() est appelée au moins une fois, depuis je ne sais où, sur un objet map dont les objets sprites n'existent pas encore
 
 En cours :
 ==========
 
 * pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
+* envoi des vues (json) depuis l'extension braldop
+* code go : création d'un package pour réutiliser l'essentiel du code dans le mapserver
 
 P1 :
 ====
 
-
+* BUG : de temps en temps la carte se charge en noir et je dois faire un reload sous Chrome
 * serveur avec login (mdp restreint) pour la réception des vues
 
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
 * faire de jolis dessins pour les routes
 
-* envoi des vues (json) depuis l'extension braldop
 * ajout d'un onglet pour la carte grace à l'extension
 
 * extension : système de chat avec les bralduns en vue (avec invitations possibles d'autres bralduns)

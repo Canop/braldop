@@ -18,7 +18,7 @@ type LecteurScripts struct {
 	NbReadFiles uint
 	MemMap      *bra.MemMap
 	IdBralduns  []string // la liste des bralduns dont on peut regarder la vue
-	verbose     uint     // 0 : peu, 1 : un peu, 2 : beaucoup
+	verbose     bool
 }
 
 type Visible interface {
@@ -127,7 +127,7 @@ func (ls *LecteurScripts) VisitDir(path string, f *os.FileInfo) bool {
 		return true
 	}
 	if IndexOfStringIn(pathToken[indexTokenPrivate+1], ls.IdBralduns) == -1 {
-		if ls.verbose > 0 {
+		if ls.verbose {
 			fmt.Printf("Fichier non autorisé : %s\n", path)
 		}
 		return false
@@ -136,11 +136,14 @@ func (ls *LecteurScripts) VisitDir(path string, f *os.FileInfo) bool {
 }
 
 func main() {
+	ls := NewLecteurScripts()
+
 	cheminFichiersCsv := flag.String("in", "", "répertoire des fichiers csv")
 	cheminRepertoireExport := flag.String("out", "", "répertoire d'export")
 	idBraldunsBruts := flag.String("bralduns", "", "ids des bralduns, séparés par des virgules")
 	cpuprofile := flag.String("cpuprofile", "", "fichier dans lequel écrire un bilan de profiling cpu")
 	exportEnv := flag.Bool("exportenv", false, "exporte les environnements dans le json (fichier plus gros, false par défaut)")
+	ls.verbose = *flag.Bool("verbose", false, "active le mode verbeux (faux par défaut)")
 	flag.Parse()
 
 	if *cpuprofile != "" {
@@ -152,8 +155,6 @@ func main() {
 		pprof.StartCPUProfile(fp)
 		defer pprof.StopCPUProfile()
 	}
-
-	ls := NewLecteurScripts()
 
 	startTime := time.Seconds()
 	ls.IdBralduns = strings.Split(*idBraldunsBruts, ",")

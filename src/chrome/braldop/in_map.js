@@ -1,27 +1,30 @@
 
 
-
+// bâtit une copie indépendante et transmissible en json à un serveur go :
 // effectue une deep-copy de l'objet source mais en ignorant tous les
 //  champs dont le nom ne commence pas par une majuscule. Ne copie pas
-//  les prototypes.
-function deepUpperClone(source) {
+//  les prototypes ni les champs nulls (ou 0).
+function goclone(source) {
 	if ($.isArray(source)) {
 		var clone = [];
-		for (var i=0; i<source.length; i++) clone[i] = deepUpperClone(source[i]);
+		for (var i=0; i<source.length; i++) {
+			if (source[i]) clone[i] = goclone(source[i]);
+		}
 		return clone;
 	} else if (typeof(source)=="object") {
 		var clone = {};
 		for (var prop in source) {
-			var firstChar = prop.charAt(0);
-			if (firstChar!=firstChar.toUpperCase()) continue;
-			clone[prop] = deepUpperClone(source[prop]);
+			if (source[prop]) {
+				var firstChar = prop.charAt(0);
+				if (firstChar!=firstChar.toUpperCase()) continue;
+				clone[prop] = goclone(source[prop]);
+			}
 		}
 		return clone;
 	} else {
 		return source;
 	}
 }
-
 
 
 var timer = null;
@@ -50,9 +53,9 @@ waitForMap(function(){
 	console.log('OK : ', map);
 	//~ console.log('map.mapData : ', map.mapData, 'clone : ', deepUpperClone(map.mapData));
 	var data = {
-		Couches: deepUpperClone(map.mapData.Couches),
-		Vues: deepUpperClone(map.mapData.Vues),
-		Position: deepUpperClone(map.mapData.Position)
+		Couches: goclone(map.mapData.Couches),
+		Vues: goclone(map.mapData.Vues),
+		Position: goclone(map.mapData.Position)
 	};
 	
 	sendToBraldopServer({Vue:data});

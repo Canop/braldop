@@ -46,8 +46,10 @@ func (h *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	err := json.Unmarshal(([]byte)(getFormValue(hr, "in")), in)
 	if err != nil {
 		out.Erreur = "Erreur décodage : " + err.Error()
+		fmt.Println("Erreur décodage : ", err.Error())
 		return
 	}
+	fmt.Printf("* Message reçu : %+v", in)
 }
 
 func (server *MapServer) Start() {

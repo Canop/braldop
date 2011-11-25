@@ -7,14 +7,21 @@
 inject('inext_const.js');
 inject('in_com.js');
 
-var splitedPathname = document.location.pathname.split('/');
-var pageName = splitedPathname[splitedPathname.length-1];
-console.log("pageName=\""+pageName+"\"");
-
-if (pageName=='login') {
+switch (document.location.pathname) {
+case '/auth/login':
+case '/auth/login/':
 	traiteLogin();
-} else {
+	break;
+case '/interface':
+case '/interface/':
 	inject('in_map.js');
 	setTimeout(setAlarms, 5000); // on n'exécute pas tout de suite car les éléments mettent du temps à se charger
+	break;
+case '/Parametres':
+case '/Parametres/':
+	changePageParamètres();
+	break;
+default:
+	console.log('page ignorée');
 }
 

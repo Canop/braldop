@@ -9,13 +9,18 @@
 			"matches": ["*://jeu.braldahim.com/*"],
 			"all_frames" : true,
 			"run_at" : "document_end",
+			"css": [
+				"tabs.css"
+			],
 			"js": [
 				"jquery-1.6.3.min.js",
 				"ext_general.js",
+				"ext_tabs.js",
 				"ext_login.js",
 				"ext_alarm.js",
 				"ext_com.js",
 				"ext_map.js",
+				"ext_options.js",
 				"ext_main.js"
 			]
 		},

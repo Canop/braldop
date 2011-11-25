@@ -28,7 +28,9 @@ function setAlarm(key, date) {
 
 // positionne des alarmes 5 minutes avant la fin de chaque période du cycle, ainsi que pour le cycle suivant
 function setAlarms() {
-	var lines = $('div.img_tour_activite span.braltexte').html().split('<br>');
+	var $alarmHolder = $('div.img_tour_activite span.braltexte');
+	if ($alarmHolder.length==0) return;
+	var lines = $alarmHolder.html().split('<br>');
 	var turnDurationSeconds = 0; // en millisecondes 
 	var alarms = {};
 	for (var i=0; i<lines.length; i++) {

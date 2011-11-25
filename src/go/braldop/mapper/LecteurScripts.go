@@ -44,10 +44,8 @@ func readLine(r *bufio.Reader) (cells []string, err error) {
 // renvoie le nombre de secondes depuis 1970 caché dans le chemin vers le fichier : année/mois/jour/truc-heurehminutes.csv
 // Le parsage des dates est pour moi le gros WTF du go... si quelqu'un arrive à faire plus propre...
 func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
-	//~ fmt.Printf("readTimeFromFilePath : %+v\n", path)
 	l := len(path)
 	if l < 4 {
-		//~ fmt.Printf("readTimeFromFilePath : chemin trop court (l=%d)\n", l)
 		return 0
 	}
 	s := path[l-4] + "-" + path[l-3] + "-" + path[l-2] // année-mois-jour
@@ -60,17 +58,13 @@ func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
 			// cas où on n'a pas les minutes
 			s += "00"
 		}
-		//~ fmt.Println("  date formatée : ", s)
 		s += " CEST"
 		t, err := time.Parse("2006-1-2-15-04 MST", s)
 		if err != nil {
 			//~ fmt.Printf("Erreur parsing date \"%s\" : %+v\n", s, err)
 			return 0
 		}
-		//~ println(s, " -> ", t.Seconds())
 		return t.Seconds()
-	} else {
-		//~ fmt.Printf("readTimeFromFilePath : indices non trouvés (i1=%d, i2=%d)\n", i1, i2)
 	}
 	return 0
 }

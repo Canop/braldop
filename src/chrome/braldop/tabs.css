@@ -1,0 +1,38 @@
+
+table.tab_holder {
+	width: 100%;
+}
+
+table.tab_holder th {
+	font-family: "Cardinal",'Lucida Sans',Times,serif;
+	font-size: 24px;
+	font-weight: normal;
+	color: #F0AE21;
+	text-shadow: 0 0 4px black,0 -5px 4px black;
+	padding: 14px 5px 3px 5px;
+	margin: 0;
+	cursor: pointer;
+}
+table.tab_holder th.active {
+	border: 1px solid #F0AE21;
+	border-bottom: none;
+	background-color: rgba(0, 100, 0, 0.25);
+}
+table.tab_holder th.inactive {
+	border: 1px solid #F0AE21;
+	background-color: rgba(0, 100, 0, 0.014);
+}
+table.tab_holder td.inter {
+	border-bottom: 1px solid #F0AE21;
+	margin: 0;
+}
+table.tab_holder td.tab_page_holder {
+	border: 1px solid #F0AE21;
+	border-top: none;
+	padding: 14px;
+	background-color: rgba(0, 100, 0, 0.25);
+}
+
+div.tab_page {
+	display: none;
+}

@@ -1,10 +1,14 @@
 package main
 
 import (
+	"crypto/sha1"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
+	"time"
 )
 
 const (
@@ -12,7 +16,7 @@ const (
 )
 
 type MapServer struct {
-
+	répertoireCartes string
 }
 
 func getFormValue(hr *http.Request, name string) string {
@@ -34,7 +38,8 @@ func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
 	fmt.Fprint(w, ")")
 }
 
-func (h *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
+
+func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Request-Method", "GET")
 	hr.ParseForm()
@@ -43,18 +48,31 @@ func (h *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	out := new(MessageOut)
 	defer envoieRéponse(w, out)
 	fmt.Println(getFormValue(hr, "in"))
-	err := json.Unmarshal(([]byte)(getFormValue(hr, "in")), in)
+	bin := ([]byte)(getFormValue(hr, "in"))
+	err := json.Unmarshal(bin, in)
 	if err != nil {
 		out.Erreur = "Erreur décodage : " + err.Error()
 		fmt.Println("Erreur décodage : ", err.Error())
 		return
 	}
-	fmt.Printf("* Message reçu : %+v\n", in)
+	//fmt.Printf("Message reçu : %+v\n", in)
 	if in.IdBraldun==0 || len(in.Mdpr)!=64 {
 		fmt.Println("IdBraldun ou Mot de passe restreint invalide")
 		return
 	}
 	fmt.Println("IdBraldun : ", in.IdBraldun, "   Mdpr : ", in.Mdpr)
+	hasher := sha1.New()
+	hasher.Write(bin)
+	sha := base64.StdEncoding.EncodeToString(hasher.Sum())
+	fmt.Println("Clef SHA1 : ", sha)
+	dir := fmt.Sprintf("%s/%d-%s/%s", ms.répertoireCartes, in.IdBraldun, sha, time.LocalTime().Format("2006/01/02"))
+	path := dir + "/carte-"+sha+".json"
+	if _,err=os.Stat(path); err!=nil { // le fichier n'existe pas, on le crée
+		os.MkdirAll(dir, 0777)
+		f, _ := os.Create(path)
+		defer f.Close()
+		f.Write(bin)
+	}
 }
 
 func (server *MapServer) Start() {
@@ -68,5 +86,6 @@ func (server *MapServer) Start() {
 
 func main() {
 	ms := new(MapServer)
+	ms.répertoireCartes = "/home/dys/braldop/cartes"
 	ms.Start()
 }

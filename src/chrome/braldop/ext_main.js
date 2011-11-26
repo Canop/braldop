@@ -5,7 +5,7 @@
  */
 
 inject('inext_const.js');
-inject('in_com.js');
+inject('inext_com.js');
 
 switch (document.location.pathname) {
 case '/auth/login':
@@ -14,7 +14,11 @@ case '/auth/login/':
 	break;
 case '/interface':
 case '/interface/':
-	inject('in_map.js');
+	if (getMdprPourServeurBraldop()) { // on ne traite la carte que si l'utilisateur l'a autorisé
+		inject('in_map.js');
+	} else {
+		console.log('pas de mdpr ou pas de authorisation');
+	}
 	setTimeout(setAlarms, 5000); // on n'exécute pas tout de suite car les éléments mettent du temps à se charger
 	break;
 case '/Parametres':

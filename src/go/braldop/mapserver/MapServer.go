@@ -49,7 +49,12 @@ func (h *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		fmt.Println("Erreur décodage : ", err.Error())
 		return
 	}
-	fmt.Printf("* Message reçu : %+v", in)
+	fmt.Printf("* Message reçu : %+v\n", in)
+	if in.IdBraldun==0 || len(in.Mdpr)!=64 {
+		fmt.Println("IdBraldun ou Mot de passe restreint invalide")
+		return
+	}
+	fmt.Println("IdBraldun : ", in.IdBraldun, "   Mdpr : ", in.Mdpr)
 }
 
 func (server *MapServer) Start() {

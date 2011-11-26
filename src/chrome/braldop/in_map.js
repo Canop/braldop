@@ -48,10 +48,13 @@ function waitForMap(callback) {
 	}
 }
 
-
 waitForMap(function(){
-	console.log('OK : ', map);
-	//~ console.log('map.mapData : ', map.mapData, 'clone : ', deepUpperClone(map.mapData));
+	console.log('OK : ', map.mapData);
+	
+	//> récupération et stockage de l'ID du braldun
+	localStorage['braldop/braldun/id']=map.mapData.Vues[0].Voyeur;
+	
+	//> on assemble les données qu'on veut envoyer au serveur
 	var data = {
 		Couches: goclone(map.mapData.Couches),
 		Vues: goclone(map.mapData.Vues),

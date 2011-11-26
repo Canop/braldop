@@ -1,5 +1,16 @@
 
 function changePageParamètres() {
+	//> récupération et stockage du mot de passe restreint
+	var mdpr = $('pre').text().trim();
+	if (mdpr.length==64) {
+		localStorage['braldop/mdpr'] = mdpr;
+	} else {
+		console.log("mot de passe restreint non reconnu");
+	}
+
+	
+	//> décomposition de l'écran en 2 onglets : l'existant dans "Paramètres Braldahim" et les miens dans "Paramètres Braldop"
+	//  + ajout de commentaires et d'une case à cocher pour l'activation de la carte
 	var $container = $('div.box_parametres');
 	var $innerDiv = $container.find('div.inner');
 	$innerDiv.detach();
@@ -10,5 +21,7 @@ function changePageParamètres() {
 		'Paramètres Braldahim': $innerDiv.find('div.contenu'),
 		'Paramètres Braldop':html
 	});
-	
+	$('#activation_envoi_braldop').change(function(){
+		localStorage['braldop/carte/activation'] = $(this).attr('checked') ? 'oui' : 'non';
+	});
 }

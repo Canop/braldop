@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -16,7 +17,7 @@ const (
 )
 
 type MapServer struct {
-	répertoireCartes string
+	répertoireCartes *string
 }
 
 func getFormValue(hr *http.Request, name string) string {
@@ -69,7 +70,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	hasher.Write(bin)
 	sha := base64.URLEncoding.EncodeToString(hasher.Sum())
 	fmt.Println("Clef SHA1 : ", sha)
-	dirBase := fmt.Sprintf("%s/%d-%s", ms.répertoireCartes, in.IdBraldun, in.Mdpr)
+	dirBase := fmt.Sprintf("%s/%d-%s", *ms.répertoireCartes, in.IdBraldun, in.Mdpr)
 	dir := dirBase + "/" + time.LocalTime().Format("2006/01/02")
 	path := dir + "/carte-"+sha+".json"
 	if _,err=os.Stat(path); err!=nil { // le fichier n'existe pas, ce sont des données intéressantes
@@ -97,6 +98,12 @@ func (server *MapServer) Start() {
 
 func main() {
 	ms := new(MapServer)
-	ms.répertoireCartes = "/home/dys/braldop/cartes"
+	ms.répertoireCartes = flag.String("cartes", "", "répertoire des cartes")
+	flag.Parse()
+	if *ms.répertoireCartes=="" {
+		fmt.Println("Chemin des cartes non fourni")
+	} else {
+		fmt.Println("Répertoire des cartes : " + *ms.répertoireCartes)
+	}
 	ms.Start()
 }

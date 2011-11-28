@@ -4,6 +4,7 @@ mapper
 mapserver
 *.8
 *.6
+_obj
 
 # les fichiers de logs
 *.out

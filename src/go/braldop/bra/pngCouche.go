@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"image/draw"
 	"image/png"
 	"os"
 	"time"
@@ -55,10 +56,31 @@ func init() {
 }
 
 // construit l'image PNG d'une couche
-func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
+// Si enrichit est true, alors on écrit par dessus une image précédemment écrite
+// au lieu de la vider.
+func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 	startTime := time.Nanoseconds()
 
 	img := image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
+
+	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
+	if enrichit {
+		if f, err := os.Open(cheminFichierImage); err==nil { // le fichier existe, on le charge
+			if ancienneImage, _, err := image.Decode(f); err==nil { // image décodée
+				rectangleAncienneImage := ancienneImage.Bounds()
+				fmt.Printf("Ancienne image trouvée, rectangle : %+v\n", rectangleAncienneImage)
+				if rectangleAncienneImage.Min.X!=0 || rectangleAncienneImage.Min.Y!=0 || rectangleAncienneImage.Max.X!=SEMI_LARGEUR*2 || rectangleAncienneImage.Max.Y!=SEMI_HAUTEUR*2 {
+					fmt.Println("Dimensions ancienne image incorrectes")
+				} else {
+					draw.Draw(img, ancienneImage.Bounds(), ancienneImage, ancienneImage.Bounds().Min,  draw.Src)
+				}
+			}
+			f.Close()
+		} else {
+			fmt.Println("Erreur ouverture : ", err)
+			fmt.Println("Pas de fichier image existant")
+		}
+	}
 
 	nbAbsences := make(map[string]uint) // je note les fonds manquants dans ma palette, ils peuvent correspondre à des évolutions du jeu Braldahim
 	for _, c := range couche.Cases {
@@ -70,7 +92,7 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string) {
 		}
 	}
 
-	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
+
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {
 		fmt.Println("Erreur à la création du fichier ", cheminFichierImage)

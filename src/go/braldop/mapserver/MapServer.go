@@ -47,7 +47,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	in := new(MessageIn)
 	out := new(MessageOut)
 	defer envoieRéponse(w, out)
-	fmt.Println(getFormValue(hr, "in"))
+	//~ fmt.Println(getFormValue(hr, "in"))
 	bin := ([]byte)(getFormValue(hr, "in"))
 	err := json.Unmarshal(bin, in)
 	if err != nil {
@@ -61,17 +61,28 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		return
 	}
 	fmt.Println("IdBraldun : ", in.IdBraldun, "   Mdpr : ", in.Mdpr)
+	if in.Vue==nil || len(in.Vue.Couches)==0 {
+		fmt.Println("Pas de données de vue")
+		return
+	}
 	hasher := sha1.New()
 	hasher.Write(bin)
-	sha := base64.StdEncoding.EncodeToString(hasher.Sum())
+	sha := base64.URLEncoding.EncodeToString(hasher.Sum())
 	fmt.Println("Clef SHA1 : ", sha)
-	dir := fmt.Sprintf("%s/%d-%s/%s", ms.répertoireCartes, in.IdBraldun, sha, time.LocalTime().Format("2006/01/02"))
+	dirBase := fmt.Sprintf("%s/%d-%s", ms.répertoireCartes, in.IdBraldun, in.Mdpr)
+	dir := dirBase + "/" + time.LocalTime().Format("2006/01/02")
 	path := dir + "/carte-"+sha+".json"
-	if _,err=os.Stat(path); err!=nil { // le fichier n'existe pas, on le crée
+	if _,err=os.Stat(path); err!=nil { // le fichier n'existe pas, ce sont des données intéressantes
+		fmt.Println(" Erreur : ", err)
+		//> on sauvegarde le fichier json
 		os.MkdirAll(dir, 0777)
 		f, _ := os.Create(path)
 		defer f.Close()
 		f.Write(bin)
+		//> on crée ou enrichit l'image png correspondant à la couche
+		in.Vue.Couches[0].ConstruitPNG(dirBase, true)
+	} else {
+		fmt.Println(" Carte inchangée")
 	}
 }
 

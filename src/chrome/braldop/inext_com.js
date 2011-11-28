@@ -1,6 +1,4 @@
 
-console.log('inext_com chargé');
-
 
 // vérifie que le compte permet l'envoi de données au serveur Braldop
 // Renvoie le mdp s'il est valide et si l'utilisateur a autorisé l'envoi

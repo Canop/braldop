@@ -171,7 +171,7 @@ func main() {
 	//> export des images PNG
 	//  et on supprime les cases de fond (maintenant inutile : on encode dans le png)
 	for _, couche := range carte.Couches {
-		couche.ConstruitPNG(*cheminRepertoireExport)
+		couche.ConstruitPNG(*cheminRepertoireExport, false)
 		if !*exportEnv {
 			couche.Cases = nil
 		}

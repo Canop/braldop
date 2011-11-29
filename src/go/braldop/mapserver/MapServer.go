@@ -87,9 +87,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		fmt.Println(" Carte inchangée")
 	}
 	out.UrlPngCouche = fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.urlCartes, in.IdBraldun, in.Mdpr, in.Vue.Couches[0].Z)
-	//fmt.Println("out.UrlPngCouche : ", out.UrlPngCouche)
 	cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.Vue.Couches[0].Z)
-	//fmt.Println("cheminLocalImage : ", cheminLocalImage)
 	if f, err := os.Open(cheminLocalImage); err==nil {
 		defer f.Close()
 		bytes, _ := ioutil.ReadAll(f)

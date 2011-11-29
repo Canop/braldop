@@ -68,16 +68,14 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 		if f, err := os.Open(cheminFichierImage); err==nil { // le fichier existe, on le charge
 			if ancienneImage, _, err := image.Decode(f); err==nil { // image décodée
 				rectangleAncienneImage := ancienneImage.Bounds()
-				fmt.Printf("Ancienne image trouvée, rectangle : %+v\n", rectangleAncienneImage)
 				if rectangleAncienneImage.Min.X!=0 || rectangleAncienneImage.Min.Y!=0 || rectangleAncienneImage.Max.X!=SEMI_LARGEUR*2 || rectangleAncienneImage.Max.Y!=SEMI_HAUTEUR*2 {
-					fmt.Println("Dimensions ancienne image incorrectes")
+					fmt.Printf("Dimensions ancienne image incorrectes : %+v\n", rectangleAncienneImage)
 				} else {
 					draw.Draw(img, ancienneImage.Bounds(), ancienneImage, ancienneImage.Bounds().Min,  draw.Src)
 				}
 			}
 			f.Close()
 		} else {
-			fmt.Println("Erreur ouverture : ", err)
 			fmt.Println("Pas de fichier image existant")
 		}
 	}

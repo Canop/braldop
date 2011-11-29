@@ -4,7 +4,6 @@
 // Renvoie le mdp s'il est valide et si l'utilisateur a autorisé l'envoi
 // de données.
 function getMdprPourServeurBraldop() {
-	console.log('ext localstorage : ', localStorage);
 	if (localStorage['braldop/carte/activation']=='non') return null;
 	var mdpr = localStorage['braldop/mdpr'];
 	if (!mdpr || mdpr.length!=64) return null;
@@ -25,8 +24,7 @@ function sendToBraldopServer(message) {
 		return;
 	}
 	message.IdBraldun = parseInt(localStorage['braldop/braldun/id'], 10);
-	console.log('Message sortant depuis le contexte de la page vers '+SERVEUR_BRALDOP+' : ');
-	console.log(message);
+	console.log('Message sortant depuis le contexte de la page vers '+SERVEUR_BRALDOP+' : ', message);
 	$.ajax(
 		{
 			url: SERVEUR_BRALDOP + '?in='+JSON.stringify(message),

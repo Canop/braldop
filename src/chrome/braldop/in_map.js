@@ -33,15 +33,14 @@ function waitForMap(callback) {
 		console.log('map déjà là');
 		callback();
 	} else {
-		console.log('attente nécessaire');
+		console.log('attente nécessaire pour la carte');
 		timer = window.setInterval(
 			function(){
 				if (map!='undefined' && map && map.mapData) {
-					console.log('la map est là et remplie');
 					window.clearInterval(timer);
 					callback();
 				} else {
-					console.log('...');
+					//console.log('...');
 				}
 			}, 500
 		);
@@ -49,7 +48,7 @@ function waitForMap(callback) {
 }
 
 waitForMap(function(){
-	console.log('OK : ', map.mapData);
+	console.log('Vue fournie par Braldahim : ', map.mapData);
 	
 	//> récupération et stockage de l'ID du braldun
 	localStorage['braldop/braldun/id']=map.mapData.Vues[0].Voyeur;

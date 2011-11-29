@@ -19,7 +19,7 @@ function setAlarm(key, date) {
 	var now = (new Date()).getTime();
 	var delay = date.getTime()-now-5*60*1000;
 	if (delay>0) {
-		console.log('Alarme programmée "'+key+'" : '+date + ' (dans '+durationMsToStr(delay)+')');
+		//~ console.log('Alarme programmée "'+key+'" : '+date + ' (dans '+durationMsToStr(delay)+')');
 		var request = {};
 		request[key] = delay;
 		chrome.extension.sendRequest(request);

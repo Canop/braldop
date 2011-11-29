@@ -15,6 +15,7 @@ case '/auth/login/':
 case '/interface':
 case '/interface/':
 	if (getMdprPourServeurBraldop()) { // on ne traite la carte que si l'utilisateur l'a autorisé
+		inject('in_upgrade_goutgueule.js');
 		inject('in_map.js');
 	} else {
 		console.log('pas de mdpr ou pas de authorisation');

@@ -41,6 +41,16 @@ function sendToBraldopServer(message) {
 // réception (intégrée à la page) du message de réponse du serveur braldop
 function receiveFromMapServer(message) {
 	console.log("Message entrant :", message);
+	if (message.PngCoucheBase64 && message.PngCoucheBase64.length>5 && map && map.mapData) {
+		map.mapData.Couches[0].fond.src = message.PngCoucheBase64;
+		map.mapData.Couches[0].fond.onload = function() {
+			map.mapData.Couches[0].Cases = null;
+			map.mapData.Couches[0].getFond = null;
+			console.log("fond chargé");
+			map.displayFog = true;
+			map.redraw();
+		}
+	}
 }
 
 

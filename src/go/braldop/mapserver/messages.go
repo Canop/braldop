@@ -23,4 +23,6 @@ type DonnéesVue struct {
 type MessageOut struct {
 	Erreur string
 	Text   string
+	UrlPngCouche string
+	PngCoucheBase64 string
 }

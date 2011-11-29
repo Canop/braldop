@@ -22,5 +22,5 @@ gomake
 killall -q mapserver
 mv mapserver.out mapserver.out-old
 mv mapserver.err mapserver.err-old
-nohup ./mapserver -cartes $CHEMIN_DEPLOIEMENT_WEB/cartes > mapserver.out 2> mapserver.err < /dev/null &
+nohup ./mapserver -cartes $CHEMIN_DEPLOIEMENT_WEB/cartes -web $URL_WEB/cartes > mapserver.out 2> mapserver.err < /dev/null &
 

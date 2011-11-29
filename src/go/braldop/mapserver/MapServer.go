@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -17,7 +18,8 @@ const (
 )
 
 type MapServer struct {
-	répertoireCartes *string
+	répertoireCartes *string // répertoire racine dans lequel on trouve les répertoires des utilisateurs
+	urlCartes *string // base de l'url du répertoire des cartes sur le serveur web
 }
 
 func getFormValue(hr *http.Request, name string) string {
@@ -74,7 +76,6 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	dir := dirBase + "/" + time.LocalTime().Format("2006/01/02")
 	path := dir + "/carte-"+sha+".json"
 	if _,err=os.Stat(path); err!=nil { // le fichier n'existe pas, ce sont des données intéressantes
-		fmt.Println(" Erreur : ", err)
 		//> on sauvegarde le fichier json
 		os.MkdirAll(dir, 0777)
 		f, _ := os.Create(path)
@@ -84,6 +85,16 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		in.Vue.Couches[0].ConstruitPNG(dirBase, true)
 	} else {
 		fmt.Println(" Carte inchangée")
+	}
+	out.UrlPngCouche = fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.urlCartes, in.IdBraldun, in.Mdpr, in.Vue.Couches[0].Z)
+	//fmt.Println("out.UrlPngCouche : ", out.UrlPngCouche)
+	cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.Vue.Couches[0].Z)
+	//fmt.Println("cheminLocalImage : ", cheminLocalImage)
+	if f, err := os.Open(cheminLocalImage); err==nil {
+		defer f.Close()
+		bytes, _ := ioutil.ReadAll(f)
+		out.PngCoucheBase64 = "data:image/png;base64," + base64.StdEncoding.EncodeToString(bytes)
+		//fmt.Println("png :\n", out.PngCoucheBase64)
 	}
 }
 
@@ -99,11 +110,17 @@ func (server *MapServer) Start() {
 func main() {
 	ms := new(MapServer)
 	ms.répertoireCartes = flag.String("cartes", "", "répertoire des cartes")
+	ms.urlCartes = flag.String("web", "", "URL des cartes")
 	flag.Parse()
 	if *ms.répertoireCartes=="" {
 		fmt.Println("Chemin des cartes non fourni")
 	} else {
 		fmt.Println("Répertoire des cartes : " + *ms.répertoireCartes)
+	}
+	if *ms.urlCartes=="" {
+		fmt.Println("URL des cartes non fournie")
+	} else {
+		fmt.Println("URL des cartes : " + *ms.urlCartes)
 	}
 	ms.Start()
 }

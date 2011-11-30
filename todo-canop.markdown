@@ -28,6 +28,8 @@ P1 :
 * mécanisme de partage de vues au sein du groupe
 * stocker (mysql ?) les échoppes et leur connaissance par les braldûns
 
+* bouton pour activer la session sans se délogguer
+
 * BUG : de temps en temps la carte se charge en noir et je dois faire un reload sous Chrome
 
 * BUG : mon code GO actuel n'efface pas les balises : si une balise est vue sur une case elle le reste (y compris dans la vue)

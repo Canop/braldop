@@ -155,13 +155,13 @@ Map.prototype.setData = function(mapData) {
 	this.mapData = mapData;
 	this.matricesVuesParZ = {};
 	this.matricesVuesParZ[0]={};
-	this.z = 0; // on va basculer forcément sur la couche zéro
+	this.z = 0;
 	this.couche = null;
 	var _this = this;
 	for (var ic=0; ic<this.mapData.Couches.length; ic++) {
 		var couche = this.mapData.Couches[ic];
 		if (couche.Z==0) this.couche = couche;
-		couche.matrix = {};//new Array(); // todo benchmarker pour comparer les effets en ram et cpu de la version map et de la version table
+		couche.matrix = {};
 		couche.fond = new Image();
 		couche.fond.src = "couche"+couche.Z+".png";
 		couche.fond.onload = function(){
@@ -217,8 +217,9 @@ Map.prototype.setData = function(mapData) {
 		}
 	}
 	if (!this.couche) {
-		console.log('Pas de couche zéro !');
-		return;
+		// pas de couche 0, alors on prend la première
+		this.couche = this.mapData.Couches[0];
+		this.z = this.couche.Z;
 	}
 	if (!this.mapData.Vues) this.mapData.Vues=[];
 	this.mapData.Vues.sort(function(a, b) {
@@ -256,6 +257,7 @@ Map.prototype.setData = function(mapData) {
 	}
 	this.compileLesVues();
 	this.matriceVues = this.matricesVuesParZ[0];
+	if (this.onSetData) this.onSetData();
 }
 
 // dessine le brouillard de guerre
@@ -408,7 +410,7 @@ Map.prototype.redraw = function() {
 				}
 			}
 			if (this.mapData.Vues) {
-				if (this.zoom>30) {
+				if (this.zoom>10) {
 					this.dessineLesVues();
 				}
 				if (this.displayFog) {

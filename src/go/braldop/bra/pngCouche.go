@@ -65,13 +65,13 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	if enrichit {
-		if f, err := os.Open(cheminFichierImage); err==nil { // le fichier existe, on le charge
-			if ancienneImage, _, err := image.Decode(f); err==nil { // image décodée
+		if f, err := os.Open(cheminFichierImage); err == nil { // le fichier existe, on le charge
+			if ancienneImage, _, err := image.Decode(f); err == nil { // image décodée
 				rectangleAncienneImage := ancienneImage.Bounds()
-				if rectangleAncienneImage.Min.X!=0 || rectangleAncienneImage.Min.Y!=0 || rectangleAncienneImage.Max.X!=SEMI_LARGEUR*2 || rectangleAncienneImage.Max.Y!=SEMI_HAUTEUR*2 {
+				if rectangleAncienneImage.Min.X != 0 || rectangleAncienneImage.Min.Y != 0 || rectangleAncienneImage.Max.X != SEMI_LARGEUR*2 || rectangleAncienneImage.Max.Y != SEMI_HAUTEUR*2 {
 					fmt.Printf("Dimensions ancienne image incorrectes : %+v\n", rectangleAncienneImage)
 				} else {
-					draw.Draw(img, ancienneImage.Bounds(), ancienneImage, ancienneImage.Bounds().Min,  draw.Src)
+					draw.Draw(img, ancienneImage.Bounds(), ancienneImage, ancienneImage.Bounds().Min, draw.Src)
 				}
 			}
 			f.Close()
@@ -89,7 +89,6 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 			nbAbsences[c.Fond] = nbAbsences[c.Fond] + 1
 		}
 	}
-
 
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {

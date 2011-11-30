@@ -1,0 +1,84 @@
+<html>
+<head>
+	<title>Cartographie via l'extension Braldop</title>
+	<meta http-equiv=content-type content="text/html; charset=UTF8"> 
+	<link rel="stylesheet" type="text/css" href="braldop.css"/>
+	<script src="jquery-1.6.3.min.js"></script>
+</head>
+<body>
+
+<div class=column_wrapper id="top_column_wrapper">
+&nbsp;</div>
+
+<div id="title_stripe">
+<a href="/blog/">canop.org</a> &gt; <a href=index.html>Braldop</a> &gt; Cartographie via l'extension Braldop
+</div>
+
+<div class=column_wrapper id="content_column_wrapper">
+<div id="content_wrapper">
+
+
+<h2>Ca fait quoi ?</h2>
+<p>Avec l'extension, vous voyez maintenant dans l'interface du jeu le terrain que vous avez vu précédemment. Vous pouvez zoomer et dézoomer à loisir.
+</p>
+<img class=screenshot src=screens/carte-extension-1.png>
+<img class=screenshot src=screens/carte-extension-2.png>
+
+
+<h2>On fait comment ?</h2>
+<p>
+</p>
+<br>
+<p><a href=braldop_2_0.crx class=install>Installer l'extension Braldop</a> Version actuelle : <span id=version>2.0</span></p>
+<br>
+<p id=browserInfos></p>
+<p>
+	Après avoir installé l'extension, réouvrez une session Braldahim, cliquez en haut à droite sur Paramètres, choisissez l'onglet Braldop et suivez les instructions.
+	<br>Votre vue sera envoyée au serveur Braldop à chacune de vos actions.
+</p>
+
+<h2>Et la suite ?</h2>
+<p>
+Je travaille sur pas mal de choses :<ul>
+	<li>du bétonnage, afin que ça soit assez solide pour être rendu public</li>
+	<li>les autres données : échoppes, palissades, etc.</li>
+	<li>la possibilité de voir les autres profondeurs que celle à laquelle vous êtes</li>
+	<li>le partage de vues (comme sur le système cartographique Goût-Gueule que vous utilisez peut-être déjà) et d'informations sur les Braldûns et les monstres</li>
+	<li>un peu de magie secrête ;)</li>
+	<li>et après tout ça, avec Boule et les thains, faudra qu'on essaye de rendre le maximum de trucs standards dans le jeu</li>
+</ul>
+</p>
+
+<h2>On en cause ?</h2>
+<p>
+Avant de rendre publique la fonction de cartographie via Braldop, je veux être sûr qu'elle est prête. C'est pourquoi pour l'instant je préfère que les discussions aient lieu plutôt sur <a href=../chrall/fofo/>le canofofo</a> que sur le forum de Braldahim.
+<br>N'oubliez pas que je dépend de vos retours, sur ce qui marche et sur ce qui ne marche pas (ou pas bien) !
+</p>
+
+
+</div> <!-- content_wrapper -->
+</div> <!-- content_column_wrapper -->
+
+<br><br>
+
+<script type="text/javascript">
+
+//> google analytics
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15064357-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  
+//> détection du navigateur
+var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') >= 0;
+if (!is_chrome) $("p#browserInfos").html("<font color=red>Sauf erreur, vous n'êtes pas sous Chrome. Vous devriez revenir sur cette page après avoir changé de navigateur.</font>");
+
+</script>
+
+</body>
+</html>

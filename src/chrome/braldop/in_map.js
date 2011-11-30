@@ -1,5 +1,6 @@
 
 
+
 // bâtit une copie indépendante et transmissible en json à un serveur go :
 // effectue une deep-copy de l'objet source mais en ignorant tous les
 //  champs dont le nom ne commence pas par une majuscule. Ne copie pas
@@ -30,10 +31,10 @@ function goclone(source) {
 var timer = null;
 function waitForMap(callback) {
 	if (map!='undefined' && map && map.mapData) {
-		console.log('map déjà là');
+		//~ console.log('map déjà là');
 		callback();
 	} else {
-		console.log('attente nécessaire pour la carte');
+		//~ console.log('attente nécessaire pour la carte');
 		timer = window.setInterval(
 			function(){
 				if (map!='undefined' && map && map.mapData) {
@@ -47,20 +48,27 @@ function waitForMap(callback) {
 	}
 }
 
-waitForMap(function(){
-	console.log('Vue fournie par Braldahim : ', map.mapData);
-	
-	//> récupération et stockage de l'ID du braldun
-	localStorage['braldop/braldun/id']=map.mapData.Vues[0].Voyeur;
-	
-	//> on assemble les données qu'on veut envoyer au serveur
+function handleNewMapData() {
 	var data = {
 		Couches: goclone(map.mapData.Couches),
 		Vues: goclone(map.mapData.Vues),
 		Position: goclone(map.mapData.Position)
 	};
+	sendToBraldopServer({Vue:data});	
+}
+
+waitForMap(function(){
+	//~ console.log('Vue fournie par Braldahim : ', map.mapData);
 	
-	sendToBraldopServer({Vue:data});
+	//> récupération et stockage de l'ID du braldun
+	localStorage['braldop/braldun/id']=map.mapData.Vues[0].Voyeur;
+	
+	//> traitement des données
+	handleNewMapData();
+	
+	//> on met un hook pour les prochaines modifs
+	map.onSetData = handleNewMapData;
 });
 
-	
+
+

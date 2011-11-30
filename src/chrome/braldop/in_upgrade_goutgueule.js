@@ -3,6 +3,107 @@
  *  (actuellement en retard par rapport à la version Braldop)
  * 
  */ 
+ 
+
+Map.prototype.setData = function(mapData) {
+	this.mapData = mapData;
+	this.matricesVuesParZ = {};
+	this.matricesVuesParZ[0]={};
+	this.z = 0; // on va basculer forcément sur la couche zéro
+	this.couche = null;
+	var _this = this;
+	for (var ic=0; ic<this.mapData.Couches.length; ic++) {
+		var couche = this.mapData.Couches[ic];
+		this.couche = couche;
+		couche.matrix = {};
+		couche.fond = new Image();
+		if (couche.Cases) {
+			for (var i=couche.Cases.length; i-->0;) {
+				var o = couche.Cases[i];
+				this.getCellCreate(couche, o.X, o.Y).fond = o.Fond;
+			}
+		}
+		if (couche.Champs) {
+			for (var i=couche.Champs.length; i-->0;) {
+				var o = couche.Champs[i];
+				o.Nom = "Champ";
+				this.getCellCreate(couche, o.X, o.Y).champ=o;
+			}
+		}
+		if (couche.Echoppes) {
+			for (var i=couche.Echoppes.length; i-->0;) {
+				var o = couche.Echoppes[i];
+				this.getCellCreate(couche, o.X, o.Y).échoppe=o;
+			}
+		}
+		if (couche.Lieux) {
+			for (var i=couche.Lieux.length; i-->0;) {
+				var o = couche.Lieux[i];
+				this.getCellCreate(couche, o.X, o.Y).lieu=o;
+			}
+		}
+		if (couche.Palissades) {
+			for (var i=couche.Palissades.length; i-->0;) {
+				var o = couche.Palissades[i];
+				o.sides = 0;
+				this.getCellCreate(couche, o.X, o.Y).palissade=o; 
+			}
+			// deuxième passe : on indique sur chaque case de palissade ses voisins
+			for (var i=couche.Palissades.length; i-->0;) {
+				var p = couche.Palissades[i];
+				var c;
+				var nb=0;
+				if ((c=this.getCell(couche, p.X+1, p.Y))&&(c.palissade)) {p.sides |= B_RIGHT; nb++;}
+				if ((c=this.getCell(couche, p.X-1, p.Y))&&(c.palissade)) {p.sides |= B_LEFT; nb++;}
+				if ((c=this.getCell(couche, p.X, p.Y+1))&&(c.palissade)) {p.sides |= B_TOP; nb++;}
+				if ((c=this.getCell(couche, p.X, p.Y-1))&&(c.palissade)) {p.sides |= B_BOTTOM; nb++;}
+				if (nb==1) { // on va essayer de deviner, le cas échéant, comment ça se prolonge dans le brouillard
+					if ((p.sides&B_LEFT)&&(!this.getCell(couche, p.X+1, p.Y))) p.sides|=B_RIGHT;
+					else if ((p.sides&B_TOP)&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_BOTTOM;
+					else if ((p.sides&B_RIGHT)&&(!this.getCell(couche, p.X-1, p.Y))) p.sides|=B_LEFT;
+					else if ((p.sides&B_BOTTOM)&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_TOP;
+				}
+			}
+		}
+	}
+	if (!this.mapData.Vues) this.mapData.Vues=[];
+	this.mapData.Vues.sort(function(a, b) {
+		return a.Time-b.Time;
+	});
+	//  les lieux de ville (pour l'instant ?) n'ont pas de profondeur explicite mais ne concernent que la surface. On les met dans la couche zéro
+	if (this.mapData.LieuxVilles) {
+		for (var i=this.mapData.LieuxVilles.length; i-->0;) {
+			var o = this.mapData.LieuxVilles[i];
+			this.getCellCreate(this.couche, o.X, o.Y).lieu=o;
+		}
+	}
+	if (mapData.Actions) {
+		for (var ia=mapData.Actions.length; ia-->0;) {
+			var a = mapData.Actions[ia];
+			a.key = this.actions.length; // on donne à l'action une clef pour la retrouver plus facilement
+			this.actions.push(a);
+			// on ajoute les actions à la vue (trouvée par l'acteur)
+			var vue;
+			if (this.mapData.Vues) {
+				for (var i=this.mapData.Vues.length; i-->0;) {
+					if (this.mapData.Vues[i].Voyeur==a.Acteur) {
+						vue = this.mapData.Vues[i];
+						break;
+					}
+				}
+			}
+			if (!vue) {
+				console.log('Vue non trouvée pour action');
+				continue;
+			}
+			if (!vue.actions) vue.actions = []; // les actions seront attachées à leur case d'effet éventuelle dans compileLesVues
+			vue.actions.push(a);
+		}
+	}
+	this.compileLesVues();
+	this.matriceVues = this.matricesVuesParZ[0];
+	if (this.onSetData) this.onSetData();
+}
 
 
 color2envs = {
@@ -50,6 +151,7 @@ Map.prototype.initializePixelsFond = function(couche) {
 	}
 	return false;
 }
+
 
 Map.prototype.redraw = function() {
 	if (this.drawInProgress) {
@@ -149,7 +251,7 @@ Map.prototype.redraw = function() {
 				}
 			}
 			if (this.mapData.Vues) {
-				if (this.zoom>30) {
+				if (this.zoom>10) {
 					this.dessineLesVues();
 				}
 				if (this.displayFog) {
@@ -175,3 +277,4 @@ Map.prototype.redraw = function() {
 		setTimeout(function(){_this.redraw();}, 40); 
 	}
 }
+

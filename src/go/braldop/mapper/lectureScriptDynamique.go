@@ -172,7 +172,7 @@ func (ls *LecteurScripts) parseLigneFichierDynamique(cells []string, vue *bra.Vu
 			vue.Objets = append(vue.Objets, o)
 		}
 	}
-	if displayErrors && err!=nil {
+	if displayErrors && err != nil {
 		fmt.Printf("Erreur lecture : %+v \n cellules : %+v\n", err, cells)
 	}
 }

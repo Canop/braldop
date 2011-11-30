@@ -24,7 +24,7 @@ function sendToBraldopServer(message) {
 		return;
 	}
 	message.IdBraldun = parseInt(localStorage['braldop/braldun/id'], 10);
-	console.log('Message sortant depuis le contexte de la page vers '+SERVEUR_BRALDOP+' : ', message);
+	//~ console.log('Message sortant depuis le contexte de la page vers '+SERVEUR_BRALDOP+' : ', message);
 	$.ajax(
 		{
 			url: SERVEUR_BRALDOP + '?in='+JSON.stringify(message),
@@ -38,13 +38,13 @@ function sendToBraldopServer(message) {
 
 // réception (intégrée à la page) du message de réponse du serveur braldop
 function receiveFromMapServer(message) {
-	console.log("Message entrant :", message);
-	if (message.PngCoucheBase64 && message.PngCoucheBase64.length>5 && map && map.mapData) {
-		map.mapData.Couches[0].fond.src = message.PngCoucheBase64;
+	//~ console.log("Message entrant :", message);
+	if (message.PngCouche && message.PngCouche.length>5 && map && map.mapData) {
+		map.mapData.Couches[0].fond.src = message.PngCouche;
 		map.mapData.Couches[0].fond.onload = function() {
 			map.mapData.Couches[0].Cases = null;
 			map.mapData.Couches[0].getFond = null;
-			console.log("fond chargé");
+			//~ console.log("fond chargé");
 			map.displayFog = true;
 			map.redraw();
 		}

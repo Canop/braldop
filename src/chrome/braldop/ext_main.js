@@ -4,6 +4,7 @@
  * Les scripts dont le nom commence par "in_" sont injectés pour être exécuté dans le contexte de la page.
  */
 
+
 inject('inext_const.js');
 inject('inext_com.js');
 
@@ -27,6 +28,6 @@ case '/Parametres/':
 	changePageParamètres();
 	break;
 default:
-	console.log('page ignorée');
+	//~ console.log('page ignorée');
 }
 

@@ -7,7 +7,7 @@ Il s'agit tout à la fois :
 
 * d'une librairie cartographique et visuelle, [Goût-Gueule](http://forum.braldahim.com/viewtopic.php?f=30&t=1223), [maintenant intégrée](http://forum.braldahim.com/viewtopic.php?f=30&t=1236) dans le jeu lui-même et disponible pour tous ceux qui souhaitent augmenter leur interface tactique de groupe
 * d'un système tout prêt de partage de vues et cartes, pour les joueurs solo ou les groupes
-* d'une extension pour le navigateur Chrome, totalement indépendante des deux autres points
+* d'une extension pour le navigateur Chrome, intégrant entre autres la cartographie à l'interface standard du jeu
 
 Le projet est géré par cano.petrole@gmail.com. N'hésitez pas à appeler au secours si nécessaire.
 

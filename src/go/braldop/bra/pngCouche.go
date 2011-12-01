@@ -15,8 +15,8 @@ const SEMI_LARGEUR = 800
 const SEMI_HAUTEUR = 500
 
 var palette color.Palette
-var indexes = make(map[string]uint8) // donne les index des couleurs par type d'environnement
-var couleurs = make(map[string]color.RGBA)                     // donne les couleurs par type d'environnement
+var indexes = make(map[string]uint8)       // donne les index des couleurs par type d'environnement
+var couleurs = make(map[string]color.RGBA) // donne les couleurs par type d'environnement
 
 // initialise la palette de couleurs des cartes PNG
 func init() {
@@ -113,8 +113,8 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 // décrit la palette pour une inclusion plus aisée dans le javascript
 func ExportePalettePng(w io.Writer) {
 	fmt.Fprintln(w, "Palette des environnements")
-	for nom, c := range(couleurs) {
-		v := (uint32(c.R)<<16) + (uint32(c.G)<<8) + uint32(c.B)
+	for nom, c := range couleurs {
+		v := (uint32(c.R) << 16) + (uint32(c.G) << 8) + uint32(c.B)
 		//~ fmt.Fprintf(w, " %s %d %d %d -> %d\n", nom, c.R, c.G, c.B, v)
 		fmt.Fprintf(w, "\t%d: \"%s\",\n", v, nom)
 	}

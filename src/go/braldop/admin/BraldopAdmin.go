@@ -7,9 +7,6 @@ import (
 	"os"
 )
 
-
-
-
 func main() {
 
 	exportePalette := flag.Bool("palette", false, "si oui alors la palette des environnements est exportée (exemple : \"bradmin -palette\")")

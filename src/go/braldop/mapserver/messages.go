@@ -12,7 +12,7 @@ type MessageIn struct {
 	IdBraldun uint
 	Mdpr      string // mot de passe restreint
 	Vue       *DonnéesVue
-	Version string // version du client
+	Version   string // version du client
 }
 
 type DonnéesVue struct {
@@ -24,5 +24,5 @@ type DonnéesVue struct {
 type MessageOut struct {
 	Erreur    string
 	PngCouche string
-	Text string // message du serveur à l'utilisateur
+	Text      string // message du serveur à l'utilisateur
 }

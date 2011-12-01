@@ -19,7 +19,6 @@ const (
 
 var versionActuelleExtension Version
 
-
 func init() {
 	versionActuelleExtension = Version{[]uint{2, 1}}
 }
@@ -50,7 +49,7 @@ func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
 func vérifieVersion(vs string) string {
 	if version, err := ParseVersion(vs); err != nil {
 		fmt.Println(" user's Version not understood : " + vs)
-	} else if CompareVersions(version, &versionActuelleExtension)==-1 {
+	} else if CompareVersions(version, &versionActuelleExtension) == -1 {
 		fmt.Println(" version utilisateur obsolète : " + vs)
 		return "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/carte_et_extension.html>la nouvelle version</a>."
 	}
@@ -71,8 +70,8 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		fmt.Println("Erreur décodage : ", err.Error())
 		return
 	}
-	out.Text = vérifieVersion(in.Version)
 	//fmt.Printf("Message reçu : %+v\n", in)
+	out.Text = vérifieVersion(in.Version)
 	if in.IdBraldun == 0 || len(in.Mdpr) != 64 {
 		fmt.Println("IdBraldun ou Mot de passe restreint invalide")
 		return

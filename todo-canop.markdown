@@ -6,10 +6,11 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* code go : création d'un package pour réutiliser l'essentiel du code dans le mapserver
-* serveur avec login (mdp restreint) pour la réception des vues
-* envoi des vues (json) depuis l'extension braldop
-* script de sauvegarde quotidienne des données
+* BUG : pas possible de désactiver l'envoi dans Paramètres
+* traiter peupliers-gr
+* extension : notification des nouvelles versions
+* page web braldop : reconnaitre la version de l'extension et proposer la mise à jour
+
 
 En cours :
 ==========
@@ -19,14 +20,13 @@ En cours :
 P1 :
 ====
 
-
-* extension : notification des nouvelles versions
-* encoder dans le png la présence de balises
+* encoder dans le png la présence de palissades (jouer sur l'alpha ?)
 * récupérer dans l'extension l'affichage des régions
 * gestion de groupes dans l'extension
 * mécanisme de partage de cartes au sein du groupe
 * mécanisme de partage de vues au sein du groupe
-* stocker (mysql ?) les échoppes et leur connaissance par les braldûns
+* stocker (mysql ?) les échoppes autres lieux (ruines, ?) et leur connaissance par les braldûns
+* optimiser gestion images png (je crois que ce qui est long est le décodage, ce qui pourrait s'optimiser par un cache)
 
 * bouton pour activer la session sans se délogguer
 

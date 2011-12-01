@@ -1,7 +1,5 @@
 
 # les applications compilées
-mapper
-mapserver
 *.8
 *.6
 _obj

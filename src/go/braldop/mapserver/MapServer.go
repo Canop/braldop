@@ -17,6 +17,13 @@ const (
 	port = 8001
 )
 
+var versionActuelleExtension Version
+
+
+func init() {
+	versionActuelleExtension = Version{[]uint{2, 1}}
+}
+
 type MapServer struct {
 	répertoireCartes *string // répertoire racine dans lequel on trouve les répertoires des utilisateurs
 }
@@ -40,6 +47,16 @@ func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
 	fmt.Fprint(w, ")")
 }
 
+func vérifieVersion(vs string) string {
+	if version, err := ParseVersion(vs); err != nil {
+		fmt.Println(" user's Version not understood : " + vs)
+	} else if CompareVersions(version, &versionActuelleExtension)==-1 {
+		fmt.Println(" version utilisateur obsolète : " + vs)
+		return "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/carte_et_extension.html>la nouvelle version</a>."
+	}
+	return ""
+}
+
 func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Request-Method", "GET")
@@ -54,6 +71,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		fmt.Println("Erreur décodage : ", err.Error())
 		return
 	}
+	out.Text = vérifieVersion(in.Version)
 	//fmt.Printf("Message reçu : %+v\n", in)
 	if in.IdBraldun == 0 || len(in.Mdpr) != 64 {
 		fmt.Println("IdBraldun ou Mot de passe restreint invalide")

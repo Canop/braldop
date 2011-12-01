@@ -1,6 +1,6 @@
 {
 	"name": "Braldop",
-	"version": "2.0",
+	"version": "2.1",
 	"description": "Une extension Chrome open-source pour Braldahim",
 	"homepage_url": "http://canop.org/braldop",
 	"background_page": "extension-braldop.html",
@@ -10,6 +10,7 @@
 			"all_frames" : true,
 			"run_at" : "document_end",
 			"css": [
+				"extension-braldop.css",
 				"tabs.css"
 			],
 			"js": [
@@ -20,16 +21,16 @@
 				"ext_tabs.js",
 				"ext_login.js",
 				"ext_alarm.js",
-				"ext_map.js",
 				"ext_options.js",
 				"ext_main.js"
 			]
 		},
 		{
-			"matches": ["http://canop.org/braldop/index.html", "http://canop.org/braldop/"],
+			"matches": ["http://canop.org/braldop/index.html", "http://canop.org/braldop/", "http://canop.org/braldop/carte_et_extension.html"],
 			"run_at" : "document_end",
 			"js": [
 				"jquery-1.6.3.min.js",
+				"inext_const.js",
 				"ext_general.js",
 				"ext_detect.js"
 			]

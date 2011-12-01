@@ -7,7 +7,6 @@ function changePageParamètres() {
 	} else {
 		console.log("mot de passe restreint non reconnu");
 	}
-
 	
 	//> décomposition de l'écran en 2 onglets : l'existant dans "Paramètres Braldahim" et les miens dans "Paramètres Braldop"
 	//  + ajout de commentaires et d'une case à cocher pour l'activation de la carte
@@ -22,6 +21,6 @@ function changePageParamètres() {
 		'Paramètres Braldop':html
 	});
 	$('#activation_envoi_braldop').change(function(){
-		localStorage['braldop/carte/activation'] = $(this).attr('checked') ? 'oui' : 'non';
+		localStorage['braldop/carte/activation'] = this.checked ? 'oui' : 'non';
 	});
 }

@@ -1,9 +1,7 @@
 include $(GOROOT)/src/Make.inc
 
-TARG=mapserver
+TARG=bradmin
 GOFILES=\
-	Version.go\
-	MapServer.go\
-	messages.go\
+	BraldopAdmin.go\
 
 include $(GOROOT)/src/Make.cmd

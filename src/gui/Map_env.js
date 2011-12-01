@@ -1,29 +1,34 @@
 // carte des environnements en fonction de la couleur du pixel généré par mapper.
 // Cette carte est exploitée uniquement si l'image PNG a été reçue et si la couche
-//  ne contient pas les cases
+//  ne contient pas les cases.
+// Pour générer cette carte, utiliser la commande suivante :
+//   bradmin -palette
 color2envs = {
-	0: null,
-	4877977: "profonde",
-	5128548: "caverne-crevasse",
-	6197187: "lac",
-	6589635: "peuprofonde",
-	7117918: "chenes",
-	7916106: "gazon",
-	8029769: "hetres-gr",
-	9551989: "plaine-gr",
-	9951580: "peupliers",
-	10255739: "mine",
-	10719647: "caverne",
 	11185755: "hetres",
-	11310219: "montagne-gr",
-	11830875: "erables",
-	12049793: "plaine",
-	12097633: "tunnel",
-	12116936: "marais",
+	9551989: "plaine-gr",
+	8698773: "marais-gr",
+	9951580: "peupliers",
 	12381606: "gazon-gr",
+	7117918: "chenes",
+	12097633: "tunnel",
+	10255739: "mine",
+	5128548: "caverne-crevasse",
+	11958351: "erables-gr",
+	13880266: "pave",
+	12116936: "marais",
+	11589980: "peupliers-gr",
 	13026235: "route",
 	13810090: "montagne",
-	13880266: "pave"
+	6197187: "lac",
+	4877977: "profonde",
+	11310219: "montagne-gr",
+	12049793: "plaine",
+	11830875: "erables",
+	10719647: "caverne",
+	6589635: "peuprofonde",
+	7916106: "gazon",
+	8029769: "hetres-gr",
+	0: null
 };
 
 

@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"image/draw"
 	"image/png"
+	"io"
 	"os"
 	"time"
 )
@@ -15,12 +16,12 @@ const SEMI_HAUTEUR = 500
 
 var palette color.Palette
 var indexes = make(map[string]uint8) // donne les index des couleurs par type d'environnement
+var couleurs = make(map[string]color.RGBA)                     // donne les couleurs par type d'environnement
 
 // initialise la palette de couleurs des cartes PNG
 func init() {
 	// attention : Les couleurs suivantes doivent impérativement être toutes différentes.
 	//             Elles seront utilisées par le client pour connaitre le terrain.
-	couleurs := make(map[string]color.RGBA)                     // donne les couleurs par type d'environnement
 	couleurs["plaine"] = color.RGBA{183, 221, 129, 255}         // #b7dd81
 	couleurs["plaine-gr"] = color.RGBA{145, 192, 117, 255}      // #91c075
 	couleurs["peuprofonde"] = color.RGBA{100, 140, 195, 255}    // #648cc3
@@ -42,6 +43,7 @@ func init() {
 	couleurs["chenes"] = color.RGBA{108, 156, 94, 255}          // #6c9c5e
 	couleurs["lac"] = color.RGBA{94, 143, 195, 255}             // #5e8fc3
 	couleurs["peupliers"] = color.RGBA{151, 217, 92, 255}       // #97d95c
+	couleurs["peupliers-gr"] = color.RGBA{176, 217, 92, 255}    // #b0d95c
 	couleurs["caverne-crevasse"] = color.RGBA{78, 65, 100, 255} // #4e4164
 	couleurs["caverne"] = color.RGBA{163, 145, 159, 255}        // #a3919f
 
@@ -106,4 +108,14 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 	}
 
 	fmt.Printf("Construction carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
+}
+
+// décrit la palette pour une inclusion plus aisée dans le javascript
+func ExportePalettePng(w io.Writer) {
+	fmt.Fprintln(w, "Palette des environnements")
+	for nom, c := range(couleurs) {
+		v := (uint32(c.R)<<16) + (uint32(c.G)<<8) + uint32(c.B)
+		//~ fmt.Fprintf(w, " %s %d %d %d -> %d\n", nom, c.R, c.G, c.B, v)
+		fmt.Fprintf(w, "\t%d: \"%s\",\n", v, nom)
+	}
 }

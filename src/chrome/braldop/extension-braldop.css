@@ -1,0 +1,37 @@
+
+
+#braldop_message {
+	position : fixed;
+	left: 10px;
+	bottom: 10px;
+	border-radius: 10px;
+	font-size: 16px;
+	color: white;
+	background-color:#C33;
+	padding: 5px;
+	z-index: 1009;
+}
+
+#braldop_message_controls {
+	width: 100%;
+}
+
+#braldop_message_opener {
+	cursor: pointer;
+	font-weight: bold;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#braldop_message_deleter {
+	display: none;
+	cursor: pointer;
+}
+
+#braldop_message_content {
+	border-radius: 8px;
+	background-color:#A11;
+	display: none;
+	padding: 15px;
+	margin: 5px;
+}

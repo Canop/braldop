@@ -54,7 +54,7 @@ function handleNewMapData() {
 		Vues: goclone(map.mapData.Vues),
 		Position: goclone(map.mapData.Position)
 	};
-	sendToBraldopServer({Vue:data});	
+	sendToBraldopServer({Vue:data});
 }
 
 waitForMap(function(){

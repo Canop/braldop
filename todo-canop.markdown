@@ -20,6 +20,11 @@ En cours :
 P1 :
 ====
 
+* extension : problème à la distribution de px (Braldahim.js ligne 96)
+
+* code go : essayer d'utiliser le package log
+* mapserver : assurer la cohérence si coupure au moment de l'écriture de l'image
+
 * encoder dans le png la présence de palissades (jouer sur l'alpha ?)
 * récupérer dans l'extension l'affichage des régions
 * gestion de groupes dans l'extension

@@ -22,6 +22,7 @@ var couleurs = make(map[string]color.RGBA) // donne les couleurs par type d'envi
 func init() {
 	// attention : Les couleurs suivantes doivent impérativement être toutes différentes.
 	//             Elles seront utilisées par le client pour connaitre le terrain.
+	// pour les palissades, on joue sur l'alpha
 	couleurs["plaine"] = color.RGBA{183, 221, 129, 255}         // #b7dd81
 	couleurs["plaine-gr"] = color.RGBA{145, 192, 117, 255}      // #91c075
 	couleurs["peuprofonde"] = color.RGBA{100, 140, 195, 255}    // #648cc3
@@ -46,6 +47,7 @@ func init() {
 	couleurs["peupliers-gr"] = color.RGBA{176, 217, 92, 255}    // #b0d95c
 	couleurs["caverne-crevasse"] = color.RGBA{78, 65, 100, 255} // #4e4164
 	couleurs["caverne"] = color.RGBA{163, 145, 159, 255}        // #a3919f
+
 
 	palette = make(color.Palette, len(couleurs)+1)
 	palette[0] = color.RGBA{0, 0, 0, 0}

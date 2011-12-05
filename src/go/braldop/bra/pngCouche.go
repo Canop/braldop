@@ -23,7 +23,7 @@ func init() {
 	// attention : Les couleurs suivantes doivent impérativement être toutes différentes.
 	//             Elles seront utilisées par le client pour connaitre le terrain.
 	// pour les palissades, on joue sur l'alpha
-	couleurs["plaine"] = color.RGBA{183, 221, 129, 255}         // #b7dd81
+	couleurs["plaine"] = color.RGBA{183, 221, 129, 255}         // #b7dd81 
 	couleurs["plaine-gr"] = color.RGBA{145, 192, 117, 255}      // #91c075
 	couleurs["peuprofonde"] = color.RGBA{100, 140, 195, 255}    // #648cc3
 	couleurs["pave"] = color.RGBA{211, 203, 202, 255}           // #d3cbca
@@ -49,12 +49,17 @@ func init() {
 	couleurs["caverne"] = color.RGBA{163, 145, 159, 255}        // #a3919f
 
 
-	palette = make(color.Palette, len(couleurs)+1)
+	palette = make(color.Palette, 2*len(couleurs)+1)
 	palette[0] = color.RGBA{0, 0, 0, 0}
 	index := 1
 	for env, couleur := range couleurs {
+		// les couleurs de base, correspondant aux environnements de fond : alpha = 255
 		indexes[env] = uint8(index)
 		palette[index] = couleur
+		index++
+		// la couleur traduisant la présence d'une palissade : alpha = 254
+		couleur254 := color.RGBA{couleur.R, couleur.G, couleur.B, 254}
+		palette[index] = couleur254
 		index++
 	}
 }
@@ -66,6 +71,11 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 	startTime := time.Nanoseconds()
 
 	img := image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
+
+	caseAPalissade := make(map[int32]bool) // map suivant PosKey(x,y) : true ssi une palissade est en x,y
+	for _, p := range couche.Palissades {
+		caseAPalissade[PosKey(p.X, p.Y)] = true
+	}
 
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	if enrichit {
@@ -88,6 +98,9 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 	for _, c := range couche.Cases {
 		if colorIndex, ok := indexes[c.Fond]; ok {
 			x, y := int(c.X)+SEMI_LARGEUR, SEMI_HAUTEUR-int(c.Y)
+			if caseAPalissade[PosKey(c.X, c.Y)] {
+				colorIndex++
+			}
 			img.SetColorIndex(x, y, colorIndex)
 		} else {
 			nbAbsences[c.Fond] = nbAbsences[c.Fond] + 1
@@ -113,11 +126,14 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 }
 
 // décrit la palette pour une inclusion plus aisée dans le javascript
+// 
 func ExportePalettePng(w io.Writer) {
 	fmt.Fprintln(w, "Palette des environnements")
 	for nom, c := range couleurs {
 		v := (uint32(c.R) << 16) + (uint32(c.G) << 8) + uint32(c.B)
-		//~ fmt.Fprintf(w, " %s %d %d %d -> %d\n", nom, c.R, c.G, c.B, v)
-		fmt.Fprintf(w, "\t%d: \"%s\",\n", v, nom)
+		vp := (uint32(c.R-1) << 16) + (uint32(c.G-1) << 8) + uint32(c.B-1)
+
+		fmt.Fprintf(w, "\t%d: \"%s\", %d: \"%s\",\n", v, nom, vp, nom)
+
 	}
 }

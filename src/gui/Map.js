@@ -146,6 +146,7 @@ Map.prototype.recomputeCanvasPosition = function() {
 	this.fogContext = null;
 }
 
+
 // l'objet passé, reçu en json, devient le fournisseur des données de carte et de vue.
 // Les champs dont le nom commence par une minuscule sont définis localement et
 //  ceux dont le nom commence par une majuscule proviennent du serveur (cette norme
@@ -398,8 +399,33 @@ Map.prototype.redraw = function() {
 				var screenRect = new Rect();
 				screenRect.w = this.zoom;
 				screenRect.h = this.zoom;
+				if (this.couche.aPalissade) {
+					for (var x=this.xMin; x<=this.xMax; x++) {
+						for (var y=this.yMax; y>=this.yMin; y--) { // on balaie en commencant par le haut de l'écran (plus "loin" en perspective)
+							if (this.couche.aPalissade(x, y)) {
+								var cell = this.getCellCreate(this.couche, x, y);
+								if (!cell.palissade) {
+									p = cell.palissade = {
+										X:x, Y:y, Z:this.z, sides:0, png:true // png==true ==> pas de données
+									};
+									var nb=0;
+									if (this.couche.aPalissade(p.X+1, p.Y)) {p.sides |= B_RIGHT; nb++;}
+									if (this.couche.aPalissade(p.X-1, p.Y)) {p.sides |= B_LEFT; nb++;}
+									if (this.couche.aPalissade(p.X, p.Y+1)) {p.sides |= B_TOP; nb++;}
+									if (this.couche.aPalissade(p.X, p.Y-1)) {p.sides |= B_BOTTOM; nb++;}
+								}								
+								screenRect.x = this.zoom*(this.originX+x);
+								screenRect.y = this.zoom*(this.originY-y);
+								this.drawPalissade(screenRect, cell.palissade);
+							}
+						}
+					}
+				}
+				/*
+
 				for (var x=this.xMin; x<=this.xMax; x++) {
 					for (var y=this.yMax; y>=this.yMin; y--) { // on balaie en commencant par le haut de l'écran (plus "loin" en perspective)
+						if (couche
 						var cell = this.getCell(this.couche, x, y);
 						if (cell && cell.palissade) {
 							screenRect.x = this.zoom*(this.originX+x);
@@ -407,7 +433,7 @@ Map.prototype.redraw = function() {
 							this.drawPalissade(screenRect, cell.palissade);
 						}
 					}
-				}
+				}*/
 			}
 			if (this.mapData.Vues) {
 				if (this.zoom>10) {

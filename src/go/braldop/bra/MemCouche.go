@@ -92,8 +92,8 @@ func (mc *MemCouche) Compile(mm *MemMap) (m *Couche) {
 		}
 	}
 
-	for _, b := range mc.PalissadesParXY {
-		m.Palissades = append(m.Palissades, b)
+	for _, p := range mc.PalissadesParXY {
+		m.Palissades = append(m.Palissades, p)
 	}
 	for _, e := range mc.EchoppesParXY {
 		// on renseigne si possible le nom du braldun

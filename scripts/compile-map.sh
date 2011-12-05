@@ -16,6 +16,7 @@ source config.sh
 cd $CHEMIN_BRALDOP/src/go/braldop/bra
 gomake install
 cd $CHEMIN_BRALDOP/src/go/braldop/mapper
+make clean
 gomake
 
 rsync -az --delete $CHEMIN_BRALDOP/src/site/* $CHEMIN_DEPLOIEMENT_WEB

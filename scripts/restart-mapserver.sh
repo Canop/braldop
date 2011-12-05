@@ -10,13 +10,11 @@ source config.sh
 
 
 cd $CHEMIN_BRALDOP/src/go/braldop/bra
-rm -f _go_.6
-rm -f _go_.8
-gomake install
+make clean
+make install
 
 cd $CHEMIN_BRALDOP/src/go/braldop/mapserver
-rm -f _go_.6
-rm -f _go_.8
+make clean
 gomake
 
 killall -q mapserver

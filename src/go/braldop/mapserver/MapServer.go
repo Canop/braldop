@@ -7,9 +7,13 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"runtime/pprof"
 	"strconv"
+	"syscall"
 	"time"
 )
 
@@ -20,7 +24,7 @@ const (
 var versionActuelleExtension Version
 
 func init() {
-	versionActuelleExtension = Version{[]uint{2, 1}}
+	versionActuelleExtension = Version{[]uint{2, 2}}
 }
 
 type MapServer struct {
@@ -48,7 +52,7 @@ func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
 
 func vérifieVersion(vs string) string {
 	if version, err := ParseVersion(vs); err != nil {
-		fmt.Println(" user's Version not understood : " + vs)
+		fmt.Println(" version utilisateur incomprise : " + vs)
 	} else if CompareVersions(version, &versionActuelleExtension) == -1 {
 		fmt.Println(" version utilisateur obsolète : " + vs)
 		return "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/carte_et_extension.html>la nouvelle version</a>."
@@ -120,11 +124,33 @@ func (server *MapServer) Start() {
 func main() {
 	ms := new(MapServer)
 	ms.répertoireCartes = flag.String("cartes", "", "répertoire des cartes")
+	cpuprofile := flag.String("cpuprofile", "", "fichier dans lequel écrire un bilan de profiling cpu")
 	flag.Parse()
 	if *ms.répertoireCartes == "" {
 		fmt.Println("Chemin des cartes non fourni")
 	} else {
 		fmt.Println("Répertoire des cartes : " + *ms.répertoireCartes)
+	}
+	if *cpuprofile != "" {
+		fmt.Println("Profiling actif, résultats dans le fichier ", *cpuprofile)
+		fp, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(fp)
+		go func() {
+			for {
+				sig := <-signal.Incoming
+				fmt.Printf("Signal : %+v", sig)
+				if usig, ok := sig.(os.UnixSignal); ok {
+					if usig==syscall.SIGTERM || usig==syscall.SIGINT {
+						fmt.Printf("Mapserver tué ! (", sig, ")")
+						pprof.StopCPUProfile()
+						os.Exit(0)
+					}
+				}
+			}
+		}()
 	}
 	ms.Start()
 }

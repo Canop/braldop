@@ -6,10 +6,10 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* BUG : pas possible de désactiver l'envoi dans Paramètres
 * traiter peupliers-gr
-* extension : notification des nouvelles versions
-* page web braldop : reconnaitre la version de l'extension et proposer la mise à jour
+* encoder dans le png la présence de palissades (jouer sur l'alpha)
+* mapserver : assurer la cohérence si coupure au moment de l'écriture de l'image
+* mapserver : profilage
 
 
 En cours :
@@ -22,10 +22,16 @@ P1 :
 
 * extension : problème à la distribution de px (Braldahim.js ligne 96)
 
-* code go : essayer d'utiliser le package log
-* mapserver : assurer la cohérence si coupure au moment de l'écriture de l'image
+* canop.github.com
 
-* encoder dans le png la présence de palissades (jouer sur l'alpha ?)
+* mettre en cache les images : le profiling révèle 15% du temps passé à décoder le png existant et 29% à dessiner l'ancienne image (attention mémoire ?)
+
+* code go : essayer d'utiliser le package log
+
+* utiliser un Mutex.Lock pour éviter de backuper l'ancien png (en appelant le lock lors de l'exit) ?
+
+* extension : profilage
+
 * récupérer dans l'extension l'affichage des régions
 * gestion de groupes dans l'extension
 * mécanisme de partage de cartes au sein du groupe

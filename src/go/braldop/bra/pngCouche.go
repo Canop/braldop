@@ -66,7 +66,8 @@ func init() {
 
 // construit l'image PNG d'une couche
 // Si enrichit est true, alors on écrit par dessus une image précédemment écrite
-// au lieu de la vider.
+// au lieu de la vider. Dans ce cas on backupe l'ancien fichier auparavant pour qu'en
+// cas de crash durant l'écriture du nouveau on puisse disposer de l'ancien.
 func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 	startTime := time.Nanoseconds()
 
@@ -78,9 +79,14 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 	}
 
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
+	cheminFichierBackup := ""
 	if enrichit {
 		if f, err := os.Open(cheminFichierImage); err == nil { // le fichier existe, on le charge
-			if ancienneImage, _, err := image.Decode(f); err == nil { // image décodée
+			ancienneImage, _, err := image.Decode(f)
+			f.Close()
+			if err==nil { // image décodée
+				cheminFichierBackup = fmt.Sprintf("%s/couche%d-%s.png", cheminRépertoire, couche.Z, time.LocalTime().Format("20060102_1504_05.000"))
+				os.Rename(cheminFichierImage, cheminFichierBackup)
 				rectangleAncienneImage := ancienneImage.Bounds()
 				if rectangleAncienneImage.Min.X != 0 || rectangleAncienneImage.Min.Y != 0 || rectangleAncienneImage.Max.X != SEMI_LARGEUR*2 || rectangleAncienneImage.Max.Y != SEMI_HAUTEUR*2 {
 					fmt.Printf("Dimensions ancienne image incorrectes : %+v\n", rectangleAncienneImage)
@@ -88,7 +94,6 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 					draw.Draw(img, ancienneImage.Bounds(), ancienneImage, ancienneImage.Bounds().Min, draw.Src)
 				}
 			}
-			f.Close()
 		} else {
 			fmt.Println("Pas de fichier image existant")
 		}
@@ -122,6 +127,10 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 		}
 	}
 
+	if cheminFichierBackup!="" {
+		os.Remove(cheminFichierBackup)
+	}
+
 	fmt.Printf("Construction carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
 }
 
@@ -131,9 +140,7 @@ func ExportePalettePng(w io.Writer) {
 	fmt.Fprintln(w, "Palette des environnements")
 	for nom, c := range couleurs {
 		v := (uint32(c.R) << 16) + (uint32(c.G) << 8) + uint32(c.B)
-		vp := (uint32(c.R-1) << 16) + (uint32(c.G-1) << 8) + uint32(c.B-1)
-
+		vp := (uint32(c.R-1) << 16) + (uint32(c.G-1) << 8) + uint32(c.B-1) // couleur visible dans getImageData pour un alpha de 254
 		fmt.Fprintf(w, "\t%d: \"%s\", %d: \"%s\",\n", v, nom, vp, nom)
-
 	}
 }

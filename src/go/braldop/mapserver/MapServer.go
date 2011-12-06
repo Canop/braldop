@@ -100,7 +100,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		defer f.Close()
 		f.Write(bin)
 		//> on crée ou enrichit l'image png correspondant à la couche
-		in.Vue.Couches[0].ConstruitPNG(dirBase, true)
+		in.Vue.Couches[0].EnrichitPNG(dirBase, 10)
 	} else {
 		fmt.Println(" -> Carte inchangée")
 	}

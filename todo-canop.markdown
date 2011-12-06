@@ -17,6 +17,8 @@ En cours :
 
 * pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
 
+* mettre en cache les images : le profiling révèle 15% du temps passé à décoder le png existant et 29% à dessiner l'ancienne image (attention mémoire ?)
+
 P1 :
 ====
 
@@ -24,7 +26,6 @@ P1 :
 
 * canop.github.com
 
-* mettre en cache les images : le profiling révèle 15% du temps passé à décoder le png existant et 29% à dessiner l'ancienne image (attention mémoire ?)
 
 * code go : essayer d'utiliser le package log
 

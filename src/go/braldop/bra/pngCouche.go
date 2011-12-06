@@ -8,6 +8,7 @@ import (
 	"image/png"
 	"io"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -17,6 +18,9 @@ const SEMI_HAUTEUR = 500
 var palette color.Palette
 var indexes = make(map[string]uint8)       // donne les index des couleurs par type d'environnement
 var couleurs = make(map[string]color.RGBA) // donne les couleurs par type d'environnement
+
+var mutexCachePng = new(sync.Mutex) // utilisé pour verrouiller le cache des png
+var cachePng = make(map[string]*image.Paletted) // cache des images, la clef est le chemin du fichier
 
 // initialise la palette de couleurs des cartes PNG
 func init() {
@@ -48,7 +52,6 @@ func init() {
 	couleurs["caverne-crevasse"] = color.RGBA{78, 65, 100, 255} // #4e4164
 	couleurs["caverne"] = color.RGBA{163, 145, 159, 255}        // #a3919f
 
-
 	palette = make(color.Palette, 2*len(couleurs)+1)
 	palette[0] = color.RGBA{0, 0, 0, 0}
 	index := 1
@@ -64,23 +67,50 @@ func init() {
 	}
 }
 
-// construit l'image PNG d'une couche
-// Si enrichit est true, alors on écrit par dessus une image précédemment écrite
-// au lieu de la vider. Dans ce cas on backupe l'ancien fichier auparavant pour qu'en
-// cas de crash durant l'écriture du nouveau on puisse disposer de l'ancien.
-func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
-	startTime := time.Nanoseconds()
 
-	img := image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
-
+func (couche *Couche) dessine(img *image.Paletted) {
 	caseAPalissade := make(map[int32]bool) // map suivant PosKey(x,y) : true ssi une palissade est en x,y
 	for _, p := range couche.Palissades {
 		caseAPalissade[PosKey(p.X, p.Y)] = true
 	}
 
+	nbAbsences := make(map[string]uint) // je note les fonds manquants dans ma palette, ils peuvent correspondre à des évolutions du jeu Braldahim
+	for _, c := range couche.Cases {
+		if colorIndex, ok := indexes[c.Fond]; ok {
+			x, y := int(c.X)+SEMI_LARGEUR, SEMI_HAUTEUR-int(c.Y)
+			if caseAPalissade[PosKey(c.X, c.Y)] {
+				colorIndex++
+			}
+			img.SetColorIndex(x, y, colorIndex)
+		} else {
+			nbAbsences[c.Fond] = nbAbsences[c.Fond] + 1
+		}
+	}
+	if len(nbAbsences) > 0 {
+		fmt.Println("Fonds manquants :")
+		for fond, nb := range nbAbsences {
+			fmt.Println(" ", fond, " : ", nb)
+		}
+	}
+
+}
+
+// ajoute les fonds à un PNG existant (ou un nouveau s'il n'existait pas).
+// Si cacheSize est supérieur à 0, alors on cache l'image (ce qui n'a d'intérêt qu'en mode
+//  enrichissement) et on ne charge pas l'ancienne image.
+// On backupe l'ancien fichier avant l'écriture pour qu'en
+// cas de crash durant l'écriture on puisse disposer de l'ancien fichier.
+func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize uint) {
+	startTime := time.Nanoseconds()
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
+	var img *image.Paletted
 	cheminFichierBackup := ""
-	if enrichit {
+	mutexCachePng.Lock()
+	defer mutexCachePng.Unlock()
+	var ok bool
+	if img, ok = cachePng[cheminFichierImage]; !ok {
+		img = image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
+		cachePng[cheminFichierImage] = img // TODO : virer la plus vieille image du cache
 		if f, err := os.Open(cheminFichierImage); err == nil { // le fichier existe, on le charge
 			ancienneImage, _, err := image.Decode(f)
 			f.Close()
@@ -98,20 +128,32 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 			fmt.Println("Pas de fichier image existant")
 		}
 	}
+	
+	couche.dessine(img)
 
-	nbAbsences := make(map[string]uint) // je note les fonds manquants dans ma palette, ils peuvent correspondre à des évolutions du jeu Braldahim
-	for _, c := range couche.Cases {
-		if colorIndex, ok := indexes[c.Fond]; ok {
-			x, y := int(c.X)+SEMI_LARGEUR, SEMI_HAUTEUR-int(c.Y)
-			if caseAPalissade[PosKey(c.X, c.Y)] {
-				colorIndex++
-			}
-			img.SetColorIndex(x, y, colorIndex)
-		} else {
-			nbAbsences[c.Fond] = nbAbsences[c.Fond] + 1
-		}
+	f, err := os.Create(cheminFichierImage)
+	if err != nil {
+		fmt.Println("Erreur à la création du fichier ", cheminFichierImage)
+		return
+	}
+	fmt.Println("Création du fichier ", cheminFichierImage)
+	defer f.Close()
+	png.Encode(f, img)
+
+	if cheminFichierBackup!="" {
+		os.Remove(cheminFichierBackup)
 	}
 
+	fmt.Printf("Enrichissement carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
+}
+
+
+// construit l'image PNG d'une couche
+func (couche *Couche) ConstruitNouveauPNG(cheminRépertoire string) {
+	startTime := time.Nanoseconds()
+	img := image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
+	couche.dessine(img)
+	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {
 		fmt.Println("Erreur à la création du fichier ", cheminFichierImage)
@@ -119,18 +161,6 @@ func (couche *Couche) ConstruitPNG(cheminRépertoire string, enrichit bool) {
 	}
 	defer f.Close()
 	png.Encode(f, img)
-
-	if len(nbAbsences) > 0 {
-		fmt.Println("Fonds manquants :")
-		for fond, nb := range nbAbsences {
-			fmt.Println(" ", fond, " : ", nb)
-		}
-	}
-
-	if cheminFichierBackup!="" {
-		os.Remove(cheminFichierBackup)
-	}
-
 	fmt.Printf("Construction carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
 }
 

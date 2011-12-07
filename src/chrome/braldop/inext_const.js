@@ -3,7 +3,7 @@
 // version de l'extension
 var extVersion = "2.2";
 
-//~ var SERVEUR_BRALDOP = 'http://canop.org:8001/';
-var SERVEUR_BRALDOP = 'http://localhost:8001/';
+var SERVEUR_BRALDOP = 'http://canop.org:8001/';
+//~ var SERVEUR_BRALDOP = 'http://localhost:8001/';
 
 

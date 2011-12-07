@@ -62,6 +62,11 @@ Map.prototype.setData = function(mapData) {
 					else if ((p.sides&B_TOP)&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_BOTTOM;
 					else if ((p.sides&B_RIGHT)&&(!this.getCell(couche, p.X-1, p.Y))) p.sides|=B_LEFT;
 					else if ((p.sides&B_BOTTOM)&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_TOP;
+				} else if (nb==0) {
+					if ((!this.getCell(couche, p.X-1, p.Y))&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_LEFT|B_TOP;
+					else if ((!this.getCell(couche, p.X-1, p.Y))&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_LEFT|B_BOTTOM;
+					else if ((!this.getCell(couche, p.X+1, p.Y))&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_RIGHT|B_BOTTOM;
+					else if ((!this.getCell(couche, p.X+1, p.Y))&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_RIGHT|B_TOP;
 				}
 			}
 		}
@@ -261,6 +266,18 @@ Map.prototype.redraw = function() {
 									if (this.couche.aPalissade(p.X-1, p.Y)) {p.sides |= B_LEFT; nb++;}
 									if (this.couche.aPalissade(p.X, p.Y+1)) {p.sides |= B_TOP; nb++;}
 									if (this.couche.aPalissade(p.X, p.Y-1)) {p.sides |= B_BOTTOM; nb++;}
+									if (nb==1) {
+										if ((p.sides&B_LEFT)&&(!this.couche.aPalissade(p.X+1, p.Y))) p.sides|=B_RIGHT;
+										else if ((p.sides&B_TOP)&&(!this.couche.aPalissade(p.X, p.Y-1))) p.sides|=B_BOTTOM;
+										else if ((p.sides&B_RIGHT)&&(!this.couche.aPalissade(p.X-1, p.Y))) p.sides|=B_LEFT;
+										else if ((p.sides&B_BOTTOM)&&(!this.couche.aPalissade(p.X, p.Y+1))) p.sides|=B_TOP;
+									} else if (nb==0) {
+										console.log("nb==0");
+										if ((!this.couche.aPalissade(p.X-1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y+1))) p.sides|=B_LEFT|B_TOP;
+										else if ((!this.couche.aPalissade(p.X-1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y-1))) p.sides|=B_LEFT|B_BOTTOM;
+										else if ((!this.couche.aPalissade(p.X+1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y-1))) p.sides|=B_RIGHT|B_BOTTOM;
+										else if ((!this.couche.aPalissade(p.X+1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y+1))) p.sides|=B_RIGHT|B_TOP;										
+									}
 								}								
 								screenRect.x = this.zoom*(this.originX+x);
 								screenRect.y = this.zoom*(this.originY-y);

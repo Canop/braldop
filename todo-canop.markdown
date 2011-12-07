@@ -6,30 +6,24 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* traiter peupliers-gr
-* encoder dans le png la présence de palissades (jouer sur l'alpha)
-* mapserver : assurer la cohérence si coupure au moment de l'écriture de l'image
-* mapserver : profilage
-
+* mettre en cache les images : le profiling révèle 15% du temps passé à décoder le png existant et 29% à dessiner l'ancienne image (attention mémoire ?)
+* utiliser un Mutex.Lock pour éviter de backuper l'ancien png (en appelant le lock lors de l'exit) ?
 
 En cours :
 ==========
 
 * pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
+* BUG extension : problème à la distribution de px (Braldahim.js ligne 96)
 
-* mettre en cache les images : le profiling révèle 15% du temps passé à décoder le png existant et 29% à dessiner l'ancienne image (attention mémoire ?)
 
 P1 :
 ====
 
-* extension : problème à la distribution de px (Braldahim.js ligne 96)
 
-* canop.github.com
-
-
+* pb : je ne sais pas indiquer si une palissade dans le brouillard est destructible ou non
 * code go : essayer d'utiliser le package log
 
-* utiliser un Mutex.Lock pour éviter de backuper l'ancien png (en appelant le lock lors de l'exit) ?
+* mapserver : profilage mémoire (pour un peu mieux régler le cache des images en particulier)
 
 * extension : profilage
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"braldop/bra"
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
@@ -100,7 +101,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		defer f.Close()
 		f.Write(bin)
 		//> on crée ou enrichit l'image png correspondant à la couche
-		in.Vue.Couches[0].EnrichitPNG(dirBase, 10)
+		in.Vue.Couches[0].EnrichitPNG(dirBase, 2) // je mets provisoirement une taille de cache très petite pour vérifier le déchargement
 	} else {
 		fmt.Println(" -> Carte inchangée")
 	}
@@ -125,6 +126,7 @@ func main() {
 	ms := new(MapServer)
 	ms.répertoireCartes = flag.String("cartes", "", "répertoire des cartes")
 	cpuprofile := flag.String("cpuprofile", "", "fichier dans lequel écrire un bilan de profiling cpu")
+	memprofile := flag.String("memprofile", "", "fichier dans lequel écrire un bilan de profiling mémoire (lors de l'ordre d'arrêt)")
 	flag.Parse()
 	if *ms.répertoireCartes == "" {
 		fmt.Println("Chemin des cartes non fourni")
@@ -132,25 +134,36 @@ func main() {
 		fmt.Println("Répertoire des cartes : " + *ms.répertoireCartes)
 	}
 	if *cpuprofile != "" {
-		fmt.Println("Profiling actif, résultats dans le fichier ", *cpuprofile)
+		fmt.Println("Profiling CPU actif, résultats dans le fichier ", *cpuprofile)
 		fp, err := os.Create(*cpuprofile)
 		if err != nil {
 			log.Fatal(err)
 		}
 		pprof.StartCPUProfile(fp)
-		go func() {
-			for {
-				sig := <-signal.Incoming
-				fmt.Printf("Signal : %+v", sig)
-				if usig, ok := sig.(os.UnixSignal); ok {
-					if usig==syscall.SIGTERM || usig==syscall.SIGINT {
-						fmt.Printf("Mapserver tué ! (", sig, ")")
-						pprof.StopCPUProfile()
-						os.Exit(0)
+	}
+	go func() {
+		for {
+			sig := <-signal.Incoming
+			fmt.Printf("Signal : %+v", sig)
+			if usig, ok := sig.(os.UnixSignal); ok {
+				if usig==syscall.SIGTERM || usig==syscall.SIGINT {
+					fmt.Printf("Mapserver tué ! (", sig, ")")
+					if *memprofile != "" {
+						fmt.Println("Ecriture heap dans le fichier ", *memprofile)
+						fp, err := os.Create(*memprofile)
+						if err != nil {
+							log.Fatal(err)
+						}
+						pprof.WriteHeapProfile(fp)
 					}
+					bra.BloqueEcrituresPNG()
+					if *cpuprofile != "" {
+						pprof.StopCPUProfile()
+					}
+					os.Exit(0)
 				}
 			}
-		}()
-	}
+		}
+	}()
 	ms.Start()
 }

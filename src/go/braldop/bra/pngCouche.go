@@ -19,8 +19,14 @@ var palette color.Palette
 var indexes = make(map[string]uint8)       // donne les index des couleurs par type d'environnement
 var couleurs = make(map[string]color.RGBA) // donne les couleurs par type d'environnement
 
+// le cache est utilisé exclusivement par la fonction EnrichitPNG
 var mutexCachePng = new(sync.Mutex) // utilisé pour verrouiller le cache des png
-var cachePng = make(map[string]*image.Paletted) // cache des images, la clef est le chemin du fichier
+var cachePng = make(map[string]élémentCachePng) // cache des images, la clef est le chemin du fichier
+type élémentCachePng struct {
+	img *image.Paletted
+	vue int64 // date dernier accès (Nanoseconds)
+}
+
 
 // initialise la palette de couleurs des cartes PNG
 func init() {
@@ -96,21 +102,36 @@ func (couche *Couche) dessine(img *image.Paletted) {
 }
 
 // ajoute les fonds à un PNG existant (ou un nouveau s'il n'existait pas).
-// Si cacheSize est supérieur à 0, alors on cache l'image (ce qui n'a d'intérêt qu'en mode
-//  enrichissement) et on ne charge pas l'ancienne image.
+// Il est recommandé de faire tous les appels avec la même valeur de cacheSize.
 // On backupe l'ancien fichier avant l'écriture pour qu'en
-// cas de crash durant l'écriture on puisse disposer de l'ancien fichier.
-func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize uint) {
+//  cas de crash durant l'écriture on puisse disposer de l'ancien fichier.
+func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 	startTime := time.Nanoseconds()
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	var img *image.Paletted
 	cheminFichierBackup := ""
 	mutexCachePng.Lock()
 	defer mutexCachePng.Unlock()
-	var ok bool
-	if img, ok = cachePng[cheminFichierImage]; !ok {
+	if élémentCache, ok := cachePng[cheminFichierImage]; !ok {
 		img = image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
-		cachePng[cheminFichierImage] = img // TODO : virer la plus vieille image du cache
+		if cacheSize>0 { // mise en cache, et réduction du cache si nécessaire
+			fmt.Println(" Image pas en cache")
+			now := time.Nanoseconds()
+			for len(cachePng)>cacheSize {
+				oldestImagePath := ""
+				oldestAge := now
+				for path, élément := range(cachePng) {
+					if élément.vue <= oldestAge {
+						oldestAge = élément.vue
+						oldestImagePath = path
+					}
+				}
+				delete(cachePng, oldestImagePath)
+				fmt.Println(" Image supprimée du cache : " + oldestImagePath)
+			}
+			fmt.Println(" Ajout au cache : " + cheminFichierImage)
+			cachePng[cheminFichierImage] = élémentCachePng{img, now}
+		}
 		if f, err := os.Open(cheminFichierImage); err == nil { // le fichier existe, on le charge
 			ancienneImage, _, err := image.Decode(f)
 			f.Close()
@@ -127,6 +148,9 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize uint) {
 		} else {
 			fmt.Println("Pas de fichier image existant")
 		}
+	} else {
+		fmt.Println(" Image trouvée en cache")
+		img = élémentCache.img
 	}
 	
 	couche.dessine(img)
@@ -173,4 +197,10 @@ func ExportePalettePng(w io.Writer) {
 		vp := (uint32(c.R-1) << 16) + (uint32(c.G-1) << 8) + uint32(c.B-1) // couleur visible dans getImageData pour un alpha de 254
 		fmt.Fprintf(w, "\t%d: \"%s\", %d: \"%s\",\n", v, nom, vp, nom)
 	}
+}
+
+// arrête (pour un arrêt du logiciel) les écritures faites via EnrichitPNG (ce
+//  sont celles qui. Celles en cours s'achêvent.
+func BloqueEcrituresPNG() {
+	mutexCachePng.Lock()
 }

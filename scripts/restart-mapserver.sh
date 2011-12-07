@@ -19,10 +19,9 @@ gomake
 
 killall -q mapserver
 mv mapserver.out mapserver.out-old
-mv mapserver.err mapserver.err-old
 
 echo "*** Ctrl C stoppe l'affichage de la trace mais pas le serveur ***" > mapserver.out
 
-nohup ./mapserver ${MAPSERVER_ARGS} -cartes $CHEMIN_REPERTOIRE_DONNEES/cartes >> mapserver.out 2> mapserver.err < /dev/null &
+nohup ./mapserver ${MAPSERVER_ARGS} -cartes $CHEMIN_REPERTOIRE_DONNEES/cartes >> mapserver.out 2>&1 < /dev/null &
 
 tail -f mapserver.out

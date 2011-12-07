@@ -7,6 +7,7 @@ import (
 	"image/draw"
 	"image/png"
 	"io"
+	"log"
 	"os"
 	"sync"
 	"time"
@@ -93,9 +94,9 @@ func (couche *Couche) dessine(img *image.Paletted) {
 		}
 	}
 	if len(nbAbsences) > 0 {
-		fmt.Println("Fonds manquants :")
+		log.Println("Fonds manquants :")
 		for fond, nb := range nbAbsences {
-			fmt.Println(" ", fond, " : ", nb)
+			log.Println(" ", fond, " : ", nb)
 		}
 	}
 
@@ -115,7 +116,7 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 	if élémentCache, ok := cachePng[cheminFichierImage]; !ok {
 		img = image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
 		if cacheSize>0 { // mise en cache, et réduction du cache si nécessaire
-			fmt.Println(" Image pas en cache")
+			log.Println(" Image pas en cache")
 			now := time.Nanoseconds()
 			for len(cachePng)>cacheSize {
 				oldestImagePath := ""
@@ -127,9 +128,9 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 					}
 				}
 				delete(cachePng, oldestImagePath)
-				fmt.Println(" Image supprimée du cache : " + oldestImagePath)
+				log.Println(" Image supprimée du cache : " + oldestImagePath)
 			}
-			fmt.Println(" Ajout au cache : " + cheminFichierImage)
+			log.Println(" Ajout au cache : " + cheminFichierImage)
 			cachePng[cheminFichierImage] = élémentCachePng{img, now}
 		}
 		if f, err := os.Open(cheminFichierImage); err == nil { // le fichier existe, on le charge
@@ -140,16 +141,16 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 				os.Rename(cheminFichierImage, cheminFichierBackup)
 				rectangleAncienneImage := ancienneImage.Bounds()
 				if rectangleAncienneImage.Min.X != 0 || rectangleAncienneImage.Min.Y != 0 || rectangleAncienneImage.Max.X != SEMI_LARGEUR*2 || rectangleAncienneImage.Max.Y != SEMI_HAUTEUR*2 {
-					fmt.Printf("Dimensions ancienne image incorrectes : %+v\n", rectangleAncienneImage)
+					log.Printf(" Dimensions ancienne image incorrectes : %+v\n", rectangleAncienneImage)
 				} else {
 					draw.Draw(img, ancienneImage.Bounds(), ancienneImage, ancienneImage.Bounds().Min, draw.Src)
 				}
 			}
 		} else {
-			fmt.Println("Pas de fichier image existant")
+			log.Println(" Pas de fichier image existant")
 		}
 	} else {
-		fmt.Println(" Image trouvée en cache")
+		log.Println(" Image trouvée en cache")
 		img = élémentCache.img
 	}
 	
@@ -157,10 +158,10 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {
-		fmt.Println("Erreur à la création du fichier ", cheminFichierImage)
+		log.Println(" Erreur à la création du fichier ", cheminFichierImage)
 		return
 	}
-	fmt.Println("Création du fichier ", cheminFichierImage)
+	//~ log.Println(" Ecriture du fichier ", cheminFichierImage)
 	defer f.Close()
 	png.Encode(f, img)
 
@@ -168,7 +169,7 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 		os.Remove(cheminFichierBackup)
 	}
 
-	fmt.Printf("Enrichissement carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
+	log.Printf(" Enrichissement carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
 }
 
 
@@ -180,12 +181,12 @@ func (couche *Couche) ConstruitNouveauPNG(cheminRépertoire string) {
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {
-		fmt.Println("Erreur à la création du fichier ", cheminFichierImage)
+		log.Println("Erreur à la création du fichier ", cheminFichierImage)
 		return
 	}
 	defer f.Close()
 	png.Encode(f, img)
-	fmt.Printf("Construction carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
+	log.Printf("Construction carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
 }
 
 // décrit la palette pour une inclusion plus aisée dans le javascript

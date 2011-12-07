@@ -43,7 +43,7 @@ func getFormValue(hr *http.Request, name string) string {
 func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
 	bout, err := json.Marshal(out)
 	if err != nil {
-		fmt.Println("Erreur encodage réponse : ", err)
+		log.Println("Erreur encodage réponse : ", err)
 		return
 	}
 	fmt.Fprint(w, "receiveFromMapServer(")
@@ -53,9 +53,9 @@ func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
 
 func vérifieVersion(vs string) string {
 	if version, err := ParseVersion(vs); err != nil {
-		fmt.Println(" version utilisateur incomprise : " + vs)
+		log.Println(" version utilisateur incomprise : " + vs)
 	} else if CompareVersions(version, &versionActuelleExtension) == -1 {
-		fmt.Println(" version utilisateur obsolète : " + vs)
+		log.Println(" version utilisateur obsolète : " + vs)
 		return "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/carte_et_extension.html>la nouvelle version</a>."
 	}
 	return ""
@@ -72,29 +72,28 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	err := json.Unmarshal(bin, in)
 	if err != nil {
 		out.Erreur = "Erreur décodage : " + err.Error()
-		fmt.Println("Erreur décodage : ", err.Error())
+		log.Println("Erreur décodage : ", err.Error())
 		return
 	}
 	//fmt.Printf("Message reçu : %+v\n", in)
 	out.Text = vérifieVersion(in.Version)
 	if in.IdBraldun == 0 || len(in.Mdpr) != 64 {
-		fmt.Println("IdBraldun ou Mot de passe restreint invalide")
+		log.Println("IdBraldun ou Mot de passe restreint invalide")
 		return
 	}
-	fmt.Println("IdBraldun : ", in.IdBraldun, "   Mdpr : ", in.Mdpr)
+	log.Println("Requête Braldun ", in.IdBraldun)
 	if in.Vue == nil || len(in.Vue.Couches) == 0 {
-		fmt.Println("Pas de données de vue")
+		log.Println("Pas de données de vue")
 		return
 	}
 	hasher := sha1.New()
 	hasher.Write(bin)
 	sha := base64.URLEncoding.EncodeToString(hasher.Sum())
-	fmt.Print("Clef SHA1 : ", sha)
 	dirBase := fmt.Sprintf("%s/%d-%s", *ms.répertoireCartes, in.IdBraldun, in.Mdpr)
 	dir := dirBase + "/" + time.LocalTime().Format("2006/01/02")
 	path := dir + "/carte-" + sha + ".json"
 	if _, err = os.Stat(path); err != nil { // le fichier n'existe pas, ce sont des données intéressantes
-		fmt.Println(" -> Carte à modifier")
+		log.Println(" -> Carte à modifier")
 		//> on sauvegarde le fichier json
 		os.MkdirAll(dir, 0777)
 		f, _ := os.Create(path)
@@ -103,7 +102,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		//> on crée ou enrichit l'image png correspondant à la couche
 		in.Vue.Couches[0].EnrichitPNG(dirBase, 2) // je mets provisoirement une taille de cache très petite pour vérifier le déchargement
 	} else {
-		fmt.Println(" -> Carte inchangée")
+		log.Println(" -> Carte inchangée")
 	}
 	cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.Vue.Couches[0].Z)
 	if f, err := os.Open(cheminLocalImage); err == nil {
@@ -115,10 +114,10 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 
 func (server *MapServer) Start() {
 	http.Handle("/", server)
-	fmt.Printf("mapserver démarre sur le port %d\n", port)
+	log.Printf("mapserver démarre sur le port %d\n", port)
 	err := http.ListenAndServe(":"+strconv.Itoa(port), nil)
 	if err != nil {
-		fmt.Println("Erreur au lancement : ", err)
+		log.Println("Erreur au lancement : ", err)
 	}
 }
 
@@ -129,12 +128,12 @@ func main() {
 	memprofile := flag.String("memprofile", "", "fichier dans lequel écrire un bilan de profiling mémoire (lors de l'ordre d'arrêt)")
 	flag.Parse()
 	if *ms.répertoireCartes == "" {
-		fmt.Println("Chemin des cartes non fourni")
+		log.Println("Chemin des cartes non fourni")
 	} else {
-		fmt.Println("Répertoire des cartes : " + *ms.répertoireCartes)
+		log.Println("Répertoire des cartes : " + *ms.répertoireCartes)
 	}
 	if *cpuprofile != "" {
-		fmt.Println("Profiling CPU actif, résultats dans le fichier ", *cpuprofile)
+		log.Println("Profiling CPU actif, résultats dans le fichier ", *cpuprofile)
 		fp, err := os.Create(*cpuprofile)
 		if err != nil {
 			log.Fatal(err)
@@ -144,12 +143,12 @@ func main() {
 	go func() {
 		for {
 			sig := <-signal.Incoming
-			fmt.Printf("Signal : %+v", sig)
+			log.Printf("Signal : %+v", sig)
 			if usig, ok := sig.(os.UnixSignal); ok {
 				if usig==syscall.SIGTERM || usig==syscall.SIGINT {
-					fmt.Printf("Mapserver tué ! (", sig, ")")
+					log.Printf("Mapserver tué ! (", sig, ")")
 					if *memprofile != "" {
-						fmt.Println("Ecriture heap dans le fichier ", *memprofile)
+						log.Println("Ecriture heap dans le fichier ", *memprofile)
 						fp, err := os.Create(*memprofile)
 						if err != nil {
 							log.Fatal(err)

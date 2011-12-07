@@ -25,7 +25,7 @@ P1 :
 
 * mapserver : profilage mémoire (pour un peu mieux régler le cache des images en particulier)
 
-* extension : profilage
+* bradmin : fonction de fusion d'images
 
 * récupérer dans l'extension l'affichage des régions
 * gestion de groupes dans l'extension

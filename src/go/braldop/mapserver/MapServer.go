@@ -62,6 +62,8 @@ func vérifieVersion(vs string) string {
 }
 
 func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
+	startTime := time.Nanoseconds()
+	defer func() { log.Printf(" durée totale traitement requête : %d ms\n", (time.Nanoseconds()-startTime)/1e6) }()
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Request-Method", "GET")
 	hr.ParseForm()
@@ -83,7 +85,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	}
 	log.Println("Requête Braldun ", in.IdBraldun)
 	if in.Vue == nil || len(in.Vue.Couches) == 0 {
-		log.Println("Pas de données de vue")
+		log.Println(" Pas de données de vue")
 		return
 	}
 	hasher := sha1.New()
@@ -100,7 +102,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		defer f.Close()
 		f.Write(bin)
 		//> on crée ou enrichit l'image png correspondant à la couche
-		in.Vue.Couches[0].EnrichitPNG(dirBase, 2) // je mets provisoirement une taille de cache très petite pour vérifier le déchargement
+		in.Vue.Couches[0].EnrichitPNG(dirBase, 10)
 	} else {
 		log.Println(" -> Carte inchangée")
 	}
@@ -145,7 +147,7 @@ func main() {
 			sig := <-signal.Incoming
 			log.Printf("Signal : %+v", sig)
 			if usig, ok := sig.(os.UnixSignal); ok {
-				if usig==syscall.SIGTERM || usig==syscall.SIGINT {
+				if usig == syscall.SIGTERM || usig == syscall.SIGINT {
 					log.Printf("Mapserver tué ! (", sig, ")")
 					if *memprofile != "" {
 						log.Println("Ecriture heap dans le fichier ", *memprofile)

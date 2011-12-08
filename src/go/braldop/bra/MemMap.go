@@ -1,11 +1,5 @@
 package bra
 
-/*
-carte stockée en mémoire
-  TODO : renommer en MemCouche
-  TODO : refactorer un jour tout ça... 
-*/
-
 import (
 	"fmt"
 )

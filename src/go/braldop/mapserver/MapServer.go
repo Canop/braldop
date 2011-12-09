@@ -25,7 +25,7 @@ const (
 var versionActuelleExtension Version
 
 func init() {
-	versionActuelleExtension = Version{[]uint{2, 2}}
+	versionActuelleExtension = Version{[]uint{2, 4}}
 }
 
 type MapServer struct {
@@ -51,14 +51,15 @@ func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
 	fmt.Fprint(w, ")")
 }
 
-func vérifieVersion(vs string) string {
+func vérifieVersion(vs string) (html string) {
 	if version, err := ParseVersion(vs); err != nil {
 		log.Println(" version utilisateur incomprise : " + vs)
 	} else if CompareVersions(version, &versionActuelleExtension) == -1 {
 		log.Println(" version utilisateur obsolète : " + vs)
-		return "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/carte_et_extension.html>la nouvelle version</a>."
+		html = "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/extension-braldop.html>la nouvelle version</a>."
+		html += "<br>Il s'agit de la première béta publique."
 	}
-	return ""
+	return 
 }
 
 func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
@@ -95,7 +96,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	dir := dirBase + "/" + time.LocalTime().Format("2006/01/02")
 	path := dir + "/carte-" + sha + ".json"
 	if _, err = os.Stat(path); err != nil { // le fichier n'existe pas, ce sont des données intéressantes
-		log.Println(" -> Carte à modifier")
+		log.Println(" Carte à modifier")
 		//> on sauvegarde le fichier json
 		os.MkdirAll(dir, 0777)
 		f, _ := os.Create(path)
@@ -104,7 +105,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		//> on crée ou enrichit l'image png correspondant à la couche
 		in.Vue.Couches[0].EnrichitPNG(dirBase, 10)
 	} else {
-		log.Println(" -> Carte inchangée")
+		log.Println(" Carte inchangée")
 	}
 	cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.Vue.Couches[0].Z)
 	if f, err := os.Open(cheminLocalImage); err == nil {

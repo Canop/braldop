@@ -74,11 +74,18 @@ function Map(canvasId, posmarkid, dialogId) {
 Map.prototype.updatePosDiv = function() {
 	var html = 'X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
 	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
-	if (cell) {
-		var env = this.environnements[cell.fond];
-		if (env) html += ' ' + env.nom + ', ' + env.description;
-		//~ else console.log('env inconnu : ' + cell.fond); // notons qu'on a des undefined quand il n'y a pas de terrain sous des palissades par exemple
+	var fond;
+	if (this.couche.getFond) {
+		fond = this.couche.getFond(this.pointerX, this.pointerY);
+	} else if (cell) {
+		fond = cell.fond
+	} else {
+		console.log("Caractéristiques cases introuvables", this.pointerX, this.pointerY);
+		return;
 	}
+	var env = this.environnements[fond];
+	if (env) html += ' ' + env.nom + ', ' + env.description;
+	else console.log('env inconnu : ' + fond); // notons qu'on a des undefined quand il n'y a pas de terrain sous des palissades par exemple
 	this.$posmarkdiv.html(html);
 }
 
@@ -213,11 +220,6 @@ Map.prototype.setData = function(mapData) {
 					else if ((p.sides&B_TOP)&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_BOTTOM;
 					else if ((p.sides&B_RIGHT)&&(!this.getCell(couche, p.X-1, p.Y))) p.sides|=B_LEFT;
 					else if ((p.sides&B_BOTTOM)&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_TOP;
-				} else if (nb==0) {
-					if ((!this.getCell(couche, p.X-1, p.Y))&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_LEFT|B_TOP;
-					else if ((!this.getCell(couche, p.X-1, p.Y))&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_LEFT|B_BOTTOM;
-					else if ((!this.getCell(couche, p.X+1, p.Y))&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_RIGHT|B_BOTTOM;
-					else if ((!this.getCell(couche, p.X+1, p.Y))&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_RIGHT|B_TOP;
 				}
 			}
 		}
@@ -419,16 +421,16 @@ Map.prototype.redraw = function() {
 									if (this.couche.aPalissade(p.X, p.Y+1)) {p.sides |= B_TOP; nb++;}
 									if (this.couche.aPalissade(p.X, p.Y-1)) {p.sides |= B_BOTTOM; nb++;}
 									if (nb==1) {
-										if ((p.sides&B_LEFT)&&(!this.couche.aPalissade(p.X+1, p.Y))) p.sides|=B_RIGHT;
-										else if ((p.sides&B_TOP)&&(!this.couche.aPalissade(p.X, p.Y-1))) p.sides|=B_BOTTOM;
-										else if ((p.sides&B_RIGHT)&&(!this.couche.aPalissade(p.X-1, p.Y))) p.sides|=B_LEFT;
-										else if ((p.sides&B_BOTTOM)&&(!this.couche.aPalissade(p.X, p.Y+1))) p.sides|=B_TOP;
+										if ((p.sides&B_LEFT)&&(!this.couche.getFond(p.X+1, p.Y))) p.sides|=B_RIGHT;
+										else if ((p.sides&B_TOP)&&(!this.couche.getFond(p.X, p.Y-1))) p.sides|=B_BOTTOM;
+										else if ((p.sides&B_RIGHT)&&(!this.couche.getFond(p.X-1, p.Y))) p.sides|=B_LEFT;
+										else if ((p.sides&B_BOTTOM)&&(!this.couche.getFond(p.X, p.Y+1))) p.sides|=B_TOP;
 									} else if (nb==0) {
 										console.log("nb==0");
-										if ((!this.couche.aPalissade(p.X-1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y+1))) p.sides|=B_LEFT|B_TOP;
-										else if ((!this.couche.aPalissade(p.X-1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y-1))) p.sides|=B_LEFT|B_BOTTOM;
-										else if ((!this.couche.aPalissade(p.X+1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y-1))) p.sides|=B_RIGHT|B_BOTTOM;
-										else if ((!this.couche.aPalissade(p.X+1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y+1))) p.sides|=B_RIGHT|B_TOP;										
+										if ((!this.couche.getFond(p.X-1, p.Y))&&(!this.couche.getFond(p.X, p.Y+1))) p.sides|=B_LEFT|B_TOP;
+										else if ((!this.couche.getFond(p.X-1, p.Y))&&(!this.couche.getFond(p.X, p.Y-1))) p.sides|=B_LEFT|B_BOTTOM;
+										else if ((!this.couche.getFond(p.X+1, p.Y))&&(!this.couche.getFond(p.X, p.Y-1))) p.sides|=B_RIGHT|B_BOTTOM;
+										else if ((!this.couche.getFond(p.X+1, p.Y))&&(!this.couche.getFond(p.X, p.Y+1))) p.sides|=B_RIGHT|B_TOP;										
 									}
 								}								
 								screenRect.x = this.zoom*(this.originX+x);
@@ -440,7 +442,6 @@ Map.prototype.redraw = function() {
 				} else {
 					for (var x=this.xMin; x<=this.xMax; x++) {
 						for (var y=this.yMax; y>=this.yMin; y--) { // on balaie en commencant par le haut de l'écran (plus "loin" en perspective)
-							if (couche
 							var cell = this.getCell(this.couche, x, y);
 							if (cell && cell.palissade) {
 								screenRect.x = this.zoom*(this.originX+x);

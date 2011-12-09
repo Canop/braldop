@@ -22,7 +22,7 @@ import (
 const SEMI_LARGEUR = 800
 const SEMI_HAUTEUR = 500
 
-var palette color.Palette
+var palette color.Palette //  palette standard, utilisée pour les nouvelles images (peut être différent des images modifiées)
 var indexes = make(map[string]uint8)       // donne les index des couleurs par type d'environnement
 var couleurs = make(map[string]color.RGBA) // donne les couleurs par type d'environnement
 
@@ -84,49 +84,17 @@ func couleursEgales(c1 color.RGBA, c2 color.RGBA) bool {
 	return c1.R == c2.R && c1.G == c2.G && c1.B == c2.B && c1.A == c2.A
 }
 
-// Si vérifiePalette alors on reconstruit une table d'indexes pour l'image qui peut
-//  ne pas avoir une palette identique (ordre, ou éléments manquants). Ceci est
-//  nécessaire lorsque l'on a encodé en png puis décodé (ces opérations ne 
-//  conservant pas l'ordre de la palette) ou si l'on a enrichi la palette (nouveaux
-//  types de fonds).
-func (couche *Couche) dessine(img *image.Paletted, vérifiePalette bool) {
-	correctIndexes := indexes
-	if vérifiePalette {
-		imgPalette := img.Palette
-		changements := false
-		correctIndexes = make(map[string]uint8)
-		n := len(imgPalette)
-		for key, index := range indexes {
-			c := palette[index].(color.RGBA)
-			if couleursEgales(c, imgPalette[index].(color.RGBA)) {
-				correctIndexes[key] = indexes[key]
-			} else {
-				changements = true
-				found := false
-				for i := 0; i < n; i++ {
-					if couleursEgales(c, imgPalette[i].(color.RGBA)) {
-						found = true
-						correctIndexes[key] = uint8(i)
-					}
-				}
-				if !found {
-					log.Printf("Couleur \"%s\" absente de la palette\n", key)
-					correctIndexes[key] = uint8(len(imgPalette))
-					img.Palette = append(img.Palette, c)
-					imgPalette = img.Palette
-				}
-			}
-		}
-		if changements {
-			log.Println("Adaptation palette nécessaire")
-		} else {
-			log.Println("Palette inchangée")
-		}
-	}
+// dessine la couche sur l'image qui peut avoir une palette différente de la palette standard.
+func (couche *Couche) dessine(img *image.Paletted) {
+	imgIndexes := make(map[string]uint8) // similaire à indexes (fond->index) mais relatif à la palette de l'image et non à la palette standard	
 	caseAPalissade := make(map[int32]bool) // map suivant PosKey(x,y) : true ssi une palissade est en x,y
 	for _, p := range couche.Palissades {
 		caseAPalissade[PosKey(p.X, p.Y)] = true
 	}
+	imgPalette := img.Palette
+	déplacementsDansPalette := 0
+	ajoutsPalette := 0
+	n := len(imgPalette)
 	nbAbsences := make(map[string]uint) // je note les fonds manquants dans ma palette, ils peuvent correspondre à des évolutions du jeu Braldahim
 	for _, c := range couche.Cases {
 		x, y := int(c.X)+SEMI_LARGEUR, SEMI_HAUTEUR-int(c.Y)
@@ -134,14 +102,46 @@ func (couche *Couche) dessine(img *image.Paletted, vérifiePalette bool) {
 		if caseAPalissade[PosKey(c.X, c.Y)] {
 			key += ".p"
 		}
-		if colorIndex, ok := correctIndexes[key]; ok {
-			img.SetColorIndex(x, y, colorIndex)
-		} else {
-			nbAbsences[c.Fond] = nbAbsences[c.Fond] + 1
+		imgIndex, ok := imgIndexes[key] // index de la couleur du fond dans la palette de l'image
+		if !ok {
+			index, ok := indexes[key]
+			if ok {
+				c := palette[index].(color.RGBA) 
+				if couleursEgales(c, imgPalette[index].(color.RGBA)) { // test rapide : si la couleur est au même index dans imgPalette que dans la palette standard
+					imgIndex = index
+					imgIndexes[key] = imgIndex
+				} else {
+					found := false
+					for i := 0; i < n; i++ {
+						if couleursEgales(c, imgPalette[i].(color.RGBA)) {
+							found = true
+							imgIndex = uint8(i)
+							imgIndexes[key] = imgIndex
+							break
+						}
+					}
+					if found {
+						déplacementsDansPalette++
+					} else {
+						log.Printf(" couleur \"%s\" absente de la palette de l'image\n", key)
+						imgIndex = uint8(len(imgPalette))
+						imgIndexes[key] = imgIndex
+						img.Palette = append(img.Palette, c)
+						imgPalette = img.Palette
+						ajoutsPalette++
+					}
+				}
+			} else { // fond inconnu y compris pour la palette standard
+				nbAbsences[c.Fond] = nbAbsences[c.Fond] + 1
+			}
 		}
+		img.SetColorIndex(x, y, imgIndex) // si pas ok, ça doit passer transparent (imgIndex=0)
 	}
-	if len(nbAbsences) > 0 {
-		log.Println("Fonds manquants :")
+	if ajoutsPalette+déplacementsDansPalette != 0 {
+		log.Println(" Transformations palette : ", déplacementsDansPalette, " déplacements et ", ajoutsPalette, "ajouts")
+	}
+	if len(nbAbsences) != 0 {
+		log.Println(" Fonds manquants :")
 		for fond, nb := range nbAbsences {
 			log.Println(" ", fond, " : ", nb)
 		}
@@ -181,6 +181,7 @@ func Analyse(img image.Image) {
 //  ceci sera corrigé un jour (avec test pour garder la possibilité
 //  d'être rapide en cas d'égalité)
 // Les deux images doivent être de mêmes dimensions exactement
+// WARNING : pas testé et probablement pas utilisable en l'état
 func Enrichit(img1 *image.Paletted, img2 *image.Paletted) error {
 	if len(img1.Palette) != len(img2.Palette) {
 		return errors.New("palettes incompatibles")
@@ -209,14 +210,12 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 	cheminFichierBackup := ""
 	mutexCachePng.Lock()
 	defer mutexCachePng.Unlock()
-	vérifiePalette := false
 	if élémentCache, ok := cachePng[cheminFichierImage]; !ok {
 		if f, err := os.Open(cheminFichierImage); err == nil { // le fichier existe, on le charge
 			ancienneImage, _, err := image.Decode(f)
 			f.Close()
 			if err == nil { // image décodée
 				img = ancienneImage.(*image.Paletted)
-				vérifiePalette = true
 				cheminFichierBackup = fmt.Sprintf("%s/couche%d-%s.png", cheminRépertoire, couche.Z, time.LocalTime().Format("20060102_1504_05.000"))
 				os.Rename(cheminFichierImage, cheminFichierBackup)
 			} else {
@@ -250,7 +249,7 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 		img = élémentCache.img
 	}
 
-	couche.dessine(img, vérifiePalette)
+	couche.dessine(img)
 
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {
@@ -272,7 +271,7 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 func (couche *Couche) ConstruitNouveauPNG(cheminRépertoire string) {
 	startTime := time.Nanoseconds()
 	img := image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
-	couche.dessine(img, false)
+	couche.dessine(img)
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {
@@ -296,7 +295,7 @@ func ExportePalettePng(w io.Writer) {
 }
 
 // arrête (pour un arrêt du logiciel) les écritures faites via EnrichitPNG (ce
-//  sont celles qui. Celles en cours s'achêvent.
+//  sont celles qui sont potentiellement destructives). Celles en cours s'achêvent.
 func BloqueEcrituresPNG() {
 	mutexCachePng.Lock()
 }

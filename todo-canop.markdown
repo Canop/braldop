@@ -6,9 +6,6 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* mapserver : utiliser le package log
-* mapserver : profilage mémoire (pour un peu mieux régler le cache des images en particulier)
-
 En cours :
 ==========
 
@@ -27,6 +24,8 @@ P1 :
 * mécanisme de partage de cartes au sein du groupe
 * mécanisme de partage de vues au sein du groupe
 * stocker (mysql ?) les échoppes et autres lieux (ruines, buissons, ?) et leur connaissance par les braldûns
+
+* bug extension : on n'affiche pas les caractéristiques des terrains pour les cases sous le brouillard
 
 * bouton pour activer la session sans se délogguer
 
@@ -51,3 +50,4 @@ P2 :
 	-> mettre la date de vue dans VueEnvironnement et comparer à l'écriture dans MemMap, avec raz des routes, champs, échoppes, palissades et bosquets en cas de modif de l'environnement
 * extension : système de chat de groupe (avec invitation possibles autres bralduns)
 
+* librairie des cdm

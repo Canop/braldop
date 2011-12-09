@@ -76,10 +76,12 @@ Map.prototype.openCellDialog = function(x, y, fixed) {
 		if (cell.palissade) {
 			empty = false;
 			html[h++] = "<b>Palissade";
-			if (!cell.palissade.Destructible) html[h++] = " indestructible";
-			html[h++] = "</b>";
-			if (cell.palissade.Destructible && cell.palissade.DateFin) {
-				html[h++] = ' (date de fin : ' + formatDate(cell.palissade.DateFin*1000, true) + ')';
+			if (!cell.palissade.png) {
+				if (!cell.palissade.Destructible) html[h++] = " indestructible";
+				html[h++] = "</b>";
+				if (cell.palissade.Destructible && cell.palissade.TimeFin) {
+					html[h++] = ' (date de fin : ' + formatDate(cell.palissade.TimeFin*1000, true) + ')';
+				}
 			}
 			html[h++] = '<br>';
 			empty=false;

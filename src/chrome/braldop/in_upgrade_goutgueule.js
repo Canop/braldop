@@ -45,29 +45,8 @@ Map.prototype.setData = function(mapData) {
 		if (couche.Palissades) {
 			for (var i=couche.Palissades.length; i-->0;) {
 				var o = couche.Palissades[i];
-				o.sides = 0;
+				o.sides = -1; // sera calculé lors du redraw
 				this.getCellCreate(couche, o.X, o.Y).palissade=o; 
-			}
-			// deuxième passe : on indique sur chaque case de palissade ses voisins
-			for (var i=couche.Palissades.length; i-->0;) {
-				var p = couche.Palissades[i];
-				var c;
-				var nb=0;
-				if ((c=this.getCell(couche, p.X+1, p.Y))&&(c.palissade)) {p.sides |= B_RIGHT; nb++;}
-				if ((c=this.getCell(couche, p.X-1, p.Y))&&(c.palissade)) {p.sides |= B_LEFT; nb++;}
-				if ((c=this.getCell(couche, p.X, p.Y+1))&&(c.palissade)) {p.sides |= B_TOP; nb++;}
-				if ((c=this.getCell(couche, p.X, p.Y-1))&&(c.palissade)) {p.sides |= B_BOTTOM; nb++;}
-				if (nb==1) { // on va essayer de deviner, le cas échéant, comment ça se prolonge dans le brouillard
-					if ((p.sides&B_LEFT)&&(!this.getCell(couche, p.X+1, p.Y))) p.sides|=B_RIGHT;
-					else if ((p.sides&B_TOP)&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_BOTTOM;
-					else if ((p.sides&B_RIGHT)&&(!this.getCell(couche, p.X-1, p.Y))) p.sides|=B_LEFT;
-					else if ((p.sides&B_BOTTOM)&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_TOP;
-				} else if (nb==0) {
-					if ((!this.getCell(couche, p.X-1, p.Y))&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_LEFT|B_TOP;
-					else if ((!this.getCell(couche, p.X-1, p.Y))&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_LEFT|B_BOTTOM;
-					else if ((!this.getCell(couche, p.X+1, p.Y))&&(!this.getCell(couche, p.X, p.Y-1))) p.sides|=B_RIGHT|B_BOTTOM;
-					else if ((!this.getCell(couche, p.X+1, p.Y))&&(!this.getCell(couche, p.X, p.Y+1))) p.sides|=B_RIGHT|B_TOP;
-				}
 			}
 		}
 	}
@@ -257,26 +236,30 @@ Map.prototype.redraw = function() {
 						for (var y=this.yMax; y>=this.yMin; y--) { // on balaie en commencant par le haut de l'écran (plus "loin" en perspective)
 							if (this.couche.aPalissade(x, y)) {
 								var cell = this.getCellCreate(this.couche, x, y);
-								if (!cell.palissade) {
-									p = cell.palissade = {
-										X:x, Y:y, Z:this.z, sides:0, png:true // png==true ==> pas de données
-									};
+								if ((!cell.palissade) || cell.palissade.sides==-1) {
+									if (!cell.palissade) { // présence palissade reçue en png
+										cell.palissade = {
+											X:x, Y:y, Z:this.z, sides:0, png:true // png==true ==> pas de données
+										};
+									} else { // objet palissade reçu en json
+										cell.palissade.sides = 0;
+									}
+									p = cell.palissade;
 									var nb=0;
 									if (this.couche.aPalissade(p.X+1, p.Y)) {p.sides |= B_RIGHT; nb++;}
 									if (this.couche.aPalissade(p.X-1, p.Y)) {p.sides |= B_LEFT; nb++;}
 									if (this.couche.aPalissade(p.X, p.Y+1)) {p.sides |= B_TOP; nb++;}
 									if (this.couche.aPalissade(p.X, p.Y-1)) {p.sides |= B_BOTTOM; nb++;}
 									if (nb==1) {
-										if ((p.sides&B_LEFT)&&(!this.couche.aPalissade(p.X+1, p.Y))) p.sides|=B_RIGHT;
-										else if ((p.sides&B_TOP)&&(!this.couche.aPalissade(p.X, p.Y-1))) p.sides|=B_BOTTOM;
-										else if ((p.sides&B_RIGHT)&&(!this.couche.aPalissade(p.X-1, p.Y))) p.sides|=B_LEFT;
-										else if ((p.sides&B_BOTTOM)&&(!this.couche.aPalissade(p.X, p.Y+1))) p.sides|=B_TOP;
+										if ((p.sides&B_LEFT)&&(!this.couche.getFond(p.X+1, p.Y))) p.sides|=B_RIGHT;
+										else if ((p.sides&B_TOP)&&(!this.couche.getFond(p.X, p.Y-1))) p.sides|=B_BOTTOM;
+										else if ((p.sides&B_RIGHT)&&(!this.couche.getFond(p.X-1, p.Y))) p.sides|=B_LEFT;
+										else if ((p.sides&B_BOTTOM)&&(!this.couche.getFond(p.X, p.Y+1))) p.sides|=B_TOP;
 									} else if (nb==0) {
-										console.log("nb==0");
-										if ((!this.couche.aPalissade(p.X-1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y+1))) p.sides|=B_LEFT|B_TOP;
-										else if ((!this.couche.aPalissade(p.X-1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y-1))) p.sides|=B_LEFT|B_BOTTOM;
-										else if ((!this.couche.aPalissade(p.X+1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y-1))) p.sides|=B_RIGHT|B_BOTTOM;
-										else if ((!this.couche.aPalissade(p.X+1, p.Y))&&(!this.couche.aPalissade(p.X, p.Y+1))) p.sides|=B_RIGHT|B_TOP;										
+										if ((!this.couche.getFond(p.X-1, p.Y))&&(!this.couche.getFond(p.X, p.Y+1))) p.sides|=B_LEFT|B_TOP;
+										else if ((!this.couche.getFond(p.X-1, p.Y))&&(!this.couche.getFond(p.X, p.Y-1))) p.sides|=B_LEFT|B_BOTTOM;
+										else if ((!this.couche.getFond(p.X+1, p.Y))&&(!this.couche.getFond(p.X, p.Y-1))) p.sides|=B_RIGHT|B_BOTTOM;
+										else if ((!this.couche.getFond(p.X+1, p.Y))&&(!this.couche.getFond(p.X, p.Y+1))) p.sides|=B_RIGHT|B_TOP;										
 									}
 								}								
 								screenRect.x = this.zoom*(this.originX+x);
@@ -324,4 +307,141 @@ Map.prototype.redraw = function() {
 		var _this = this;
 		setTimeout(function(){_this.redraw();}, 40); 
 	}
+}
+
+Map.prototype.openCellDialog = function(x, y, fixed) {
+	var cell = this.getCell(this.couche, x, y);
+	var screenRect = new Rect();
+	screenRect.w = this.zoom;
+	screenRect.h = this.zoom;
+	screenRect.x = this.zoom*(this.originX+x);
+	screenRect.y = this.zoom*(this.originY-y);
+	var html = [];
+	var h=0;
+	var empty = true;
+	if (cell) {
+		if (cell.palissade) {
+			empty = false;
+			html[h++] = "<b>Palissade";
+			if (!cell.palissade.png) {
+				if (!cell.palissade.Destructible) html[h++] = " indestructible";
+				html[h++] = "</b>";
+				if (cell.palissade.Destructible && cell.palissade.TimeFin) {
+					html[h++] = ' (date de fin : ' + formatDate(cell.palissade.TimeFin*1000, true) + ')';
+				}
+			}
+			html[h++] = '<br>';
+			empty=false;
+		} else if (cell.champ) {
+			html[h++] = '<table><tr><td><span class="champ"/></td><td>';
+			html[h++] = 'Champ de <a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+cell.champ.IdBraldun+'&direct=profil">'+cell.champ.NomCompletBraldun+'</a></td></tr></table>';
+			html[h++] = '</td></tr></table>';
+			empty=false;
+		} else if (cell.échoppe) {
+			html[h++] = '<table><tr><td><span class="'+cell.échoppe.Métier+'"/></td><td>';
+			html[h++] = cell.échoppe.Nom+'<br>';
+			html[h++] = cell.échoppe.Métier+' : <a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+cell.échoppe.IdBraldun+'&direct=profil">'+cell.échoppe.NomCompletBraldun+'</a></td></tr></table>';
+			html[h++] = '</td></tr></table>';
+			empty=false;
+		} else if (cell.lieu) {
+			html[h++] = '<table><tr><td><span class="lieu_'+cell.lieu.IdTypeLieu+'"/></td><td> '+cell.lieu.Nom+'</td></tr></table>';
+			empty=false;
+		}
+	}
+	var cellVue = this.getCellVue(x, y);
+	if (cellVue) {
+		if (cellVue.actions.length) {
+			empty = false;
+			html[h++] = '<table>';
+			for (var ia=cellVue.actions.length; ia-->0;) {
+				var a = cellVue.actions[ia];
+				var t = this.typesActions[a.Type];
+				html[h++] = '<tr><td>';
+				if (t.icone) html[h++] = '<img hspace=5 vspace=2 src="'+t.icone.src+'">'; // le hspace et le vspace là sont paresseux, on changera si plusieurs actions ont des icônes
+				html[h++] = '</td><td><a href="javascript:mapDoAction('+a.key+');">'+t.nom+'</a></td><td>('+a.PA+' PA)</td></tr>';
+			}
+			html[h++] = '</table>';
+		}
+		if (cellVue.bralduns.length) {
+			empty = false;
+			html[h++] = "<b>Braldûns :</b>";
+			html[h++] = '<table>';
+			for (var ib=0; ib<cellVue.bralduns.length; ib++) {
+				var b = cellVue.bralduns[ib];
+				var key = b.KO ? 'braldunKo' : ( b.Sexe=='f' ? 'braldun_feminin' : 'braldun_masculin' );
+				if (b.Camp.length) key += '-'+b.Camp;
+				html[h++] = '<tr><td>';
+				html[h++] = '<span class="'+key+'"></span>';
+				html[h++] = '</td><td><a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+b.Id+'&direct=profil">'+b.Prénom+' '+b.Nom+'</a></td><td>niv. '+b.Niveau;
+				html[h++] = '</td><td>';
+				if (b.IdCommunauté>0) html[h++] =  this.mapData.Communautés[b.IdCommunauté].Nom;
+				html[h++] = '</td><td>';
+				if (b.PointsGredin) html[h++] = '<span class=pointsGredin>'+b.PointsGredin+'</span>';
+				if (b.PointsRedresseur) html[h++] = '<span class=pointsRedresseur>'+b.PointsRedresseur+'</span>';
+				html[h++] = '</td></tr>';
+			}
+			html[h++] = '</table>';
+		}
+		if (cellVue.monstres.length) {
+			empty = false;
+			html[h++] = "<b>Monstres :</b>";
+			html[h++] = '<table>';
+			for (var ib=0; ib<cellVue.monstres.length; ib++) {
+				var o = cellVue.monstres[ib];
+				html[h++] = '<tr><td>';
+				html[h++] = '<span class="'+this.spritesVueTypes.css('monstre_'+o.IdType+'a', 'monstre')+'"/>';
+				html[h++] = '</td><td><a target=winprofil href="http://jeu.braldahim.com/voir/monstre/?monstre='+o.Id+'">'+o.Nom+' '+o.Taille+'</a>';
+				html[h++] = '</td></tr>';
+			}
+			html[h++] = '</table>';
+		}
+		if (cellVue.cadavres.length) {
+			empty = false;
+			html[h++] = "<b>Cadavres :</b>";
+			html[h++] = '<table>';
+			for (var ib=0; ib<cellVue.cadavres.length; ib++) {
+				var o = cellVue.cadavres[ib];
+				html[h++] = '<tr><td>';
+				html[h++] = '<span class="cadavre"></span>';
+				html[h++] = '</td><td><a target=winprofil href="http://jeu.braldahim.com/voir/monstre/?monstre='+o.Id+'">'+o.Nom+' '+o.Taille+'</a>';
+				if (o.Gibier) html[h++] = ' (gibier)';
+				html[h++] = '</td></tr>';
+			}
+			html[h++] = '</table>';
+		}
+		if (cellVue.objets.length) {
+			empty = false;
+			html[h++] = "<b>Au sol :</b>";
+			html[h++] = '<table>';
+			for (var ib=0; ib<cellVue.objets.length; ib++) {
+				var o = cellVue.objets[ib];
+				html[h++] = '<tr><td>';
+				html[h++] = '<span class="'+this.getObjectImgKey(o)+'"></span>';
+				html[h++] = '</td><td>';
+				html[h++] = '  '+o.Label;
+				html[h++] = '</td></tr>';
+			}
+			html[h++] = '</table>';
+		}
+	}
+	if (empty) html[h++] = "<i>Il n'y a rien ici</i>";
+	this.openDialog(x+","+y, html.join(''), fixed);
+}
+
+Map.prototype.updatePosDiv = function() {
+	var html = 'X='+this.pointerX+' &nbsp; Y='+this.pointerY+' &nbsp; Z='+this.z;
+	var cell = this.getCell(this.couche, this.pointerX, this.pointerY);
+	var fond;
+	if (this.couche.getFond) {
+		fond = this.couche.getFond(this.pointerX, this.pointerY);
+	} else if (cell) {
+		fond = cell.fond
+	} else {
+		console.log("Caractéristiques cases introuvables", this.pointerX, this.pointerY);
+		return;
+	}
+	var env = this.environnements[fond];
+	if (env) html += ' ' + env.nom + ', ' + env.description;
+	else console.log('env inconnu : ' + fond); // notons qu'on a des undefined quand il n'y a pas de terrain sous des palissades par exemple
+	this.$posmarkdiv.html(html);
 }

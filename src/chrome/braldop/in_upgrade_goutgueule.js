@@ -434,6 +434,7 @@ Map.prototype.updatePosDiv = function() {
 	var fond;
 	if (this.couche.getFond) {
 		fond = this.couche.getFond(this.pointerX, this.pointerY);
+		if (!fond) return;
 	} else if (cell) {
 		fond = cell.fond
 	} else {

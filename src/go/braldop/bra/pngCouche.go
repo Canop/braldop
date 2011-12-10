@@ -14,7 +14,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"reflect"
 	"sync"
 	"time"
 )
@@ -22,7 +21,7 @@ import (
 const SEMI_LARGEUR = 800
 const SEMI_HAUTEUR = 500
 
-var palette color.Palette //  palette standard, utilisée pour les nouvelles images (peut être différent des images modifiées)
+var palette color.Palette                  //  palette standard, utilisée pour les nouvelles images (peut être différent des images modifiées)
 var indexes = make(map[string]uint8)       // donne les index des couleurs par type d'environnement
 var couleurs = make(map[string]color.RGBA) // donne les couleurs par type d'environnement
 
@@ -86,7 +85,7 @@ func couleursEgales(c1 color.RGBA, c2 color.RGBA) bool {
 
 // dessine la couche sur l'image qui peut avoir une palette différente de la palette standard.
 func (couche *Couche) dessine(img *image.Paletted) {
-	imgIndexes := make(map[string]uint8) // similaire à indexes (fond->index) mais relatif à la palette de l'image et non à la palette standard	
+	imgIndexes := make(map[string]uint8)   // similaire à indexes (fond->index) mais relatif à la palette de l'image et non à la palette standard	
 	caseAPalissade := make(map[int32]bool) // map suivant PosKey(x,y) : true ssi une palissade est en x,y
 	for _, p := range couche.Palissades {
 		caseAPalissade[PosKey(p.X, p.Y)] = true
@@ -106,8 +105,8 @@ func (couche *Couche) dessine(img *image.Paletted) {
 		if !ok {
 			index, ok := indexes[key]
 			if ok {
-				c := palette[index].(color.RGBA) 
-				if couleursEgales(c, imgPalette[index].(color.RGBA)) { // test rapide : si la couleur est au même index dans imgPalette que dans la palette standard
+				c := palette[index].(color.RGBA)
+				if index < uint8(n) && couleursEgales(c, imgPalette[index].(color.RGBA)) { // test rapide : si la couleur est au même index dans imgPalette que dans la palette standard
 					imgIndex = index
 					imgIndexes[key] = imgIndex
 				} else {
@@ -148,52 +147,46 @@ func (couche *Couche) dessine(img *image.Paletted) {
 	}
 }
 
-func Analyse(img image.Image) {
-	log.Println("  format :", reflect.TypeOf(img))
-	log.Printf(" palette : %+v\n", (img.(*image.Paletted)).Palette)
-	maxX := img.Bounds().Max.X
-	maxY := img.Bounds().Max.Y
-	rouges := make(map[uint32]int)
-	alphas := make(map[uint32]int)
-	nb254 := 0
-	for x := img.Bounds().Min.X; x <= maxX; x++ {
-		for y := img.Bounds().Min.Y; y <= maxY; y++ {
-			c := img.At(x, y)
-			r, _, _, a := c.RGBA()
-			rouges[r] = rouges[r] + 1
-			if alphas[a] == 0 {
-				log.Println("c : ", c)
-			}
-			alphas[a] = alphas[a] + 1
-			if a == 254 {
-				nb254++
-			}
-		}
-	}
-	log.Printf(" rouges : %+v\n", rouges)
-	log.Printf(" alphas : %+v\n", alphas)
-}
-
 // Merge les deux images de telle sorte qu'après l'opération les pixels de img1 :
 //   - soient inchangés là où l'index dans img2 est 0
 //   - prennent la valeur de img2 ailleurs
-// Actuellement, les palettes doivent être identiques mais
-//  ceci sera corrigé un jour (avec test pour garder la possibilité
-//  d'être rapide en cas d'égalité)
 // Les deux images doivent être de mêmes dimensions exactement
-// WARNING : pas testé et probablement pas utilisable en l'état
-func Enrichit(img1 *image.Paletted, img2 *image.Paletted) error {
-	if len(img1.Palette) != len(img2.Palette) {
-		return errors.New("palettes incompatibles")
-	}
+// La palette de img1 est enrichie si nécessaire
+func Fusionne(img1 *image.Paletted, img2 *image.Paletted) error {
 	r1 := img1.Bounds()
 	r2 := img2.Bounds()
 	if r1.Min.X != r2.Min.X || r1.Max.X != r2.Max.X || r1.Min.Y != r2.Min.Y || r1.Max.Y != r2.Max.Y {
 		return errors.New("image dimensions not compatible")
 	}
-	for p := len(img2.Pix) - 1; p > 0; p-- {
-		if img2.Pix[p] != 0 {
-			img1.Pix[p] = img2.Pix[p]
+	p1 := img1.Palette
+	p2 := img2.Palette
+	n1 := len(p1)
+	n2 := len(p2)
+	op := make([]uint8, n2) // tableau donnant l'index dans la palette de img1 d'une couleur de la palette de img2
+	for i2 := 0; i2 < n2; i2++ {
+		c := p2[i2].(color.RGBA)
+		if i2 < n1 && couleursEgales(c, p1[i2].(color.RGBA)) {
+			op[i2] = uint8(i2)
+		} else {
+			found := false
+			for i1 := 0; i1 < n1; i1++ {
+				if couleursEgales(c, p1[i1].(color.RGBA)) {
+					op[i2] = uint8(i1)
+					found = true
+					break
+				}
+			}
+			if !found {
+				op[i2] = uint8(len(p1))
+				p1 = append(p1, c)
+				img1.Palette = p1
+			}
+		}
+	}
+	l2 := len(img2.Pix)
+	for x := 0; x < l2; x++ {
+		if img2.Pix[x] != 0 {
+			img1.Pix[x] = op[img2.Pix[x]]
 		}
 	}
 	return nil

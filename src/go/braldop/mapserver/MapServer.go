@@ -59,7 +59,7 @@ func vérifieVersion(vs string) (html string) {
 		html = "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/extension-braldop.html>la nouvelle version</a>."
 		html += "<br>Il s'agit de la première béta publique."
 	}
-	return 
+	return
 }
 
 func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {

@@ -10,7 +10,7 @@ En cours :
 ==========
 
 * pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
-* BUG extension : problème à la distribution de px (Braldahim.js ligne 96)
+* BUG extension : problème à la distribution de px (Braldahim.js ligne 96) ?
 
 
 P1 :

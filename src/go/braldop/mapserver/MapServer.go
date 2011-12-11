@@ -103,7 +103,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		defer f.Close()
 		f.Write(bin)
 		//> on crée ou enrichit l'image png correspondant à la couche
-		in.Vue.Couches[0].EnrichitPNG(dirBase, 10)
+		bra.EnrichitCouchePNG(dirBase, &in.Vue.Couches[0], 20)
 	} else {
 		log.Println(" Carte inchangée")
 	}

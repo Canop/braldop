@@ -84,7 +84,7 @@ func couleursEgales(c1 color.RGBA, c2 color.RGBA) bool {
 }
 
 // dessine la couche sur l'image qui peut avoir une palette différente de la palette standard.
-func (couche *Couche) dessine(img *image.Paletted) {
+func dessine(img *image.Paletted, couche *Couche) {
 	imgIndexes := make(map[string]uint8)   // similaire à indexes (fond->index) mais relatif à la palette de l'image et non à la palette standard	
 	caseAPalissade := make(map[int32]bool) // map suivant PosKey(x,y) : true ssi une palissade est en x,y
 	for _, p := range couche.Palissades {
@@ -192,11 +192,19 @@ func Fusionne(img1 *image.Paletted, img2 *image.Paletted) error {
 	return nil
 }
 
-// ajoute les fonds à un PNG existant (ou un nouveau s'il n'existait pas).
+// utilise les images couchexxx.png du répertoire cheminRépertoireSource pour construire
+//  ou enrichir les images couchexxx.png du répertoire cheminRépertoireEcriture
+func EnrichitCouchesPNG(cheminRépertoireEcriture string, cheminRépertoireSource string) {
+	
+}
+
+
+// ajoute les fonds de la couche passée à un PNG existant (ou un nouveau s'il n'existait pas)
+//  nommé couchexxx.png dans le répertoire cheminRépertoire.
 // Il est recommandé de faire tous les appels avec la même valeur de cacheSize.
 // On backupe l'ancien fichier avant l'écriture pour qu'en
 //  cas de crash durant l'écriture on puisse disposer de l'ancien fichier.
-func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
+func EnrichitCouchePNG(cheminRépertoire string, couche *Couche, cacheSize int) {
 	startTime := time.Nanoseconds()
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	var img *image.Paletted
@@ -242,7 +250,7 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 		img = élémentCache.img
 	}
 
-	couche.dessine(img)
+	dessine(img, couche)
 
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {
@@ -261,10 +269,10 @@ func (couche *Couche) EnrichitPNG(cheminRépertoire string, cacheSize int) {
 }
 
 // construit l'image PNG d'une couche
-func (couche *Couche) ConstruitNouveauPNG(cheminRépertoire string) {
+func ConstruitNouveauPNG(cheminRépertoire string, couche *Couche) {
 	startTime := time.Nanoseconds()
 	img := image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
-	couche.dessine(img)
+	dessine(img, couche)
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {

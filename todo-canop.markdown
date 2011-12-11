@@ -11,14 +11,14 @@ En cours :
 
 * pb ascenseur menu dans interface scrollable & molette https://github.com/braldahim/braldahim/issues/105
 * BUG extension : problème à la distribution de px (Braldahim.js ligne 96) ?
-
+* compte braldop et vérification du mdpr via les scripts publics
+* bradmin : fonction de fusion d'images
 
 P1 :
 ====
 
 * pb : je ne sais pas indiquer si une palissade dans le brouillard est destructible ou non
 
-* bradmin : fonction de fusion d'images
 
 * gestion de groupes dans l'extension
 * mécanisme de partage de cartes au sein du groupe

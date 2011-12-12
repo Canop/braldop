@@ -30,6 +30,7 @@ func init() {
 
 type MapServer struct {
 	répertoireCartes *string // répertoire racine dans lequel on trouve les répertoires des utilisateurs
+	bd *bra.BaseMysql
 }
 
 func getFormValue(hr *http.Request, name string) string {
@@ -67,6 +68,8 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	defer func() { log.Printf(" durée totale traitement requête : %d ms\n", (time.Nanoseconds()-startTime)/1e6) }()
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Request-Method", "GET")
+	
+	//> analyse et vérification de la requête
 	hr.ParseForm()
 	in := new(MessageIn)
 	out := new(MessageOut)
@@ -89,6 +92,29 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		log.Println(" Pas de données de vue")
 		return
 	}
+	
+	//> récupération du compte braldop authentifié
+	var cb *bra.CompteBraldop
+	if con, err := ms.bd.Open(); err!=nil {
+		log.Println("Erreur à la connexion bd", err)
+		// on fera sans le compte braldop pour la suite
+	} else {
+		defer con.Close()
+		cb, err = con.AuthentifieCompte(in.IdBraldun, in.Mdpr)
+		if err!=nil {
+			log.Println(" erreur durant authentification compte")		
+		}
+		if cb==nil {
+			log.Println(" compte non trouvé ou mauvais mdpr")
+		} else if !cb.Authentifié {
+			log.Println(" compte trouvé avec cd mdpr mais non authentifié")
+			cb = nil
+		} else {
+			log.Println(" compte authentifié")
+		}
+	}
+	
+	//> traitement des données de vue (stockage, retour carte)
 	hasher := sha1.New()
 	hasher.Write(bin)
 	sha := base64.URLEncoding.EncodeToString(hasher.Sum())
@@ -129,7 +155,13 @@ func main() {
 	ms.répertoireCartes = flag.String("cartes", "", "répertoire des cartes")
 	cpuprofile := flag.String("cpuprofile", "", "fichier dans lequel écrire un bilan de profiling cpu")
 	memprofile := flag.String("memprofile", "", "fichier dans lequel écrire un bilan de profiling mémoire (lors de l'ordre d'arrêt)")
+	mysqluser := flag.String("mysqluser", "", "user pour l'accès mysql")
+	mysqlmdp := flag.String("mysqlmdp", "", "mdp pour l'accès mysql")
+	mysqldb := flag.String("mysqldb", "braldop", "base mysql")
 	flag.Parse()
+	
+	ms.bd = bra.NewBaseMysql(*mysqluser, *mysqlmdp, *mysqldb)
+	
 	if *ms.répertoireCartes == "" {
 		log.Println("Chemin des cartes non fourni")
 	} else {

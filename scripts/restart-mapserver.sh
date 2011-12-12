@@ -22,6 +22,6 @@ mv mapserver.out mapserver.out-old
 
 echo "*** Ctrl C stoppe l'affichage de la trace mais pas le serveur ***" > mapserver.out
 
-nohup ./mapserver ${MAPSERVER_ARGS} -cartes $CHEMIN_REPERTOIRE_DONNEES/cartes >> mapserver.out 2>&1 < /dev/null &
+nohup ./mapserver ${MAPSERVER_ARGS} -mysqluser ${USER_MYSQL} -mysqlmdp ${MDP_MYSQL} -cartes $CHEMIN_REPERTOIRE_DONNEES/cartes >> mapserver.out 2>&1 < /dev/null &
 
 tail -f mapserver.out

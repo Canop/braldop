@@ -17,8 +17,7 @@ En cours :
 P1 :
 ====
 
-* pb : je ne sais pas indiquer si une palissade dans le brouillard est destructible ou non
-
+* pb : je ne sais pas indiquer si une palissade dans le brouillard est destructible ou non (utiliser un alpha à 253 ?)
 
 * gestion de groupes dans l'extension
 * mécanisme de partage de cartes au sein du groupe
@@ -30,6 +29,8 @@ P1 :
 * bouton pour activer la session sans se délogguer
 
 * faire de jolis dessins pour les routes
+
+* respecter l'ordre de profondeur pour les dessins objets & palissades (donc certains objets masqués partiellement par le haut des palissades)
 
 * ordonner les profondeurs dans le menu de sélection
 * essayer d'améliorer le dessin des portails

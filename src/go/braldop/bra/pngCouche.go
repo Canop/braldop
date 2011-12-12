@@ -271,7 +271,7 @@ func EnrichitCouchesPNG(cheminRépertoireEcriture string, cheminRépertoireSourc
 //  cas de crash durant l'écriture on puisse disposer de l'ancien fichier.
 func EnrichitCouchePNG(cheminRépertoire string, couche *Couche, cacheSize int) {
 	startTime := time.Nanoseconds()
-	cheminFichierImage :=  filepath.Join(cheminRépertoire, fmt.Sprintf("couche%d.png", cheminRépertoire, couche.Z))
+	cheminFichierImage :=  filepath.Join(cheminRépertoire, fmt.Sprintf("couche%d.png", couche.Z))
 	var img *image.Paletted
 	cheminFichierBackup := ""
 	mutexCachePng.Lock()

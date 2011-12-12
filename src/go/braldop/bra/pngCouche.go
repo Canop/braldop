@@ -14,6 +14,9 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -194,8 +197,70 @@ func Fusionne(img1 *image.Paletted, img2 *image.Paletted) error {
 
 // utilise les images couchexxx.png du répertoire cheminRépertoireSource pour construire
 //  ou enrichir les images couchexxx.png du répertoire cheminRépertoireEcriture
-func EnrichitCouchesPNG(cheminRépertoireEcriture string, cheminRépertoireSource string) {
-	
+func EnrichitCouchesPNG(cheminRépertoireEcriture string, cheminRépertoireSource string) error {
+	srcdir, err := os.Open(cheminRépertoireSource)
+	if err!=nil {
+		log.Println("Erreur ouverture répertoire source dans EnrichitCouchesPNG : ", err)
+		return err
+	}
+	defer srcdir.Close()
+	filenames, err := srcdir.Readdirnames(-1)
+	if err!=nil {
+		log.Println("Erreur listage fichiers sources dans EnrichitCouchesPNG : ", err)
+		return err
+	}
+	for _, filename := range(filenames) {
+		if filepath.Ext(filename)!=".png" {
+			continue
+		}
+		bn := filepath.Base(filename)
+		if !strings.HasPrefix(bn, "couche") {
+			continue
+		}
+		var z int
+		z, err = strconv.Atoi(bn[len("couche"):len(filename)-len(".png")])
+		if err!=nil {
+			continue 
+		}
+		log.Println("Fichier ok : ", bn, " z :", z)
+		cheminFichierSource := filepath.Join(cheminRépertoireSource, bn)
+		log.Println("cheminFichierSource : ", cheminFichierSource)
+		cheminFichierDestination := filepath.Join(cheminRépertoireEcriture, bn)
+		log.Println("cheminFichierDestination : ", cheminFichierDestination)
+		sf, err := os.Open(cheminFichierSource)
+		if err!=nil {
+			return err 
+		}		
+		defer sf.Close()
+		if df, err := os.Open(cheminFichierDestination); err == nil { // le fichier existe, on le charge
+			destimg, _, err := image.Decode(df)
+			df.Close()
+			if err != nil {
+				return err
+			}
+			srcimg, _, err := image.Decode(sf)
+			if err != nil {
+				return err
+			}			
+			Fusionne(destimg.(*image.Paletted), srcimg.(*image.Paletted))
+			
+			df, err = os.Create(cheminFichierDestination) // ouverture en écriture
+			if err != nil {
+				return err
+			}
+			defer df.Close()
+			png.Encode(df, destimg)
+			
+		} else { // le fichier n'existe pas, il suffit de copier la source
+			df, err := os.Create(cheminFichierDestination)
+			if err != nil {
+				return err
+			}
+			defer df.Close()
+			io.Copy(df, sf)
+		}
+	}
+	return nil
 }
 
 
@@ -206,7 +271,7 @@ func EnrichitCouchesPNG(cheminRépertoireEcriture string, cheminRépertoireSourc
 //  cas de crash durant l'écriture on puisse disposer de l'ancien fichier.
 func EnrichitCouchePNG(cheminRépertoire string, couche *Couche, cacheSize int) {
 	startTime := time.Nanoseconds()
-	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
+	cheminFichierImage :=  filepath.Join(cheminRépertoire, fmt.Sprintf("couche%d.png", cheminRépertoire, couche.Z))
 	var img *image.Paletted
 	cheminFichierBackup := ""
 	mutexCachePng.Lock()

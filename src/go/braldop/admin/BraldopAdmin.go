@@ -27,7 +27,7 @@ func main() {
 	out := flag.String("out", "", "répertoire de sortie")
 	cmd := flag.String("cmd", "", "commande")
 	flag.Parse()
-
+	var err error
 	if *exportePalette {
 		bra.ExportePalettePng(os.Stdout)
 	} else if *cmd == "png" {
@@ -35,26 +35,44 @@ func main() {
 			log.Println("Source de données non précisée (in devrait être le chemin d'un fichier json)")
 		} else {
 			dir := *out
-			cheminsIn = strings.Split(*in, ";")
-			if out=="" {
-				dir, _ := filepath.Split(cheminsIn[0])
+			cheminsIn := strings.Split(*in, ";")
+			if dir=="" {
+				dir, _ = filepath.Split(cheminsIn[0])
+				cheminsIn = cheminsIn[1:]
 			}
-			
-			filein, err := os.Open(*in)
-			if err != nil {
+			dir, err = filepath.Abs(dir)
+			if err!=nil {
 				log.Fatal(err)
+			}				
+			for _, cheminIn := range(cheminsIn) {
+				cheminIn, err = filepath.Abs(cheminIn)
+				if err!=nil {
+					log.Fatal(err)
+				}
+				if filepath.Ext(cheminIn)==".json" {
+					filein, err := os.Open(*in)
+					if err != nil {
+						log.Fatal(err)
+					}
+					defer filein.Close()
+					messin := new(MessageIn)
+					bin, _ := ioutil.ReadAll(filein)
+					err = json.Unmarshal(bin, messin)
+					if err != nil {
+						log.Fatal(err)
+					}
+					if messin.Vue == nil || len(messin.Vue.Couches) == 0 {
+						log.Fatal(" Pas de données de vue")
+					}
+					bra.EnrichitCouchePNG(dir, &messin.Vue.Couches[0], 0)
+				} else { // si pas json on suppose pour l'instant qu'il s'agit d'un répertoire de fichiers png
+					log.Println("********\nEnrichitCouchesPNG", dir, cheminIn)
+					err = bra.EnrichitCouchesPNG(dir, cheminIn)
+					if err != nil {
+						log.Fatal(err)
+					}
+				}
 			}
-			defer filein.Close()
-			messin := new(MessageIn)
-			bin, _ := ioutil.ReadAll(filein)
-			err = json.Unmarshal(bin, messin)
-			if err != nil {
-				log.Fatal(err)
-			}
-			if messin.Vue == nil || len(messin.Vue.Couches) == 0 {
-				log.Fatal(" Pas de données de vue")
-			}
-			messin.Vue.Couches[0].EnrichitPNG(dir, 0)
 		}
 	} else {
 		log.Println("Usage :")

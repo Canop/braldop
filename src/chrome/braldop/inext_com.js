@@ -3,7 +3,7 @@
 // vérifie que le compte permet l'envoi de données au serveur Braldop
 // Renvoie le mdp s'il est valide et si l'utilisateur a autorisé l'envoi
 // de données.
-function getMdprPourServeurBraldop() {
+braldop.getMdprPourServeurBraldop = function() {
 	if (localStorage['braldop/carte/activation']=='non') return null;
 	var mdpr = localStorage['braldop/mdpr'];
 	if (!mdpr || mdpr.length!=64) return null;
@@ -12,8 +12,8 @@ function getMdprPourServeurBraldop() {
 
 
 // envoie au serveur un message authentifié par le mdp restreint
-function sendToBraldopServer(message) {
-	message.Mdpr = getMdprPourServeurBraldop();
+braldop.sendToBraldopServer = function(message) {
+	message.Mdpr = braldop.getMdprPourServeurBraldop();
 	if (!message.Mdpr) {
 		console.log('Envoi au serveur braldop non authorisé');
 		return;
@@ -24,11 +24,11 @@ function sendToBraldopServer(message) {
 		return;
 	}
 	message.IdBraldun = parseInt(localStorage['braldop/braldun/id'], 10);
-	message.Version = extVersion;
-	//~ console.log('Message sortant depuis le contexte de la page vers '+SERVEUR_BRALDOP+' : ', message);
+	message.Version = braldop.extVersion;
+	console.log('Message sortant depuis le contexte de la page vers '+braldop.serveur+' : ', message);
 	$.ajax(
 		{
-			url: SERVEUR_BRALDOP + '?in='+JSON.stringify(message),
+			url: braldop.serveur + '?in='+JSON.stringify(message),
 			crossDomain: true,
 			dataType: "jsonp"
 		}
@@ -38,8 +38,8 @@ function sendToBraldopServer(message) {
 
 
 // réception (intégrée à la page) du message de réponse du serveur braldop
-function receiveFromMapServer(message) {
-	//~ console.log("Message entrant :", message);
+receiveFromMapServer = function(message) {
+	console.log("Message entrant :", message);
 	if (message.Text && message.Text.length>0) {
 		var $messageDiv = $('#braldop_message_content');
 		if ($messageDiv.length==0) {
@@ -53,15 +53,58 @@ function receiveFromMapServer(message) {
 		}
 		$messageDiv.html(message.Text);
 	}
-	if (message.PngCouche && message.PngCouche.length>5 && map && map.mapData) {
-		map.mapData.Couches[0].fond.src = message.PngCouche;
-		map.mapData.Couches[0].fond.onload = function() {
-			map.mapData.Couches[0].Cases = null;
-			map.mapData.Couches[0].getFond = null;
-			//~ console.log("fond chargé");
-			map.displayFog = true;
-			map.redraw();
+	if (message.DV && message.DV.Vues) {
+		// ce sont les vues supplémentaires (celles des copains), on les ajoute
+		for (var i=0; i<message.DV.Vues.length; i++) {
+			message.DV.Vues[i].active = true;
+			var found = false;
+			for (var iv=0; iv<map.mapData.Vues.length; iv++) {
+				if (message.DV.Vues[i].Voyeur==map.mapData.Vues[iv].Voyeur) {
+					map.mapData.Vues[iv] = message.DV.Vues[i];
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				map.mapData.Vues.push(message.DV.Vues[i]);
+			}
 		}
+		map.compileLesVues();
+	}
+	if (!message.Z) message.Z = 0; // juste le temps de la transition, avant mise à jour du serveur
+	if (message.PngCouche && message.PngCouche.length>5 && map && map.mapData) {
+		var couche = null;
+		console.log("A");
+		for (var ic=0; ic<map.mapData.Couches.length; ic++) {
+			var c = map.mapData.Couches[ic];
+			if (c.Z==message.Z) {
+				console.log('couche = c');
+				couche = c;
+				break;
+			}
+		}
+		console.log("B couche :", c);
+		if (couche==null) {
+			console.log('new couche');
+			couche = {};
+			couche.Z = message.Z;
+			couche.matrix = {};
+			map.mapData.Couches.push(couche);
+		}
+		console.log("C");
+		couche.fond = new Image();
+		couche.fond.src = message.PngCouche;
+		couche.fond.onload = function() {
+			console.log("couche.fond.onload");
+			couche.Cases = null;
+			couche.getFond = null;
+			map.displayFog = true;
+			map.changeProfondeur(couche.Z);
+			braldop.depths = message.ZConnus;
+			braldop.updateMapSettings();
+			map.redraw();
+			console.log("Couche active : ", map.couche);
+		};
 	}
 }
 

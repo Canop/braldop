@@ -5,11 +5,11 @@
 // effectue une deep-copy de l'objet source mais en ignorant tous les
 //  champs dont le nom ne commence pas par une majuscule. Ne copie pas
 //  les prototypes ni les champs nulls (ou 0).
-function goclone(source) {
+braldop.goclone = function(source) {
 	if ($.isArray(source)) {
 		var clone = [];
 		for (var i=0; i<source.length; i++) {
-			if (source[i]) clone[i] = goclone(source[i]);
+			if (source[i]) clone[i] = braldop.goclone(source[i]);
 		}
 		return clone;
 	} else if (typeof(source)=="object") {
@@ -18,7 +18,7 @@ function goclone(source) {
 			if (source[prop]) {
 				var firstChar = prop.charAt(0);
 				if (firstChar!=firstChar.toUpperCase()) continue;
-				clone[prop] = goclone(source[prop]);
+				clone[prop] = braldop.goclone(source[prop]);
 			}
 		}
 		return clone;
@@ -28,17 +28,17 @@ function goclone(source) {
 }
 
 
-var timer = null;
-function waitForMap(callback) {
+braldop.timer = null;
+braldop.waitForMap = function(callback) {
 	if (map!='undefined' && map && map.mapData) {
 		//~ console.log('map déjà là');
 		callback();
 	} else {
 		//~ console.log('attente nécessaire pour la carte');
-		timer = window.setInterval(
+		braldop.timer = window.setInterval(
 			function(){
 				if (map!='undefined' && map && map.mapData) {
-					window.clearInterval(timer);
+					window.clearInterval(braldop.timer);
 					callback();
 				} else {
 					//console.log('...');
@@ -48,26 +48,26 @@ function waitForMap(callback) {
 	}
 }
 
-function handleNewMapData() {
+braldop.handleNewMapData = function() {
 	var data = {
-		Couches: goclone(map.mapData.Couches),
-		Vues: goclone(map.mapData.Vues),
-		Position: goclone(map.mapData.Position)
+		Couches: braldop.goclone(map.mapData.Couches),
+		Vues: braldop.goclone(map.mapData.Vues),
+		Position: braldop.goclone(map.mapData.Position)
 	};
-	sendToBraldopServer({Vue:data});
+	braldop.sendToBraldopServer({ZRequis:map.z, Vue:data});
 }
 
-waitForMap(function(){
+braldop.waitForMap(function(){
 	//~ console.log('Vue fournie par Braldahim : ', map.mapData);
 	
 	//> récupération et stockage de l'ID du braldun
 	localStorage['braldop/braldun/id']=map.mapData.Vues[0].Voyeur;
 	
 	//> traitement des données
-	handleNewMapData();
+	braldop.handleNewMapData();
 	
 	//> on met un hook pour les prochaines modifs
-	map.onSetData = handleNewMapData;
+	map.onSetData = braldop.handleNewMapData;
 });
 
 

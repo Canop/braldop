@@ -1,6 +1,6 @@
 
 
-function ajouteOnglets($target, tabs) {
+braldop.ajouteOnglets = function($target, tabs) {
 	var html = '<table class=tab_holder cellspacing=0><tr>';
 	var i=0;
 	for (var key in tabs) {

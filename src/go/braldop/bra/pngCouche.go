@@ -195,6 +195,40 @@ func Fusionne(img1 *image.Paletted, img2 *image.Paletted) error {
 	return nil
 }
 
+// détermine les nombres xxx pour lesquels le répertoire cheminRépertoire contient des fichiers
+//  dont le nom est couchexxx.png
+func CouchesPNGDisponibles(cheminRépertoire string) ([]int, error) {
+	nums := make([]int, 0, 10)
+	srcdir, err := os.Open(cheminRépertoire)
+	if err!=nil {
+		log.Println("Erreur ouverture répertoire source dans CouchesDisponibles : ", err)
+		return nil, err
+	}
+	defer srcdir.Close()
+	filenames, err := srcdir.Readdirnames(-1)
+	if err!=nil {
+		log.Println("Erreur listage fichiers sources dans CouchesDisponibles : ", err)
+		return nil, err
+	}
+	for _, filename := range(filenames) {
+		if filepath.Ext(filename)!=".png" {
+			continue
+		}
+		bn := filepath.Base(filename)
+		if !strings.HasPrefix(bn, "couche") {
+			continue
+		}
+		var z int
+		z, err = strconv.Atoi(bn[len("couche"):len(filename)-len(".png")])
+		if err!=nil {
+			continue 
+		}
+		nums = append(nums, z)
+	}
+	return nums, nil	
+}
+
+
 // utilise les images couchexxx.png du répertoire cheminRépertoireSource pour construire
 //  ou enrichir les images couchexxx.png du répertoire cheminRépertoireEcriture
 func EnrichitCouchesPNG(cheminRépertoireEcriture string, cheminRépertoireSource string) error {

@@ -4,6 +4,7 @@ TARG=braldop/bra
 GOFILES=\
 	Point.go\
 	Braldun.go\
+	CompteBraldop.go\
 	Communaute.go\
 	LieuVille.go\
 	Ville.go\
@@ -26,5 +27,7 @@ GOFILES=\
 	VueRoute.go\
 	Vue.go\
 	pngCouche.go\
+	store.go\
+	store_comptes.go\
 
 include $(GOROOT)/src/Make.pkg

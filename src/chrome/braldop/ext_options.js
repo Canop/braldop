@@ -1,5 +1,5 @@
 
-function changePageParamètres() {
+braldop.changePageParamètres = function() {
 	//> récupération et stockage du mot de passe restreint
 	var mdpr = $('pre').text().trim();
 	if (mdpr.length==64) {
@@ -16,7 +16,7 @@ function changePageParamètres() {
 	html = "<br><br>Activer le système cartographique permet de disposer dans votre vue des terrains vus précédemment.";
 	html += "<br><br><input type=checkbox id=activation_envoi_braldop "+(localStorage['braldop/carte/activation']=='oui'?'checked':'')+"><label for=activation_envoi_braldop>Activer le système cartographique</for>";
 	html += "<br><br>Si vous activez le système cartographique, vos données de vue et votre mot de passe restreint seront envoyés au serveur Braldop.";
-	ajouteOnglets($container, {
+	braldop.ajouteOnglets($container, {
 		'Paramètres Braldahim': $innerDiv.find('div.contenu'),
 		'Paramètres Braldop':html
 	});

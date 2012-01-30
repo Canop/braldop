@@ -31,6 +31,7 @@ func init() {
 type MapServer struct {
 	répertoireCartes *string // répertoire racine dans lequel on trouve les répertoires des utilisateurs
 	bd *bra.BaseMysql
+	fv FusionneurVue
 }
 
 func getFormValue(hr *http.Request, name string) string {
@@ -63,6 +64,10 @@ func vérifieVersion(vs string) (html string) {
 	return
 }
 
+func (ms *MapServer) répertoireCartesBraldun(idBraldun uint, mdpr string) string {
+	return fmt.Sprintf("%s/%d-%s", *ms.répertoireCartes, idBraldun, mdpr)
+}
+
 func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	startTime := time.Nanoseconds()
 	defer func() { log.Printf(" durée totale traitement requête : %d ms\n", (time.Nanoseconds()-startTime)/1e6) }()
@@ -87,14 +92,18 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		log.Println("IdBraldun ou Mot de passe restreint invalide")
 		return
 	}
+	dirBase := ms.répertoireCartesBraldun(in.IdBraldun, in.Mdpr)
 	log.Println("Requête Braldun ", in.IdBraldun)
+	var couche *bra.Couche
 	if in.Vue == nil || len(in.Vue.Couches) == 0 {
 		log.Println(" Pas de données de vue")
-		return
+	} else {
+		couche = in.Vue.Couches[0]
 	}
 	
-	//> récupération du compte braldop authentifié
+	//> récupération du compte braldop authentifié et du tableau des amis
 	var cb *bra.CompteBraldop
+	var amis []*bra.CompteBraldop
 	if con, err := ms.bd.Open(); err!=nil {
 		log.Println("Erreur à la connexion bd", err)
 		// on fera sans le compte braldop pour la suite
@@ -111,29 +120,61 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 			cb = nil
 		} else {
 			log.Println(" compte authentifié")
+			amis, err = con.Amis(cb.IdBraldun)
+			if err!=nil {
+				log.Println(" erreur durant récupération amis")
+			}
 		}
 	}
 	
-	//> traitement des données de vue (stockage, retour carte)
-	hasher := sha1.New()
-	hasher.Write(bin)
-	sha := base64.URLEncoding.EncodeToString(hasher.Sum())
-	dirBase := fmt.Sprintf("%s/%d-%s", *ms.répertoireCartes, in.IdBraldun, in.Mdpr)
-	dir := dirBase + "/" + time.LocalTime().Format("2006/01/02")
-	path := dir + "/carte-" + sha + ".json"
-	if _, err = os.Stat(path); err != nil { // le fichier n'existe pas, ce sont des données intéressantes
-		log.Println(" Carte à modifier")
-		//> on sauvegarde le fichier json
-		os.MkdirAll(dir, 0777)
-		f, _ := os.Create(path)
-		defer f.Close()
-		f.Write(bin)
-		//> on crée ou enrichit l'image png correspondant à la couche
-		bra.EnrichitCouchePNG(dirBase, &in.Vue.Couches[0], 20)
-	} else {
-		log.Println(" Carte inchangée")
+	//> stockage des données de vue
+	if couche!=nil {
+		hasher := sha1.New()
+		hasher.Write(bin)
+		sha := base64.URLEncoding.EncodeToString(hasher.Sum())
+		dir := dirBase + "/" + time.LocalTime().Format("2006/01/02")
+		path := dir + "/carte-" + sha + ".json"
+		if _, err = os.Stat(path); err != nil { // le fichier n'existe pas, ce sont des données intéressantes
+			log.Println(" Carte à modifier")
+			//> on sauvegarde le fichier json
+			os.MkdirAll(dir, 0777)
+			f, _ := os.Create(path)
+			defer f.Close()
+			f.Write(bin)
+			//> on crée ou enrichit l'image png correspondant à la couche
+			bra.EnrichitCouchePNG(dirBase, couche, 20)
+			//> et on s'occupe aussi des amis
+			if amis!=nil {
+				for _, ami := range(amis) {
+					log.Println(" enrichissement carte ami ", ami.IdBraldun)
+					bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(ami.IdBraldun, ami.Mdpr), couche, 20)
+				}
+			}
+		} else {
+			log.Println(" Carte inchangée")
+		}
 	}
-	cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.Vue.Couches[0].Z)
+	
+	//> renseignements sur les couches disponibles
+	out.ZConnus, err = bra.CouchesPNGDisponibles(dirBase)
+	if err!=nil {
+		log.Println(" erreur durant la détermination des couches disponibles")
+	}
+	
+	//> renvoi des données de vues provenant des amis
+	if amis!=nil && couche!=nil {
+		ms.fv.Reçoit(in.Vue.Vues[0])
+		vues := ms.fv.Complète(in.Vue.Vues[0], amis)
+		if len(vues)>0 {
+			out.DV = new(DonnéesVue)
+			out.DV.Vues = vues
+		}
+	}
+	
+	//> renvoi de la carte en png
+	log.Println("ZRequis : ", in.ZRequis)
+	out.Z = in.ZRequis
+	cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.ZRequis)
 	if f, err := os.Open(cheminLocalImage); err == nil {
 		defer f.Close()
 		bytes, _ := ioutil.ReadAll(f)
@@ -175,6 +216,7 @@ func main() {
 		}
 		pprof.StartCPUProfile(fp)
 	}
+	ms.fv.Charge(*ms.répertoireCartes)
 	go func() {
 		for {
 			sig := <-signal.Incoming

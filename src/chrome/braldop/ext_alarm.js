@@ -1,5 +1,5 @@
 
-function durationMsToStr(delay) {
+braldop.durationMsToStr = function(delay) {
 	delay /= 1000; // on passe en secondes 
 	var delayHours = Math.floor(delay/3600);
 	var delayMinutes = Math.floor((delay-3600*delayHours)/60);
@@ -15,7 +15,7 @@ function durationMsToStr(delay) {
 }
 
 // règle un réveil
-function setAlarm(key, date) {
+braldop.setAlarm = function(key, date) {
 	var now = (new Date()).getTime();
 	var delay = date.getTime()-now-5*60*1000;
 	if (delay>0) {
@@ -27,7 +27,7 @@ function setAlarm(key, date) {
 }
 
 // positionne des alarmes 5 minutes avant la fin de chaque période du cycle, ainsi que pour le cycle suivant
-function setAlarms() {
+braldop.setAlarms = function() {
 	var $alarmHolder = $('div.img_tour_activite span.braltexte');
 	if ($alarmHolder.length==0) return;
 	var lines = $alarmHolder.html().split('<br>');
@@ -60,9 +60,9 @@ function setAlarms() {
 	}
 	//console.log('Durée du tour en secondes : '+turnDurationSeconds);
 	for (var key in alarms) {
-		setAlarm(key, alarms[key]);
+		braldop.setAlarm(key, alarms[key]);
 		if (key!='Début tour') {
-			setAlarm(key+" tour suivant", new Date(alarms[key].getTime()+turnDurationSeconds*1000));
+			braldop.setAlarm(key+" tour suivant", new Date(alarms[key].getTime()+turnDurationSeconds*1000));
 		}
 	}
 }

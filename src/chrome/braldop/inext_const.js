@@ -1,9 +1,13 @@
-// ce fichier est exécuté à la fois dans l'extension (ext) et dans le contexte de la page (in)
+// Ce fichier est exécuté à la fois dans l'extension (ext) et dans le contexte de la page (in)
+// Il déclare braldop et doit donc être exécuté en premier
+
+var braldop = {};
 
 // version de l'extension
-var extVersion = "2.4";
+braldop.extVersion = "2.4";
 
-var SERVEUR_BRALDOP = 'http://canop.org:8001/';
-//~ var SERVEUR_BRALDOP = 'http://localhost:8001/';
+//~ braldop.serveur = 'http://canop.org:8001/';
+braldop.serveur = 'http://localhost:8001/';
 
 
+braldop.depths = null;

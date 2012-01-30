@@ -27,7 +27,6 @@ type ConnexionMysql struct {
 	*mysql.Client
 }
 
-
 func NewBaseMysql(user string, password string, database string) *BaseMysql {
 	store := new(BaseMysql)
 	store.user = user

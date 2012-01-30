@@ -29,8 +29,6 @@ func NewVue() *Vue {
 	return vue
 }
 
-
-
 // effectue un clonage à un niveau : les objets (Braldun, etc.) ne
 //  sont pas eux même clonés
 func (vue *Vue) clone() (c *Vue) {
@@ -65,7 +63,7 @@ func (vue *Vue) cloneCoupé(xmin, xmax, ymin, ymax int16) (c *Vue) {
 	c.XMax = vue.XMax
 	c.YMin = vue.YMin
 	c.YMax = vue.YMax
-	if xmin>vue.XMax || vue.XMin<xmax || ymin>vue.YMax || vue.YMin<ymax {		
+	if xmin > vue.XMax || vue.XMin < xmax || ymin > vue.YMax || vue.YMin < ymax {
 		c.Bralduns = make([]*Braldun, len(vue.Bralduns))
 		c.Cadavres = make([]*VueCadavre, len(vue.Cadavres))
 		c.Monstres = make([]*VueMonstre, len(vue.Monstres))
@@ -79,19 +77,19 @@ func (vue *Vue) cloneCoupé(xmin, xmax, ymin, ymax int16) (c *Vue) {
 		c.Cadavres = make([]*VueCadavre, 0, len(vue.Cadavres))
 		c.Monstres = make([]*VueMonstre, 0, len(vue.Monstres))
 		c.Objets = make([]*VueObjet, 0, len(vue.Objets))
-		for _, o := range(vue.Bralduns) {
-			if o.X<xmin || o.X>xmax || o.Y<ymin || o.Y>ymax {
+		for _, o := range vue.Bralduns {
+			if o.X < xmin || o.X > xmax || o.Y < ymin || o.Y > ymax {
 				c.Bralduns = append(c.Bralduns, o)
 			}
-		}		
+		}
 	}
 	return c
 }
 
 // indique si (x,y) est en dehors des zones de vue
-func PointEnDehors(x, y int16, vues[]*Vue) bool {	
-	for _, vj := range (vues) {
-		if x>=vj.XMin && x<=vj.XMax && y>=vj.YMin && y<=vj.YMax {
+func PointEnDehors(x, y int16, vues []*Vue) bool {
+	for _, vj := range vues {
+		if x >= vj.XMin && x <= vj.XMax && y >= vj.YMin && y <= vj.YMax {
 			return false
 		}
 	}

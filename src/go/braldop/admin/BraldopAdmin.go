@@ -11,9 +11,6 @@ import (
 	"strings"
 )
 
-
-
-
 // Exemples de commandes :
 //  > bradmin -palette
 //    exporte sur stdout la palette des couleurs des fonds à utiliser dans le javascript pour décoder les png
@@ -36,20 +33,20 @@ func main() {
 		} else {
 			dir := *out
 			cheminsIn := strings.Split(*in, ";")
-			if dir=="" {
+			if dir == "" {
 				dir, _ = filepath.Split(cheminsIn[0])
 				cheminsIn = cheminsIn[1:]
 			}
 			dir, err = filepath.Abs(dir)
-			if err!=nil {
+			if err != nil {
 				log.Fatal(err)
-			}				
-			for _, cheminIn := range(cheminsIn) {
+			}
+			for _, cheminIn := range cheminsIn {
 				cheminIn, err = filepath.Abs(cheminIn)
-				if err!=nil {
+				if err != nil {
 					log.Fatal(err)
 				}
-				if filepath.Ext(cheminIn)==".json" {
+				if filepath.Ext(cheminIn) == ".json" {
 					filein, err := os.Open(*in)
 					if err != nil {
 						log.Fatal(err)

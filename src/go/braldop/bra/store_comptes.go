@@ -2,6 +2,14 @@ package bra
 
 // persistence des comptes braldop sur mysql
 
+
+type Partage struct {
+	IdA uint // id du braldun A
+	IdB uint
+	AOk bool // le braldun A a accepté (ou proposé) le partage
+	BOk bool
+}
+
 // renvoie un compte braldop pris en bd
 func (con ConnexionMysql) AuthentifieCompte(idBraldun uint, mdpr string) (*CompteBraldop, error) {
 	sql := "select mdpr_ok, x, y, z from compte where id=? and mdpr=?"
@@ -59,4 +67,35 @@ func (con ConnexionMysql) Amis(idBraldun uint) ([]*CompteBraldop, error) {
 		amis = append(amis, cb.Clone())
 	}
 	return amis, nil // je ne crois pas qu'on puisse arriver là mais cette ligne permet la compilation...
+}
+
+// récupère toutes les infos de partage, acceptés ou non, impliquant un braldun
+func (con ConnexionMysql) AllPartages(idBraldun uint) ([]*Partage, error) {
+
+	sql := "select a_id, b_id, a_ok, b_ok from partage where bl_a=? or b_b=?"
+	stmt, err := con.Prepare(sql)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.FreeResult()
+	err = stmt.BindParams(idBraldun, idBraldun)
+	if err != nil {
+		return nil, err
+	}
+	err = stmt.Execute()
+	if err != nil {
+		return nil, err
+	}
+	r := new(Partage)
+	stmt.BindResult(&r.IdA, &r.IdB, &r.AOk, &r.BOk)
+	partages := make([]*Partage, 0, 10)
+	for {
+		eof, _err := stmt.Fetch()
+		if _err != nil || eof {
+			return partages, _err
+		}
+		p := &Partage{r.IdA, r.IdB, r.AOk, r.BOk} // on dirait qu'on ne peut pas dupliquer l'objet plus simplement
+		partages = append(partages, p)
+	}
+	return partages, nil
 }

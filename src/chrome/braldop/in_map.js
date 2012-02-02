@@ -54,7 +54,7 @@ braldop.handleNewMapData = function() {
 		Vues: braldop.goclone(map.mapData.Vues),
 		Position: braldop.goclone(map.mapData.Position)
 	};
-	braldop.sendToBraldopServer({ZRequis:map.z, Vue:data});
+	braldop.sendToBraldopServer({Cmd:'carte', ZRequis:map.z, Vue:data});
 }
 
 braldop.waitForMap(function(){

@@ -18,6 +18,8 @@ import (
 //    construit un png (tata/couchexx.png) dont le contenu correspond à la Couche encodée dans le fichier tata/toto.json
 //  > bradmin -cmd png -in toto;tutu -out titi
 //    enrichit (ou crée) les fichiers titi/couchexx.png à partir des données couchexx.png des répertoires toto et tutu
+//  > bradmin -cmd check -id 754 -mdpr XXXX
+//    vérifie que le braldun 754 est connu de Braldahim et a bien le mot de passe restreint mdpr
 func main() {
 	exportePalette := flag.Bool("palette", false, "si oui alors la palette des environnements est exportée (exemple : \"bradmin -palette\")")
 	in := flag.String("in", "", "source des données")

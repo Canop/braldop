@@ -20,7 +20,7 @@ braldop.ensureMapSettings = function() {
 		braldop.$depthMenu.change(function(){
 			var z = parseInt(braldop.$depthMenu.val(), 10);
 			console.log("nouveau z:", z);
-			braldop.sendToBraldopServer({ZRequis:z});
+			braldop.sendToBraldopServer({Cmd:'carte', ZRequis:z});
 		});
 		braldop.$globalMenu = $('#bra_menu');
 		$triangle=$('#bra_triangle_vues');
@@ -36,7 +36,6 @@ braldop.ensureMapSettings = function() {
 		});
 	}
 }
-
 
 
 braldop.updateMapSettings = function() {

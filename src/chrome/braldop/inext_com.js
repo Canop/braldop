@@ -36,7 +36,6 @@ braldop.sendToBraldopServer = function(message) {
 	return true;
 }
 
-
 // réception (intégrée à la page) du message de réponse du serveur braldop
 receiveFromMapServer = function(message) {
 	console.log("Message entrant :", message);
@@ -54,25 +53,22 @@ receiveFromMapServer = function(message) {
 		$messageDiv.html(message.Text);
 	}
 	if (message.DV && message.DV.Vues) {
-		// ce sont les vues supplémentaires (celles des copains), on les ajoute
+		// les vues recues du serveur remplacent les vues présentes, mais on garde les actions locales
 		for (var i=0; i<message.DV.Vues.length; i++) {
 			message.DV.Vues[i].active = true;
 			var found = false;
 			for (var iv=0; iv<map.mapData.Vues.length; iv++) {
-				if (message.DV.Vues[i].Voyeur==map.mapData.Vues[iv].Voyeur) {
-					map.mapData.Vues[iv] = message.DV.Vues[i];
-					found = true;
+				if (map.mapData.Vues[iv].actions) {
+					message.DV.Vues[i].actions = map.mapData.Vues[iv].actions; // reprise des actions reçues de Braldahim
 					break;
 				}
 			}
-			if (!found) {
-				map.mapData.Vues.push(message.DV.Vues[i]);
-			}
 		}
+		map.mapData.Vues = message.DV.Vues;
 		map.compileLesVues();
 	}
-	if (!message.Z) message.Z = 0; // juste le temps de la transition, avant mise à jour du serveur
 	if (message.PngCouche && message.PngCouche.length>5 && map && map.mapData) {
+		if (!message.Z) message.Z = 0; // juste le temps de la transition, avant mise à jour du serveur
 		var couche = null;
 		console.log("A");
 		for (var ic=0; ic<map.mapData.Couches.length; ic++) {

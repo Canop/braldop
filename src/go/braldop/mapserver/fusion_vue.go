@@ -23,7 +23,7 @@ func (fusion FusionVues) Len() int {
 	return len(fusion.Vues)
 }
 func (fusion FusionVues) Less(i, j int) bool {
-	return fusion.Vues[i].Time > fusion.Vues[j].Time
+	return fusion.Vues[i].Time < fusion.Vues[j].Time
 }
 func (fusion FusionVues) Swap(i, j int) {
 	fusion.Vues[i], fusion.Vues[j] = fusion.Vues[j], fusion.Vues[i]
@@ -51,8 +51,24 @@ func (fv *FusionneurVue) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*b
 	for _, v := range fusion.Vues {
 		fmt.Println("fusion vue ", v.Voyeur, " time : ", v.Time)
 	}
-	sort.Sort(fusion) // index faible : plus récent
+	sort.Sort(fusion) // index faible : plus ancien
+	
+	//> on ajoute le prénom du Braldun voyeur à chaque vue (faudrait faire ça ailleurs)
+	for _, vi := range fusion.Vues {
+		for _, b := range vi.Bralduns {
+			if b.Id == vi.Voyeur {
+				vi.PrénomVoyeur = b.Prénom
+				break
+			}
+		}
+	}
+	return fusion.Vues
+	
 	// on construit un nouveau tableau des vues, épurées des doublons et tenant compte des dates de MAJ
+	// NOTE : je préfère finalement envoyer les vues complètes, afin que le client puisse choisir ce
+	//         qu'il veut afficher. Notons que le code qui suit n'est plus compatible avec l'inversion
+	//         d'ordre du tableau des fues
+	/*
 	bralduns := make(map[uint]*bra.Braldun)
 	monstres := make(map[uint]*bra.VueMonstre)
 	l := len(fusion.Vues)
@@ -104,8 +120,7 @@ func (fv *FusionneurVue) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*b
 				v.Objets = append(v.Objets, o)
 			}
 		}
-	}
-	return vues
+	}*/
 }
 
 // appelée au lancement cette fonction charge les donnéesVueBraldun

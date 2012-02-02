@@ -155,30 +155,34 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		}
 	}
 
-	//> renseignements sur les couches disponibles
-	out.ZConnus, err = bra.CouchesPNGDisponibles(dirBase)
-	if err != nil {
-		log.Println(" erreur durant la détermination des couches disponibles")
-	}
-
-	//> renvoi des données de vues provenant des amis
-	if amis != nil && couche != nil {
-		ms.fv.Reçoit(in.Vue.Vues[0])
-		vues := ms.fv.Complète(in.Vue.Vues[0], amis)
-		if len(vues) > 0 {
-			out.DV = new(DonnéesVue)
-			out.DV.Vues = vues
+	if in.Cmd=="carte" || in.Cmd=="" { // pour la compatibilité ascendante, la commande est provisoirement optionnelle
+		//> renseignements sur les couches disponibles
+		out.ZConnus, err = bra.CouchesPNGDisponibles(dirBase)
+		if err != nil {
+			log.Println(" erreur durant la détermination des couches disponibles")
 		}
-	}
 
-	//> renvoi de la carte en png
-	log.Println("ZRequis : ", in.ZRequis)
-	out.Z = in.ZRequis
-	cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.ZRequis)
-	if f, err := os.Open(cheminLocalImage); err == nil {
-		defer f.Close()
-		bytes, _ := ioutil.ReadAll(f)
-		out.PngCouche = "data:image/png;base64," + base64.StdEncoding.EncodeToString(bytes)
+		//> renvoi des données de vues provenant des amis
+		if amis != nil && couche != nil {
+			ms.fv.Reçoit(in.Vue.Vues[0])
+			vues := ms.fv.Complète(in.Vue.Vues[0], amis)
+			if len(vues) > 0 {
+				out.DV = new(DonnéesVue)
+				out.DV.Vues = vues
+			}
+		}
+
+		//> renvoi de la carte en png
+		log.Println("ZRequis : ", in.ZRequis)
+		out.Z = in.ZRequis
+		cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.ZRequis)
+		if f, err := os.Open(cheminLocalImage); err == nil {
+			defer f.Close()
+			bytes, _ := ioutil.ReadAll(f)
+			out.PngCouche = "data:image/png;base64," + base64.StdEncoding.EncodeToString(bytes)
+		}
+	} else if in.Cmd=="partages" {
+		
 	}
 }
 

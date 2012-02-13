@@ -1,6 +1,6 @@
 {
 	"name": "Braldop",
-	"version": "2.6",
+	"version": "3.0",
 	"description": "Une extension Chrome open-source pour Braldahim",
 	"homepage_url": "http://canop.org/braldop",
 	"background_page": "extension-braldop.html",

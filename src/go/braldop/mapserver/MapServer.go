@@ -25,7 +25,7 @@ const (
 var versionActuelleExtension Version
 
 func init() {
-	versionActuelleExtension = Version{[]uint{2, 4}}
+	versionActuelleExtension = Version{[]uint{3, 0}}
 }
 
 type MapServer struct {
@@ -55,11 +55,10 @@ func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
 
 func vérifieVersion(vs string) (html string) {
 	if version, err := ParseVersion(vs); err != nil {
-		log.Println(" version utilisateur incomprise : " + vs)
+		log.Println("Version utilisateur incomprise : " + vs)
 	} else if CompareVersions(version, &versionActuelleExtension) == -1 {
-		log.Println(" version utilisateur obsolète : " + vs)
-		html = "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/extension-braldop.html>la nouvelle version</a>."
-		html += "<br>Il s'agit de la première béta publique."
+		log.Println("Version utilisateur obsolète : " + vs)
+		html = "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/index.html>la nouvelle version</a>."
 	}
 	return
 }

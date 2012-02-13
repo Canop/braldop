@@ -25,10 +25,25 @@ func main() {
 	in := flag.String("in", "", "source des données")
 	out := flag.String("out", "", "répertoire de sortie")
 	cmd := flag.String("cmd", "", "commande")
+	id := flag.Int("id", 0, "id braldun")
+	mdpr := flag.String("mdpr", "", "mot de passe restreint")
 	flag.Parse()
 	var err error
 	if *exportePalette {
 		bra.ExportePalettePng(os.Stdout)
+	} else if *cmd == "check" {
+		if *id == 0 {
+			log.Println("Id du braldun non précisé")
+		} else if *mdpr == "" {
+			log.Println("Mot de passe restreint non précisé")
+		} else {
+			auth, err := bra.AuthentifieCompteParScriptPublic(uint(*id), *mdpr)
+			if err != nil {
+				log.Println("Unable to authenticate", err)
+			} else {
+				log.Println("Autentication : ", auth)
+			}
+		}
 	} else if *cmd == "png" {
 		if *in == "" {
 			log.Println("Source de données non précisée (in devrait être le chemin d'un fichier json)")

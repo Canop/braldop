@@ -2,100 +2,127 @@ package bra
 
 // persistence des comptes braldop sur mysql
 
+import (
+	"log"
+)
 
-type Partage struct {
-	IdA uint // id du braldun A
-	IdB uint
-	AOk bool // le braldun A a accepté (ou proposé) le partage
-	BOk bool
+
+func erreurCompte(idBraldun uint, idError string, err error) (*CompteBraldop, string) {
+	log.Printf(" Erreur %s sur braldun %d : %s\n", idError, idBraldun, err.Error())
+	return nil, "Erreur " + idError // il s'agit de l'erreur affichable dans l'IHM	
 }
 
-// renvoie un compte braldop pris en bd
-func (con ConnexionMysql) AuthentifieCompte(idBraldun uint, mdpr string) (*CompteBraldop, error) {
-	sql := "select mdpr_ok, x, y, z from compte where id=? and mdpr=?"
+// renvoie un compte trouvé en BD. Ne fait aucune vérification et renvoie donc false dans le champ Authentifié
+func (con ConnexionMysql) GetCompteExistant(idBraldun uint) (*CompteBraldop, string) {
+	sql := "select mdpr, x, y, z from compte where id=?"
 	stmt, err := con.Prepare(sql)
 	if err != nil {
-		return nil, err
+		return erreurCompte(idBraldun, "Auth 01", err)
 	}
 	defer stmt.FreeResult()
-	err = stmt.BindParams(idBraldun, mdpr)
+	err = stmt.BindParams(idBraldun)
 	if err != nil {
-		return nil, err
+		return erreurCompte(idBraldun, "Auth 02", err)
 	}
 	err = stmt.Execute()
 	if err != nil {
-		return nil, err
+		return erreurCompte(idBraldun, "Auth 03", err)
 	}
 	cb := new(CompteBraldop)
-	var mdprok int
-	stmt.BindResult(&mdprok, &cb.X, &cb.Y, &cb.Z)
-	eof, err := stmt.Fetch()
-	if err != nil || eof {
-		return nil, err
-	}
 	cb.IdBraldun = idBraldun
-	cb.Mdpr = mdpr
-	cb.Authentifié = mdprok == 1
-	return cb, nil
+	cb.Authentifié = false
+	stmt.BindResult(&cb.Mdpr, &cb.X, &cb.Y, &cb.Z)
+	eof, err := stmt.Fetch()
+	if err != nil {
+		return erreurCompte(idBraldun, "Auth 04", err)
+	}
+	if eof {
+		return nil, ""
+	}
+	return cb, ""
 }
 
-// renvoie la liste des amis (les bralduns avec qui un partage est établi)
-// Seuls les comptes ayant mdpr_ok à 1 sont pris en compte.
-func (con ConnexionMysql) Amis(idBraldun uint) ([]*CompteBraldop, error) {
-	amis := make([]*CompteBraldop, 0, 10)
-	sql := "select id, mdpr, x, y, z from compte, partage where ((a_id=? and id=b_id) or (b_id=? and id=a_id)) and a_ok=1 and b_ok=1 and mdpr_ok=1"
-	stmt, err := con.Prepare(sql)
-	if err != nil {
-		return nil, err
+// Renvoie un compte braldop pris en bd, et un message d'erreur pour l'utilisateur (ou "")
+// Si nécessaire crée le compte et/ou vérifie le mot de passe auprès du script public.
+// Renvoie un compte ssi l'authentification est OK (donc cb.Authentifié vaut toujours true)
+// Logique :
+//  Si le couple id,mdpr est présent et identique en bd, on le renvoie
+//  Si le couple id,mdpr est présent mais mdpr différent, on tente l'authentification par le service web
+//     Si le nouveau id,mdpr est correct, on met à jour la bd et on renvoie le nouveau cb
+//     Si le nouveau id,mdpr est incorrect, on ne met pas à jour la bd et on renvoie nil avec un message d'erreur
+//  Si le braldun n'a pas de compte en bd, on tente l'authentification par le service web
+//     Si le nouveau id,mdpr est correct, on met à jour la bd et on renvoie le nouveau cb
+//     Si le nouveau id,mdpr est incorrect, on ne met pas à jour la bd et on renvoie nil avec un message d'erreur
+func (con ConnexionMysql) AuthentifieCompte(idBraldun uint, mdpr string, créeSiNécessaire bool) (*CompteBraldop, string) {
+	cb, errmess := con.GetCompteExistant(idBraldun)
+	if errmess != "" {
+		return nil, errmess
 	}
-	defer stmt.FreeResult()
-	err = stmt.BindParams(idBraldun, idBraldun)
-	if err != nil {
-		return nil, err
-	}
-	err = stmt.Execute()
-	if err != nil {
-		return nil, err
-	}
-	cb := new(CompteBraldop)
-	stmt.BindResult(&cb.IdBraldun, &cb.Mdpr, &cb.X, &cb.Y, &cb.Z)
-	for {
-		eof, _err := stmt.Fetch()
-		if _err != nil || eof {
-			return amis, _err
+	if cb == nil { //- nouveau compte
+		log.Println(" compte absent de la BD pour braldun ", idBraldun)
+		auth, err := AuthentifieCompteParScriptPublic(idBraldun, mdpr)
+		if err != nil {
+			return erreurCompte(idBraldun, "Auth 05", err)
 		}
-		amis = append(amis, cb.Clone())
-	}
-	return amis, nil // je ne crois pas qu'on puisse arriver là mais cette ligne permet la compilation...
-}
-
-// récupère toutes les infos de partage, acceptés ou non, impliquant un braldun
-func (con ConnexionMysql) AllPartages(idBraldun uint) ([]*Partage, error) {
-
-	sql := "select a_id, b_id, a_ok, b_ok from partage where bl_a=? or b_b=?"
-	stmt, err := con.Prepare(sql)
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.FreeResult()
-	err = stmt.BindParams(idBraldun, idBraldun)
-	if err != nil {
-		return nil, err
-	}
-	err = stmt.Execute()
-	if err != nil {
-		return nil, err
-	}
-	r := new(Partage)
-	stmt.BindResult(&r.IdA, &r.IdB, &r.AOk, &r.BOk)
-	partages := make([]*Partage, 0, 10)
-	for {
-		eof, _err := stmt.Fetch()
-		if _err != nil || eof {
-			return partages, _err
+		if !auth {
+			log.Println(" Non validation mot de passe restreint braldun ", idBraldun)
+			return nil, "Non validation mot de passe restreint (peut-être un dépassement du nombre de tentatives)"
 		}
-		p := &Partage{r.IdA, r.IdB, r.AOk, r.BOk} // on dirait qu'on ne peut pas dupliquer l'objet plus simplement
-		partages = append(partages, p)
+		//- compte OK : à insérer
+		sql := "insert into compte (id, mdpr, mdpr_ok) values (?, ?, 1)"
+		stmt, err := con.Prepare(sql)
+		if err != nil {
+			return erreurCompte(idBraldun, "Auth 06", err)
+		}
+		defer stmt.FreeResult()
+		err = stmt.BindParams(idBraldun, mdpr)
+		if err != nil {
+			return erreurCompte(idBraldun, "Auth 07", err)
+		}
+		err = stmt.Execute()
+		if err != nil {
+			return erreurCompte(idBraldun, "Auth 08", err)
+		}
+		cb := new(CompteBraldop)
+		cb.IdBraldun = idBraldun
+		cb.Authentifié = true
+		cb.Mdpr = mdpr
+		log.Println(" Nouveau compte : braldun ", idBraldun)
+		return cb, ""
+	} else { //- compte déjà présent
+		if mdpr == cb.Mdpr { //- mot de passe identique à celui en bd : ok
+			cb.Authentifié = true
+			return cb, ""
+		} else { //- mot de passe différent, on va regarder si le nouveau est bon
+			auth, err := AuthentifieCompteParScriptPublic(idBraldun, mdpr)
+			if err != nil {
+				return erreurCompte(idBraldun, "Auth 09", err)
+			}
+			if !auth {
+				log.Println(" Non validation nouveau mot de passe restreint braldun ", idBraldun)
+				return nil, "Non validation nouveau mot de passe restreint (peut-être un dépassement du nombre de tentatives)"
+			} else { //- nouveau mot de passe restreint, à mettre à jour (TODO -> transmettre info pour merge images)
+				cb.Authentifié = true
+				sql := "update compte set mdpr=?, mdpr_ok=1 where id=?"
+				stmt, err := con.Prepare(sql)
+				if err != nil {
+					return erreurCompte(idBraldun, "Auth 10", err)
+				}
+				defer stmt.FreeResult()
+				err = stmt.BindParams(mdpr, idBraldun)
+				if err != nil {
+					return erreurCompte(idBraldun, "Auth 11", err)
+				}
+				err = stmt.Execute()
+				if err != nil {
+					return erreurCompte(idBraldun, "Auth 12", err)
+				}
+				cb.Mdpr = mdpr
+				log.Println(" Mot de passe modifié pour braldun ", idBraldun)
+				return cb, ""
+			}
+		}
 	}
-	return partages, nil
+	return nil, "" // ligne inateignable
 }
+

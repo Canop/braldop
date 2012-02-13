@@ -27,7 +27,9 @@ GOFILES=\
 	VueRoute.go\
 	Vue.go\
 	pngCouche.go\
+	spclient.go\
 	store.go\
 	store_comptes.go\
+	store_partages.go\
 
 include $(GOROOT)/src/Make.pkg

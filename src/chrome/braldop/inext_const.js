@@ -6,8 +6,8 @@ var braldop = {};
 // version de l'extension
 braldop.extVersion = "2.6";
 
-braldop.serveur = 'http://canop.org:8001/';
-//~ braldop.serveur = 'http://localhost:8001/';
+//~ braldop.serveur = 'http://canop.org:8001/';
+braldop.serveur = 'http://localhost:8001/';
 
 
 braldop.depths = null;

@@ -1,7 +1,7 @@
 ﻿/*
  * ce script lance les opérations.
  * Comme tous les scripts "ext_", il est exécuté dans le contexte de l'extension et non de la page.
- * Les scripts dont le nom commence par "in_" sont injectés pour être exécuté dans le contexte de la page.
+ * Les scripts dont le nom commence par "in_" ou inext_ sont injectés pour être exécuté dans le contexte de la page.
  */
 
 
@@ -26,6 +26,7 @@ case '/interface/':
 	break;
 case '/Parametres':
 case '/Parametres/':
+	braldop.inject('in_options.js');
 	braldop.changePageParamètres();
 	break;
 default:

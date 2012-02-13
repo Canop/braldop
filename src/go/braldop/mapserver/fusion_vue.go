@@ -3,7 +3,6 @@ package main
 import (
 	"braldop/bra"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -41,18 +40,18 @@ func (fv *FusionneurVue) Reçoit(vue *bra.Vue) {
 // renvoie les vues
 func (fv *FusionneurVue) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*bra.Vue {
 	fusion := new(FusionVues)
-	fusion.Vues = make([]*bra.Vue, 1, len(amis))
+	fusion.Vues = make([]*bra.Vue, 1, len(amis)+1)
 	fusion.Vues[0] = vue
 	for _, ami := range amis {
 		if dvb, ok := fv.vues[ami.IdBraldun]; ok {
 			fusion.Vues = append(fusion.Vues, dvb)
 		}
 	}
-	for _, v := range fusion.Vues {
-		fmt.Println("fusion vue ", v.Voyeur, " time : ", v.Time)
-	}
+	//~ for _, v := range fusion.Vues {
+	//~ fmt.Println("fusion vue ", v.Voyeur, " time : ", v.Time)
+	//~ }
 	sort.Sort(fusion) // index faible : plus ancien
-	
+
 	//> on ajoute le prénom du Braldun voyeur à chaque vue (faudrait faire ça ailleurs)
 	for _, vi := range fusion.Vues {
 		for _, b := range vi.Bralduns {
@@ -63,64 +62,64 @@ func (fv *FusionneurVue) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*b
 		}
 	}
 	return fusion.Vues
-	
+
 	// on construit un nouveau tableau des vues, épurées des doublons et tenant compte des dates de MAJ
 	// NOTE : je préfère finalement envoyer les vues complètes, afin que le client puisse choisir ce
 	//         qu'il veut afficher. Notons que le code qui suit n'est plus compatible avec l'inversion
 	//         d'ordre du tableau des fues
 	/*
-	bralduns := make(map[uint]*bra.Braldun)
-	monstres := make(map[uint]*bra.VueMonstre)
-	l := len(fusion.Vues)
-	vues := make([]*bra.Vue, l, l)
-	for i, vi := range fusion.Vues {
-		v := bra.NewVue()
-		v.Z = fusion.Vues[i].Z
-		v.Time = fusion.Vues[i].Time
-		v.Voyeur = fusion.Vues[i].Voyeur
-		v.PrénomVoyeur = fusion.Vues[i].PrénomVoyeur
-		v.XMin = fusion.Vues[i].XMin
-		v.XMax = fusion.Vues[i].XMax
-		v.YMin = fusion.Vues[i].YMin
-		v.YMax = fusion.Vues[i].YMax
-		vues[i] = v
-		intersectvues := make([]*bra.Vue, 0, i)
-		for j := 0; j < i; j++ {
-			vj := fusion.Vues[j]
-			if vi.Z == vj.Z && vi.XMin <= vj.XMax && vj.XMin <= vi.XMax && vi.YMin <= vj.YMax && vj.YMin <= vi.YMax {
-				intersectvues = append(intersectvues, vj)
-			}
-		}
-		for _, b := range vi.Bralduns {
-			if b.Id == v.Voyeur {
-				v.PrénomVoyeur = b.Prénom
-			}
-			if _, ok := bralduns[b.Id]; !ok { // si ce braldun n'est pas dans une vue plus récente
-				bralduns[b.Id] = b
-				if bra.PointEnDehors(b.X, b.Y, intersectvues) {
-					v.Bralduns = append(v.Bralduns, b)
+		bralduns := make(map[uint]*bra.Braldun)
+		monstres := make(map[uint]*bra.VueMonstre)
+		l := len(fusion.Vues)
+		vues := make([]*bra.Vue, l, l)
+		for i, vi := range fusion.Vues {
+			v := bra.NewVue()
+			v.Z = fusion.Vues[i].Z
+			v.Time = fusion.Vues[i].Time
+			v.Voyeur = fusion.Vues[i].Voyeur
+			v.PrénomVoyeur = fusion.Vues[i].PrénomVoyeur
+			v.XMin = fusion.Vues[i].XMin
+			v.XMax = fusion.Vues[i].XMax
+			v.YMin = fusion.Vues[i].YMin
+			v.YMax = fusion.Vues[i].YMax
+			vues[i] = v
+			intersectvues := make([]*bra.Vue, 0, i)
+			for j := 0; j < i; j++ {
+				vj := fusion.Vues[j]
+				if vi.Z == vj.Z && vi.XMin <= vj.XMax && vj.XMin <= vi.XMax && vi.YMin <= vj.YMax && vj.YMin <= vi.YMax {
+					intersectvues = append(intersectvues, vj)
 				}
 			}
-		}
-		for _, m := range vi.Monstres {
-			if _, ok := monstres[m.Id]; !ok {
-				monstres[m.Id] = m
-				if bra.PointEnDehors(m.X, m.Y, intersectvues) {
-					v.Monstres = append(v.Monstres, m)
+			for _, b := range vi.Bralduns {
+				if b.Id == v.Voyeur {
+					v.PrénomVoyeur = b.Prénom
+				}
+				if _, ok := bralduns[b.Id]; !ok { // si ce braldun n'est pas dans une vue plus récente
+					bralduns[b.Id] = b
+					if bra.PointEnDehors(b.X, b.Y, intersectvues) {
+						v.Bralduns = append(v.Bralduns, b)
+					}
 				}
 			}
-		}
-		for _, c := range vi.Cadavres {
-			if bra.PointEnDehors(c.X, c.Y, intersectvues) {
-				v.Cadavres = append(v.Cadavres, c)
+			for _, m := range vi.Monstres {
+				if _, ok := monstres[m.Id]; !ok {
+					monstres[m.Id] = m
+					if bra.PointEnDehors(m.X, m.Y, intersectvues) {
+						v.Monstres = append(v.Monstres, m)
+					}
+				}
 			}
-		}
-		for _, o := range vi.Objets {
-			if bra.PointEnDehors(o.X, o.Y, intersectvues) {
-				v.Objets = append(v.Objets, o)
+			for _, c := range vi.Cadavres {
+				if bra.PointEnDehors(c.X, c.Y, intersectvues) {
+					v.Cadavres = append(v.Cadavres, c)
+				}
 			}
-		}
-	}*/
+			for _, o := range vi.Objets {
+				if bra.PointEnDehors(o.X, o.Y, intersectvues) {
+					v.Objets = append(v.Objets, o)
+				}
+			}
+		}*/
 }
 
 // appelée au lancement cette fonction charge les donnéesVueBraldun

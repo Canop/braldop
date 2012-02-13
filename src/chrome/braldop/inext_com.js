@@ -10,6 +10,14 @@ braldop.getMdprPourServeurBraldop = function() {
 	return mdpr;
 }
 
+// renvoie 0 s'il n'est pas disponible
+braldop.getIdBraldun = function() {
+	if (!localStorage['braldop/braldun/id']) {
+		console.log('ID braldun introuvable');
+		return 0;
+	}
+	return parseInt(localStorage['braldop/braldun/id'], 10);
+}
 
 // envoie au serveur un message authentifié par le mdp restreint
 braldop.sendToBraldopServer = function(message) {
@@ -18,7 +26,6 @@ braldop.sendToBraldopServer = function(message) {
 		console.log('Envoi au serveur braldop non authorisé');
 		return;
 	}
-	
 	if (!localStorage['braldop/braldun/id']) {
 		console.log('ID braldun introuvable');
 		return;
@@ -70,28 +77,22 @@ receiveFromMapServer = function(message) {
 	if (message.PngCouche && message.PngCouche.length>5 && map && map.mapData) {
 		if (!message.Z) message.Z = 0; // juste le temps de la transition, avant mise à jour du serveur
 		var couche = null;
-		console.log("A");
 		for (var ic=0; ic<map.mapData.Couches.length; ic++) {
 			var c = map.mapData.Couches[ic];
 			if (c.Z==message.Z) {
-				console.log('couche = c');
 				couche = c;
 				break;
 			}
 		}
-		console.log("B couche :", c);
 		if (couche==null) {
-			console.log('new couche');
 			couche = {};
 			couche.Z = message.Z;
 			couche.matrix = {};
 			map.mapData.Couches.push(couche);
 		}
-		console.log("C");
 		couche.fond = new Image();
 		couche.fond.src = message.PngCouche;
 		couche.fond.onload = function() {
-			console.log("couche.fond.onload");
 			couche.Cases = null;
 			couche.getFond = null;
 			map.displayFog = true;
@@ -99,8 +100,10 @@ receiveFromMapServer = function(message) {
 			braldop.depths = message.ZConnus;
 			braldop.updateMapSettings();
 			map.redraw();
-			console.log("Couche active : ", map.couche);
 		};
+	}
+	if (message.Partages) {
+		braldop.remplitTablePartages(message.Partages);
 	}
 }
 

@@ -15,8 +15,9 @@ type MessageIn struct {
 	Vue       *DonnéesVue
 	Version   string // version du client
 	ZRequis   int    // la profondeur pour laquelle on veut en retour des données (png+compléments)
-	Cmd string
-	Obj uint // l'objet de la commande, un id
+	Cmd       string
+	Action string
+	Cible       uint
 }
 
 type DonnéesVue struct {
@@ -28,9 +29,9 @@ type DonnéesVue struct {
 type MessageOut struct {
 	Erreur    string
 	PngCouche string
-	Text      string      // message du serveur à l'utilisateur
-	Z         int         // la profondeur correspondant aux données envoyées (en particulier le png)
-	ZConnus   []int       // les profondeurs pour lesquelles on peut proposer des données
-	DV        *DonnéesVue // des compléments
-	Partages []*bra.Partage // uniquement envoyé si demandé
+	Text      string         // message du serveur à l'utilisateur
+	Z         int            // la profondeur correspondant aux données envoyées (en particulier le png)
+	ZConnus   []int          // les profondeurs pour lesquelles on peut proposer des données
+	DV        *DonnéesVue    // des compléments
+	Partages  []*bra.Partage // uniquement envoyé si demandé
 }

@@ -104,28 +104,25 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	//> récupération du compte braldop authentifié et du tableau des amis
 	var cb *bra.CompteBraldop
 	var amis []*bra.CompteBraldop
-	if con, err := ms.bd.Open(); err != nil {
+	con, err := ms.bd.Open()
+	if err != nil {
 		log.Println("Erreur à la connexion bd", err)
-		// on fera sans le compte braldop pour la suite
-	} else {
-		defer con.Close()
-		cb, err = con.AuthentifieCompte(in.IdBraldun, in.Mdpr)
-		if err != nil {
-			log.Println(" erreur durant authentification compte")
-		}
-		if cb == nil {
-			log.Println(" compte non trouvé ou mauvais mdpr")
-		} else if !cb.Authentifié {
-			log.Println(" compte trouvé avec cd mdpr mais non authentifié")
-			cb = nil
-		} else {
-			log.Println(" compte authentifié")
-			amis, err = con.Amis(cb.IdBraldun)
-			if err != nil {
-				log.Println(" erreur durant récupération amis")
-			}
-		}
+		out.Text = "Erreur Braldop : connexion BD"
+		return
 	}
+	defer con.Close()
+	cb, errmess := con.AuthentifieCompte(in.IdBraldun, in.Mdpr, true)
+	if errmess != "" {
+		out.Text = "Une erreur s'est produite durant l'authentification sur Braldop : <i>" + errmess + "</i><br>Contactez Canopée du Haut-Rac pour plus d'informations."
+		return // on a besoin du compte
+	}
+	log.Println(" compte authentifié")
+	amis, err = con.Amis(cb.IdBraldun)
+	if err != nil {
+		log.Println(" erreur durant récupération amis")
+	}
+
+	log.Println(" commande :", in.Cmd)
 
 	//> stockage des données de vue
 	if couche != nil {
@@ -155,7 +152,8 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		}
 	}
 
-	if in.Cmd=="carte" || in.Cmd=="" { // pour la compatibilité ascendante, la commande est provisoirement optionnelle
+
+	if in.Cmd == "carte" || in.Cmd == "" { // pour la compatibilité ascendante, la commande est provisoirement optionnelle
 		//> renseignements sur les couches disponibles
 		out.ZConnus, err = bra.CouchesPNGDisponibles(dirBase)
 		if err != nil {
@@ -173,7 +171,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		}
 
 		//> renvoi de la carte en png
-		log.Println("ZRequis : ", in.ZRequis)
+		log.Println(" ZRequis : ", in.ZRequis)
 		out.Z = in.ZRequis
 		cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.ZRequis)
 		if f, err := os.Open(cheminLocalImage); err == nil {
@@ -181,8 +179,14 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 			bytes, _ := ioutil.ReadAll(f)
 			out.PngCouche = "data:image/png;base64," + base64.StdEncoding.EncodeToString(bytes)
 		}
-	} else if in.Cmd=="partages" {
-		
+	} else if in.Cmd == "partages" {
+		if in.Action != "" && in.Cible>0 {
+			con.ModifiePartage(in.IdBraldun, in.Cible, in.Action)
+		}
+		out.Partages, err = con.Partages(in.IdBraldun)
+		if err != nil {
+			log.Println(" erreur à la récupération des partages :", err)
+		}
 	}
 }
 

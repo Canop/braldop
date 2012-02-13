@@ -201,13 +201,13 @@ func CouchesPNGDisponibles(cheminRépertoire string) ([]int, error) {
 	nums := make([]int, 0, 10)
 	srcdir, err := os.Open(cheminRépertoire)
 	if err != nil {
-		log.Println("Erreur ouverture répertoire source dans CouchesDisponibles : ", err)
+		log.Println(" Erreur ouverture répertoire source dans CouchesDisponibles : ", err)
 		return nil, err
 	}
 	defer srcdir.Close()
 	filenames, err := srcdir.Readdirnames(-1)
 	if err != nil {
-		log.Println("Erreur listage fichiers sources dans CouchesDisponibles : ", err)
+		log.Println(" Erreur listage fichiers sources dans CouchesDisponibles : ", err)
 		return nil, err
 	}
 	for _, filename := range filenames {
@@ -233,13 +233,13 @@ func CouchesPNGDisponibles(cheminRépertoire string) ([]int, error) {
 func EnrichitCouchesPNG(cheminRépertoireEcriture string, cheminRépertoireSource string) error {
 	srcdir, err := os.Open(cheminRépertoireSource)
 	if err != nil {
-		log.Println("Erreur ouverture répertoire source dans EnrichitCouchesPNG : ", err)
+		log.Println(" Erreur ouverture répertoire source dans EnrichitCouchesPNG : ", err)
 		return err
 	}
 	defer srcdir.Close()
 	filenames, err := srcdir.Readdirnames(-1)
 	if err != nil {
-		log.Println("Erreur listage fichiers sources dans EnrichitCouchesPNG : ", err)
+		log.Println(" Erreur listage fichiers sources dans EnrichitCouchesPNG : ", err)
 		return err
 	}
 	for _, filename := range filenames {
@@ -255,11 +255,11 @@ func EnrichitCouchesPNG(cheminRépertoireEcriture string, cheminRépertoireSourc
 		if err != nil {
 			continue
 		}
-		log.Println("Fichier ok : ", bn, " z :", z)
+		log.Println(" Fichier ok : ", bn, " z :", z)
 		cheminFichierSource := filepath.Join(cheminRépertoireSource, bn)
-		log.Println("cheminFichierSource : ", cheminFichierSource)
+		log.Println(" cheminFichierSource : ", cheminFichierSource)
 		cheminFichierDestination := filepath.Join(cheminRépertoireEcriture, bn)
-		log.Println("cheminFichierDestination : ", cheminFichierDestination)
+		log.Println(" cheminFichierDestination : ", cheminFichierDestination)
 		sf, err := os.Open(cheminFichierSource)
 		if err != nil {
 			return err
@@ -317,7 +317,7 @@ func EnrichitCouchePNG(cheminRépertoire string, couche *Couche, cacheSize int) 
 				cheminFichierBackup = fmt.Sprintf("%s/couche%d-%s.png", cheminRépertoire, couche.Z, time.LocalTime().Format("20060102_1504_05.000"))
 				os.Rename(cheminFichierImage, cheminFichierBackup)
 			} else {
-				log.Println("ERREUR DECODAGE IMAGE ", cheminFichierImage)
+				log.Println(" ERREUR DECODAGE IMAGE ", cheminFichierImage)
 				img = image.NewPaletted(image.Rect(0, 0, SEMI_LARGEUR*2, SEMI_HAUTEUR*2), palette)
 			}
 		} else {
@@ -373,12 +373,12 @@ func ConstruitNouveauPNG(cheminRépertoire string, couche *Couche) {
 	cheminFichierImage := fmt.Sprintf("%s/couche%d.png", cheminRépertoire, couche.Z)
 	f, err := os.Create(cheminFichierImage)
 	if err != nil {
-		log.Println("Erreur à la création du fichier ", cheminFichierImage)
+		log.Println(" Erreur à la création du fichier ", cheminFichierImage)
 		return
 	}
 	defer f.Close()
 	png.Encode(f, img)
-	log.Printf("Construction carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
+	log.Printf(" Construction carte PNG en %d ms\n", (time.Nanoseconds()-startTime)/1e6)
 }
 
 // décrit la palette pour une inclusion plus aisée dans le javascript

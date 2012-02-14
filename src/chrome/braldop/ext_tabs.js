@@ -31,3 +31,12 @@ braldop.ajouteOnglets = function($target, tabs) {
 		$('div.tab_page#tab_page_'+$(this).attr('num')).show();
 	});
 }
+
+// on surcharge le comportement des onglets pour afficher ou masquer le petit menu braldop
+braldop.initInterface = function() {
+	$('span.onglet').live('click', function(){
+		var id=$(this).attr('id');
+		if (id=='onglet_box_interface') $('#bra_map_settings').show();
+		else $('#bra_map_settings').hide();
+	});
+}

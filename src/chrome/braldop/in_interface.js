@@ -5,11 +5,12 @@ braldop.$depthMenu = null;
 braldop.$globalMenu = null;
 braldop.globalMenuOpen = false;
 
+
 braldop.ensureMapSettings = function() {
 	if (!braldop.$mapSettings) {
 		var html = '<div id=bra_map_settings>';
 		html += '<select id=bra_depth>';
-		html += '</select>';	
+		html += '</select>';
 		html += '<span id="bra_triangle_vues">&#x25bc;</span>';
 		html += '<div id="bra_menu">BIP!</div>';
 		html += '</div>';

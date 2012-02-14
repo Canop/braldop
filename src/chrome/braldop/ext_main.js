@@ -15,6 +15,7 @@ case '/auth/login/':
 	break;
 case '/interface':
 case '/interface/':
+	braldop.initInterface();
 	if (braldop.getMdprPourServeurBraldop()) { // on ne traite la carte que si l'utilisateur l'a autorisé
 		braldop.inject('in_upgrade_goutgueule.js');
 		braldop.inject('in_interface.js');

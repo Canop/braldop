@@ -1,11 +1,9 @@
 package main
 
-/*
-définit les structures, mappées avec du json, en entrée et sortie du mapserver.
-*/
+// définit les structures, mappées avec du json, en entrée et sortie du mapserver.
 
 import (
-	"braldop/bra"
+	"bra"
 )
 
 type MessageIn struct {

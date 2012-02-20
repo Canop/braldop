@@ -1,7 +1,7 @@
 package main
 
 import (
-	"braldop/bra"
+	"bra"
 	"encoding/json"
 	"flag"
 	"io/ioutil"
@@ -24,7 +24,7 @@ func main() {
 	exportePalette := flag.Bool("palette", false, "si oui alors la palette des environnements est exportée (exemple : \"bradmin -palette\")")
 	in := flag.String("in", "", "source des données")
 	out := flag.String("out", "", "répertoire de sortie")
-	cmd := flag.String("cmd", "", "commande")
+	cmd := flag.String("cmd", "", "commande (check ou png)")
 	id := flag.Int("id", 0, "id braldun")
 	mdpr := flag.String("mdpr", "", "mot de passe restreint")
 	flag.Parse()
@@ -37,7 +37,7 @@ func main() {
 		} else if *mdpr == "" {
 			log.Println("Mot de passe restreint non précisé")
 		} else {
-			auth, err := bra.AuthentifieCompteParScriptPublic(int(*id), *mdpr)
+			auth, err := bra.AuthentifieCompteParScriptPublic(uint(*id), *mdpr)
 			if err != nil {
 				log.Println("Unable to authenticate", err)
 			} else {

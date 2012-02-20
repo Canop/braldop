@@ -1,7 +1,6 @@
 package bra
 
-// Interrogations des Scripts Publics 
-
+// Interrogations des Scripts Publics de Braldahim
 
 import (
 	"bufio"

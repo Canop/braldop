@@ -13,11 +13,8 @@ cd $CHEMIN
 
 source config.sh
 
-cd $CHEMIN_BRALDOP/src/go/braldop/bra
-gomake install
-cd $CHEMIN_BRALDOP/src/go/braldop/mapper
-make clean
-gomake
+go install bra
+go install braldopmapper
 
 rsync -az --delete $CHEMIN_BRALDOP/src/site/* $CHEMIN_DEPLOIEMENT_WEB
 
@@ -27,7 +24,7 @@ do
 echo "======================= COMPILATION GROUPE ${NOM_GROUPE[$i]} ======================="
 mkdir -p $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
 rsync -az --delete $CHEMIN_BRALDOP/src/gui/* $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
-./mapper ${MAPPER_ARGS_GROUPE[$i]} -in $CHEMIN_REPERTOIRE_DONNEES -bralduns ${BRALDUNS_GROUPE[$i]} -out $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
+../go/bin/braldopmapper ${MAPPER_ARGS_GROUPE[$i]} -in $CHEMIN_REPERTOIRE_DONNEES -bralduns ${BRALDUNS_GROUPE[$i]} -out $CHEMIN_DEPLOIEMENT_WEB/groupes/${NOM_GROUPE[$i]}
 done
 
 

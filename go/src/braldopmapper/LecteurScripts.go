@@ -1,7 +1,7 @@
 package main
 
 import (
-	"braldop/bra"
+	"bra"
 	"bufio"
 	"encoding/json"
 	"flag"
@@ -64,7 +64,7 @@ func (ls *LecteurScripts) readTimeFromFilePath(path []string) int64 {
 			//~ fmt.Printf("Erreur parsing date \"%s\" : %+v\n", s, err)
 			return 0
 		}
-		return t.Seconds()
+		return t.Unix()
 	}
 	return 0
 }
@@ -79,7 +79,7 @@ func IndexOfStringIn(s string, a []string) int {
 }
 
 // implémentation de filepath.Visitor
-func (ls *LecteurScripts) VisitFile(path string, f *os.FileInfo) {
+func (ls *LecteurScripts) VisitFile(path string, f os.FileInfo) {
 	pathToken := strings.Split(path, "/")
 	if strings.HasSuffix(path, ".csv") {
 		f, err := os.Open(path)
@@ -114,7 +114,7 @@ func (ls *LecteurScripts) VisitFile(path string, f *os.FileInfo) {
 }
 
 // implémentation de filepath.Visitor
-func (ls *LecteurScripts) VisitDir(path string, f *os.FileInfo) bool {
+func (ls *LecteurScripts) VisitDir(path string, f os.FileInfo) bool {
 	pathToken := strings.Split(path, "/")
 	indexTokenPrivate := IndexOfStringIn("private", pathToken)
 	if indexTokenPrivate == -1 || indexTokenPrivate+1 == len(pathToken) {
@@ -150,12 +150,12 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	startTime := time.Seconds()
+	startTime := time.Now().Unix()
 	ls.IdBralduns = strings.Split(*idBraldunsBruts, ",")
 
 	//> lecture des fichiers csv
-	filepath.Walk(*cheminFichiersCsv, func(path string, info *os.FileInfo, err error) error {
-		if info.IsDirectory() {
+	filepath.Walk(*cheminFichiersCsv, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() {
 			if !ls.VisitDir(path, info) {
 				return filepath.SkipDir
 			}
@@ -189,6 +189,6 @@ func main() {
 	f.Write(bout)
 
 	//> affichage d'un petit bilan
-	fmt.Printf("Fichiers lus : %d\nCarte compilée dans %s en %d secondes\n\n", ls.NbReadFiles, *cheminRepertoireExport, time.Seconds()-startTime)
+	fmt.Printf("Fichiers lus : %d\nCarte compilée dans %s en %d secondes\n\n", ls.NbReadFiles, *cheminRepertoireExport, time.Now().Unix()-startTime)
 
 }

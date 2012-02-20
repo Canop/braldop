@@ -1,7 +1,10 @@
 
-# fichiers de profiling
+# fichiers de profiling et log
+profiling
+log
 *.prof
 *.heap
+*.log
 
 # spécifique Canop
 deploy-canop.sh

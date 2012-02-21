@@ -2,7 +2,6 @@ package bra
 
 // couche, exportable en json par exemple.
 
-
 type Case struct {
 	X    int16
 	Y    int16

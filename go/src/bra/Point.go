@@ -23,7 +23,6 @@ func Atoi(a string) (int, error) {
 	return int(i), err
 }
 
-
 // fournit une clé standard Int32 à partir de deux nombres Int16
 func PosKey(x int16, y int16) int32 {
 	return (int32(x) << 16) + (int32(y))

@@ -9,12 +9,12 @@ import (
 
 func testParse(t *testing.T, s string, ok bool, parts ...uint64) {
 	v, e := ParseVersion(s)
-	for i, p := range(parts) {
-		if i>=len(v.Parts) || p!=v.Parts[i] {
+	for i, p := range parts {
+		if i >= len(v.Parts) || p != v.Parts[i] {
 			t.Errorf("Version \"%s\" should be parsed as %s", s, Version{parts})
 		}
 	}
-	if (e==nil) != ok {
+	if (e == nil) != ok {
 		if ok {
 			t.Errorf("Unexpected error while parsing \"%s\"", s)
 		} else {
@@ -26,7 +26,7 @@ func testParse(t *testing.T, s string, ok bool, parts ...uint64) {
 func testParseAndCompare(t *testing.T, s1 string, s2 string, c int) {
 	v1, _ := ParseVersion(s1)
 	v2, _ := ParseVersion(s2)
-	if CompareVersions(&v1, &v2)!=c {
+	if CompareVersions(&v1, &v2) != c {
 		t.Errorf("CompareVersions(\"%s\",\"%s\") should return %d", s1, s2, c)
 	}
 }

@@ -43,7 +43,7 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 	case "BOSQUET":
 		o := new(VueBosquet)
 		if err = o.ReadCsv(cells); err == nil {
-			if memmap!=nil {
+			if memmap != nil {
 				memmap.StoreBosquet(o)
 			}
 		}
@@ -65,7 +65,7 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 	case "CHAMP":
 		o := new(VueChamp)
 		if err = o.ReadCsv(cells); err == nil {
-			if memmap!=nil {
+			if memmap != nil {
 				memmap.StoreChamp(o)
 			}
 		}
@@ -77,14 +77,14 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 	case "CREVASSE":
 		o := new(VueCrevasse)
 		if err = o.ReadCsv(cells); err == nil {
-			if memmap!=nil {
+			if memmap != nil {
 				memmap.StoreCrevasse(o)
 			}
 		}
 	case "ECHOPPE":
 		o := new(VueEchoppe)
 		if err = o.ReadCsv(cells); err == nil {
-			if memmap!=nil {
+			if memmap != nil {
 				memmap.StoreEchoppe(o)
 			}
 		}
@@ -96,7 +96,7 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 	case "ENVIRONNEMENT":
 		o := new(VueEnvironnement)
 		if err = o.ReadCsv(cells); err == nil {
-			if memmap!=nil {
+			if memmap != nil {
 				memmap.StoreEnvironnement(o)
 			}
 		}
@@ -115,7 +115,7 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 	case "LIEU":
 		o := new(VueLieu)
 		if err = o.ReadCsv(cells); err == nil {
-			if memmap!=nil {
+			if memmap != nil {
 				memmap.StoreLieu(o)
 			}
 		} else {
@@ -151,7 +151,7 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 	case "PALISSADE":
 		o := new(VuePalissade)
 		if err = o.ReadCsv(cells, false); err == nil {
-			if memmap!=nil {
+			if memmap != nil {
 				memmap.StorePalissade(o)
 			}
 		}
@@ -173,7 +173,7 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 	case "PORTAIL":
 		o := new(VuePalissade)
 		if err = o.ReadCsv(cells, true); err == nil {
-			if memmap!=nil {
+			if memmap != nil {
 				memmap.StorePalissade(o)
 			}
 		}
@@ -190,7 +190,7 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 	case "ROUTE":
 		o := new(VueRoute)
 		if err = o.ReadCsv(cells); err == nil {
-			if memmap!=nil {
+			if memmap != nil {
 				memmap.StoreRoute(o)
 			}
 		}
@@ -227,4 +227,3 @@ func ParseFichierDynamique(r *bufio.Reader, time int64, memmap *MemMap, verbose 
 	}
 	return
 }
-

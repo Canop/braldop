@@ -9,4 +9,3 @@ func AtoId(a string) uint {
 	id64, _ := strconv.ParseUint(a, 10, 0)
 	return uint(id64)
 }
-

@@ -2,7 +2,6 @@ package main
 
 // définit les structures, mappées avec du json, en entrée et sortie du mapserver.
 
-
 import (
 	"bra"
 )
@@ -14,8 +13,8 @@ type MessageIn struct {
 	Version   string // version du client
 	ZRequis   int    // la profondeur pour laquelle on veut en retour des données (png+compléments)
 	Cmd       string
-	Action string
-	Cible       uint
+	Action    string
+	Cible     uint
 }
 
 type DonnéesVue struct {

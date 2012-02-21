@@ -16,9 +16,8 @@ type BaseMysql struct {
 	user     string
 	password string
 	database string
-	con ConnexionMysql
+	con      ConnexionMysql
 }
-
 
 func NewBaseMysql(user string, password string, database string) *BaseMysql {
 	store := new(BaseMysql)

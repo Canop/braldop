@@ -19,10 +19,10 @@ func (con ConnexionMysql) GetCompteExistant(idBraldun uint) (*CompteBraldop, str
 	cb.IdBraldun = idBraldun
 	cb.Authentifié = false
 	err := row.Scan(&cb.Mdpr, &cb.X, &cb.Y, &cb.Z)
-	if err==nil {
+	if err == nil {
 		return cb, ""
 	}
-	if err==sql.ErrNoRows {
+	if err == sql.ErrNoRows {
 		return nil, ""
 	}
 	return erreurCompte(idBraldun, "Auth 01", err)
@@ -92,4 +92,3 @@ func (con ConnexionMysql) AuthentifieCompte(idBraldun uint, mdpr string, créeSi
 	}
 	return nil, "" // ligne inateignable
 }
-

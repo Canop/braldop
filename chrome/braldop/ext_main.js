@@ -17,7 +17,9 @@ case '/interface':
 case '/interface/':
 	braldop.initInterface();
 	if (braldop.getMdprPourServeurBraldop()) { // on ne traite la carte que si l'utilisateur l'a autorisé
-		braldop.inject('in_upgrade_goutgueule.js');
+		braldop.inject('in_up_map.js');
+		braldop.inject('in_up_env.js');
+		braldop.inject('in_up_dialog.js');
 		braldop.inject('in_interface.js');
 		braldop.inject('in_map.js');
 	} else {
@@ -30,7 +32,5 @@ case '/Parametres/':
 	braldop.inject('in_options.js');
 	braldop.changePageParamètres();
 	break;
-default:
-	//~ console.log('page ignorée');
 }
 

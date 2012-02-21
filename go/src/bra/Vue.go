@@ -1,13 +1,11 @@
 package bra
 
-/*
-Objet exportable en json
-
-*/
+// Objet exportable en json correspondant à la vue d'un Braldun (en fait pas tous les objets pour l'instant
+//  certains, les plus statiques (crevasses, champs, échoppes) étant stockés dans la memmap)
 
 type Vue struct {
 	Z            int16 // la profondeur de la couche, 0 pour la surface
-	Time         int64 // secondes depuis 1970. Une date à 0 signifie que l'objet est vide ou invalide
+	Time         int64 // secondes depuis 1970. Une date à 0 signifie généralement que l'objet est vide ou invalide
 	Voyeur       uint  // id du braldun. Un id à 0 signifie que l'objet est vide ou invalide
 	PrénomVoyeur string
 	XMin         int16

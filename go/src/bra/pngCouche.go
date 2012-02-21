@@ -58,6 +58,7 @@ func init() {
 	couleurs["erables"] = color.RGBA{180, 134, 91, 255}         // #b4865b
 	couleurs["erables-gr"] = color.RGBA{182, 120, 79, 255}      // #b6784f
 	couleurs["chenes"] = color.RGBA{108, 156, 94, 255}          // #6c9c5e
+	couleurs["chenes-gr"] = color.RGBA{109, 156, 94, 255}       // #6d9c5e
 	couleurs["lac"] = color.RGBA{94, 143, 195, 255}             // #5e8fc3
 	couleurs["peupliers"] = color.RGBA{151, 217, 92, 255}       // #97d95c
 	couleurs["peupliers-gr"] = color.RGBA{176, 217, 92, 255}    // #b0d95c

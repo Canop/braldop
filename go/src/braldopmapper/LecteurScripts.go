@@ -100,7 +100,8 @@ func (ls *LecteurScripts) VisitFile(path string, f os.FileInfo) {
 		case "villes.csv":
 			ls.parseFichierStatique(r, func() Visible { return new(bra.Ville) })
 		default:
-			vue := ls.parseFichierDynamique(r, ls.readTimeFromFilePath(pathToken))
+			vue := bra.ParseFichierDynamique(r, ls.readTimeFromFilePath(pathToken), ls.MemMap, ls.verbose)
+			ls.NbReadFiles++
 			if vue != nil {
 				//~ fmt.Printf("    -> vue : %+v\n", vue)
 				if vue.Voyeur > 0 && vue.Time > 0 {

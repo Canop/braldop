@@ -1,7 +1,7 @@
 package main
 
 import (
-	"braldop/bra"
+	"bra"
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
@@ -14,7 +14,6 @@ import (
 	"os/signal"
 	"runtime/pprof"
 	"strconv"
-	"syscall"
 	"time"
 )
 
@@ -25,7 +24,7 @@ const (
 var versionActuelleExtension Version
 
 func init() {
-	versionActuelleExtension = Version{[]uint{3, 0}}
+	versionActuelleExtension = MakeVersion(3, 1)
 }
 
 type MapServer struct {
@@ -56,7 +55,7 @@ func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
 func vérifieVersion(vs string) (html string) {
 	if version, err := ParseVersion(vs); err != nil {
 		log.Println("Version utilisateur incomprise : " + vs)
-	} else if CompareVersions(version, &versionActuelleExtension) == -1 {
+	} else if CompareVersions(&version, &versionActuelleExtension) == -1 {
 		log.Println("Version utilisateur obsolète : " + vs)
 		html = "L'extension Braldop n'est pas à jour.<br>Vous devriez installer <a href=http://canop.org/braldop/index.html>la nouvelle version</a>."
 	}
@@ -68,8 +67,10 @@ func (ms *MapServer) répertoireCartesBraldun(idBraldun uint, mdpr string) strin
 }
 
 func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
-	startTime := time.Nanoseconds()
-	defer func() { log.Printf(" durée totale traitement requête : %d ms\n", (time.Nanoseconds()-startTime)/1e6) }()
+	startTime := time.Now().UnixNano()
+	defer func() {
+		log.Printf(" durée totale traitement requête : %d ms\n", (time.Now().UnixNano()-startTime)/1e6)
+	}()
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Request-Method", "GET")
 
@@ -103,7 +104,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	//> récupération du compte braldop authentifié et du tableau des amis
 	var cb *bra.CompteBraldop
 	var amis []*bra.CompteBraldop
-	con, err := ms.bd.Open()
+	con, err := ms.bd.DB()
 	if err != nil {
 		log.Println("Erreur à la connexion bd", err)
 		out.Text = "Erreur Braldop : connexion BD"
@@ -126,8 +127,8 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	if couche != nil {
 		hasher := sha1.New()
 		hasher.Write(bin)
-		sha := base64.URLEncoding.EncodeToString(hasher.Sum())
-		dir := dirBase + "/" + time.LocalTime().Format("2006/01/02")
+		sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+		dir := dirBase + "/" + time.Now().Format("2006/01/02")
 		path := dir + "/carte-" + sha + ".json"
 		if _, err = os.Stat(path); err != nil { // le fichier n'existe pas, ce sont des données intéressantes
 			log.Println(" Carte à modifier")
@@ -149,7 +150,6 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 			log.Println(" Carte inchangée")
 		}
 	}
-
 
 	if in.Cmd == "carte" || in.Cmd == "" { // pour la compatibilité ascendante, la commande est provisoirement optionnelle
 		//> renseignements sur les couches disponibles
@@ -178,7 +178,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 			out.PngCouche = "data:image/png;base64," + base64.StdEncoding.EncodeToString(bytes)
 		}
 	} else if in.Cmd == "partages" {
-		if in.Action != "" && in.Cible>0 {
+		if in.Action != "" && in.Cible > 0 {
 			con.ModifiePartage(in.IdBraldun, in.Cible, in.Action)
 		}
 		out.Partages, err = con.Partages(in.IdBraldun)
@@ -224,27 +224,25 @@ func main() {
 	}
 	ms.fv.Charge(*ms.répertoireCartes)
 	go func() {
+		sigchan := make(chan os.Signal)
+		signal.Notify(sigchan, os.Interrupt, os.Kill)
 		for {
-			sig := <-signal.Incoming
-			log.Printf("Signal : %+v", sig)
-			if usig, ok := sig.(os.UnixSignal); ok {
-				if usig == syscall.SIGTERM || usig == syscall.SIGINT {
-					log.Printf("Mapserver tué ! (", sig, ")")
-					if *memprofile != "" {
-						log.Println("Ecriture heap dans le fichier ", *memprofile)
-						fp, err := os.Create(*memprofile)
-						if err != nil {
-							log.Fatal(err)
-						}
-						pprof.WriteHeapProfile(fp)
-					}
-					bra.BloqueEcrituresPNG()
-					if *cpuprofile != "" {
-						pprof.StopCPUProfile()
-					}
-					os.Exit(0)
+			sig := <-sigchan
+			log.Println("Signal : %+v", sig)
+			log.Println("Mapserver tué ! (", sig, ")")
+			if *memprofile != "" {
+				log.Println("Ecriture heap dans le fichier ", *memprofile)
+				fp, err := os.Create(*memprofile)
+				if err != nil {
+					log.Fatal(err)
 				}
+				pprof.WriteHeapProfile(fp)
 			}
+			bra.BloqueEcrituresPNG()
+			if *cpuprofile != "" {
+				pprof.StopCPUProfile()
+			}
+			os.Exit(0)
 		}
 	}()
 	ms.Start()

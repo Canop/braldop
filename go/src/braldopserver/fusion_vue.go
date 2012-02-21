@@ -1,7 +1,7 @@
 package main
 
 import (
-	"braldop/bra"
+	"bra"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -33,7 +33,7 @@ type FusionneurVue struct {
 }
 
 func (fv *FusionneurVue) Reçoit(vue *bra.Vue) {
-	vue.Time = time.Seconds()
+	vue.Time = time.Now().Unix()
 	fv.vues[vue.Voyeur] = vue
 }
 
@@ -134,21 +134,21 @@ func (fv *FusionneurVue) Charge(répertoireCartes string) error {
 	defer rep.Close()
 	cfis, _ := rep.Readdir(-1)
 	for _, cfi := range cfis {
-		t := strings.Split(cfi.Name, "-")
+		t := strings.Split(cfi.Name(), "-")
 		if len(t) != 2 {
 			continue
 		}
-		idBraldun, _ := strconv.Atoui(t[0])
+		idBraldun, _ := strconv.ParseUint(t[0], 10, 0)
 		if idBraldun == 0 {
 			continue
 		}
 		plusRécentChemin := ""
 		plusRécentDate := int64(0)
 		// on parcoure toute l'arborescence, pas le plus efficace mais le plus simple à coder
-		filepath.Walk(filepath.Join(répertoireCartes, cfi.Name), func(path string, info *os.FileInfo, err error) error {
-			if info.IsRegular() && strings.HasPrefix(info.Name, "carte-") && strings.HasSuffix(info.Name, ".json") && info.Mtime_ns > plusRécentDate {
+		filepath.Walk(filepath.Join(répertoireCartes, cfi.Name()), func(path string, info os.FileInfo, err error) error {
+			if !info.IsDir() && strings.HasPrefix(info.Name(), "carte-") && strings.HasSuffix(info.Name(), ".json") && info.ModTime().Unix() > plusRécentDate {
 				plusRécentChemin = path
-				plusRécentDate = info.Mtime_ns
+				plusRécentDate = info.ModTime().Unix()
 			}
 			return nil
 		})
@@ -178,7 +178,7 @@ func (fv *FusionneurVue) Charge(répertoireCartes string) error {
 			continue
 		}
 		in.Vue.Vues[0].Time = plusRécentDate / 1e9
-		fv.vues[idBraldun] = in.Vue.Vues[0]
+		fv.vues[uint(idBraldun)] = in.Vue.Vues[0]
 		log.Println("  Données vue chargées pour", idBraldun)
 	}
 	return nil

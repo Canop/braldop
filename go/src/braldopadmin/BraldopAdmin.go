@@ -12,7 +12,7 @@ import (
 )
 
 // Exemples de commandes :
-//  > bradmin -palette
+//  > bradmin -cmd palette
 //    exporte sur stdout la palette des couleurs des fonds à utiliser dans le javascript pour décoder les png
 //  > bradmin -cmd png -in tata/toto.json 
 //    construit un png (tata/couchexx.png) dont le contenu correspond à la Couche encodée dans le fichier tata/toto.json
@@ -21,16 +21,31 @@ import (
 //  > bradmin -cmd check -id 754 -mdpr XXXX
 //    vérifie que le braldun 754 est connu de Braldahim et a bien le mot de passe restreint mdpr
 func main() {
-	exportePalette := flag.Bool("palette", false, "si oui alors la palette des environnements est exportée (exemple : \"bradmin -palette\")")
 	in := flag.String("in", "", "source des données")
-	out := flag.String("out", "", "répertoire de sortie")
-	cmd := flag.String("cmd", "", "commande (check ou png)")
+	out := flag.String("out", "", "répertoire de sortie (pour la commande png)")
+	cmd := flag.String("cmd", "", "commande (check, palette, png ou vue)")
 	id := flag.Int("id", 0, "id braldun")
 	mdpr := flag.String("mdpr", "", "mot de passe restreint")
 	flag.Parse()
 	var err error
-	if *exportePalette {
+	if *cmd == "palette" {
 		bra.ExportePalettePng(os.Stdout)
+	} else if *cmd == "vue" {
+		if *id == 0 {
+			log.Println("Id du braldun non précisé")
+		} else if *mdpr == "" {
+			log.Println("Mot de passe restreint non précisé")
+		} else {
+			dv, err := bra.VueParScriptPublic(uint(*id), *mdpr)
+			if err != nil {
+				log.Fatal(err)
+			}
+			bout, err := json.Marshal(dv)
+			if err != nil {
+				log.Fatal(err)
+			}
+			os.Stdout.Write(bout)
+		}
 	} else if *cmd == "check" {
 		if *id == 0 {
 			log.Println("Id du braldun non précisé")
@@ -78,7 +93,7 @@ func main() {
 					if messin.Vue == nil || len(messin.Vue.Couches) == 0 {
 						log.Fatal(" Pas de données de vue")
 					}
-					bra.EnrichitCouchePNG(dir, &messin.Vue.Couches[0], 0)
+					bra.EnrichitCouchePNG(dir, messin.Vue.Couches[0], 0)
 				} else { // si pas json on suppose pour l'instant qu'il s'agit d'un répertoire de fichiers png
 					log.Println("********\nEnrichitCouchesPNG", dir, cheminIn)
 					err = bra.EnrichitCouchesPNG(dir, cheminIn)

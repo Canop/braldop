@@ -33,6 +33,13 @@ braldop.sendToBraldopServer = function(message) {
 	message.IdBraldun = parseInt(localStorage['braldop/braldun/id'], 10);
 	message.Version = braldop.extVersion;
 	console.log('Message sortant depuis le contexte de la page vers '+braldop.serveur+' : ', message);
+	braldop.messageTimeout = setTimeout(function(){
+		var html = 'Problèmes de connexion au serveur Braldop.';
+		html += '<br>Ce peut être lié à des problèmes réseau, à un verrouillage de votre accès au port 8001, à un problème sur le serveur lui-même.';
+		html += "<br>Si le problème persiste vous devriez désactiver l'extension Braldop afin de jouer normalement.";
+		html += "<br>Avant d'en arriver à de telles extrémités, essayez de recharger la page et d'en causer sur le forum.";
+		braldop.alertUser(html);
+	}, 10000);
 	$.ajax(
 		{
 			url: braldop.serveur + '?in='+JSON.stringify(message),
@@ -43,21 +50,27 @@ braldop.sendToBraldopServer = function(message) {
 	return true;
 }
 
+// affiche un message pour l'utilisateur
+braldop.alertUser = function(text) {
+	var $messageDiv = $('#braldop_message_content');
+	if ($messageDiv.length==0) {
+		var html = '<div id=braldop_message><div id=braldop_message_content>';
+		html += '<hr><a id=>OK</a>'
+		html += '</div><div id=braldop_message_controls><table width=100%><tr><td><span id=braldop_message_opener>!</span></td><td align=right id=braldop_message_deleter>Supprimer ce message</td></tr></table></div></div>';
+		$(html).appendTo($('body'));
+		$messageDiv =  $('#braldop_message_content');
+		$('#braldop_message_opener').click(function(){$('#braldop_message_content, #braldop_message_deleter').toggle()});
+		$('#braldop_message_deleter').click(function(){$('#braldop_message').remove()});
+	}
+	$messageDiv.html(text);
+}
+
 // réception (intégrée à la page) du message de réponse du serveur braldop
 receiveFromMapServer = function(message) {
+	if (braldop.messageTimeout) clearTimeout(braldop.messageTimeout);
 	console.log("Message entrant :", message);
 	if (message.Text && message.Text.length>0) {
-		var $messageDiv = $('#braldop_message_content');
-		if ($messageDiv.length==0) {
-			var html = '<div id=braldop_message><div id=braldop_message_content>';
-			html += '<hr><a id=>OK</a>'
-			html += '</div><div id=braldop_message_controls><table width=100%><tr><td><span id=braldop_message_opener>!</span></td><td align=right id=braldop_message_deleter>Supprimer ce message</td></tr></table></div></div>';
-			$(html).appendTo($('body'));
-			$messageDiv =  $('#braldop_message_content');
-			$('#braldop_message_opener').click(function(){$('#braldop_message_content, #braldop_message_deleter').toggle()});
-			$('#braldop_message_deleter').click(function(){$('#braldop_message').remove()});
-		}
-		$messageDiv.html(message.Text);
+		braldop.alertUser(message.Text);
 	}
 	if (message.DV && message.DV.Vues) {
 		// les vues recues du serveur remplacent les vues présentes, mais on garde les actions locales

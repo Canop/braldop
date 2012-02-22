@@ -6,7 +6,7 @@
 	"background_page": "extension-braldop.html",
 	"content_scripts": [
 		{
-			"matches": ["*://jeu.braldahim.com/*"],
+			"matches": ["*://jeu.braldahim.com/*", "*://work.braldahim.com/*"],
 			"all_frames" : true,
 			"run_at" : "document_end",
 			"css": [

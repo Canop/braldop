@@ -9,14 +9,8 @@ import (
 type MessageIn struct {
 	IdBraldun uint
 	Mdpr      string // mot de passe restreint
-	Vue       *DonnéesVue
+	Vue       *bra.DonnéesVue
 	Version   string // version du client
-}
-
-type DonnéesVue struct {
-	Couches  []bra.Couche
-	Vues     []bra.Vue
-	Position bra.VuePosition
 }
 
 type MessageOut struct {

@@ -2,7 +2,6 @@ package bra
 
 // Objet exportable en json correspondant à la vue d'un Braldun (en fait pas tous les objets pour l'instant
 //  certains, les plus statiques (crevasses, champs, échoppes) étant stockés dans la memmap)
-
 type Vue struct {
 	Z            int16 // la profondeur de la couche, 0 pour la surface
 	Time         int64 // secondes depuis 1970. Une date à 0 signifie généralement que l'objet est vide ou invalide
@@ -16,6 +15,13 @@ type Vue struct {
 	Cadavres     []*VueCadavre
 	Monstres     []*VueMonstre
 	Objets       []*VueObjet
+}
+
+// DonnéesVue est plus proche de ce que devrait être une Vue. C'est ce qu'on récupère de ce que voit un Braldun.
+type DonnéesVue struct {
+	Couches  []*Couche
+	Vues     []*Vue
+	Position *VuePosition
 }
 
 func NewVue() *Vue {

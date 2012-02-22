@@ -1,6 +1,6 @@
 // carte des environnements en fonction de la couleur du pixel généré par mapper ou mapserver.
-// Pour générer cette carte, utiliser la commande suivante :
-//   bradmin -palette
+// Pour générer cette table, utiliser la commande suivante :
+//   braldopadmin -cmd palette
 color2envs = {
 	11185755: "hetres", 11119962: "hetres",
 	9551989: "plaine-gr", 9486196: "plaine-gr",

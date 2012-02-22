@@ -152,6 +152,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	}
 
 	if in.Cmd == "carte" || in.Cmd == "" { // pour la compatibilité ascendante, la commande est provisoirement optionnelle
+		
 		//> renseignements sur les couches disponibles
 		out.ZConnus, err = bra.CouchesPNGDisponibles(dirBase)
 		if err != nil {
@@ -163,7 +164,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 			ms.fv.Reçoit(in.Vue.Vues[0])
 			vues := ms.fv.Complète(in.Vue.Vues[0], amis)
 			if len(vues) > 0 {
-				out.DV = new(DonnéesVue)
+				out.DV = new(bra.DonnéesVue)
 				out.DV.Vues = vues
 			}
 		}

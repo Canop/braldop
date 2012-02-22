@@ -22,11 +22,13 @@ func readLine(r *bufio.Reader) (cells []string, err error) {
 
 // remplit l'objet Vue et optionnellement (si elle est fournie) la MemMap
 //  à partir d'une ligne d'un flux csv
-func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbose bool) {
+// Renvoie éventuellement un objet VuePosition (oui, ça devient le bordel...)
+func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbose bool) *VuePosition {
 	if len(cells) < 3 {
 		fmt.Println("  Ligne trop courte : ", cells)
-		return
+		return nil
 	}
+	var pos *VuePosition
 	var err error
 	displayErrors := true
 	switch cells[0] {
@@ -186,6 +188,7 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 			vue.XMax = o.XMax
 			vue.YMin = o.YMin
 			vue.YMax = o.YMax
+			pos = o
 		}
 	case "ROUTE":
 		o := new(VueRoute)
@@ -208,11 +211,12 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 	if displayErrors && err != nil {
 		fmt.Printf("Erreur lecture : %+v \n cellules : %+v\n", err, cells)
 	}
+	return pos
 }
 
 // remplit l'objet Vue et optionnellement (si elle est fournie) la MemMap
 //  à partir d'un flux csv.
-func ParseFichierDynamique(r *bufio.Reader, time int64, memmap *MemMap, verbose bool) (vue *Vue) {
+func ParseFichierDynamique(r *bufio.Reader, time int64, memmap *MemMap, verbose bool) (vue *Vue, pos *VuePosition) {
 	vue = NewVue()
 	vue.Time = time
 	for {
@@ -223,7 +227,20 @@ func ParseFichierDynamique(r *bufio.Reader, time int64, memmap *MemMap, verbose 
 			}
 			return
 		}
-		ParseLigneFichierDynamique(line, vue, memmap, verbose)
+		pos = ParseLigneFichierDynamique(line, vue, memmap, verbose)
 	}
 	return
+}
+
+// construit un objet DonnéesVue à partir d'un fichier unique (qui doit être un fichier de vue
+//  pour que ça ait un intérêt)
+func ParseFichierDynamiqueDonnéesVue(r *bufio.Reader, time int64, verbose bool) *DonnéesVue {
+	memmap := NewMemMap()
+	dv := new(DonnéesVue)
+	var vue *Vue
+	vue, dv.Position = ParseFichierDynamique(r, time, memmap, verbose)
+	carte := memmap.Compile()
+	dv.Couches = carte.Couches
+	dv.Vues = []*Vue{vue}
+	return dv
 }

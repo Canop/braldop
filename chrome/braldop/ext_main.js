@@ -21,6 +21,7 @@ case '/interface/':
 		braldop.inject('in_up_env.js');
 		braldop.inject('in_up_dialog.js');
 		braldop.inject('in_interface.js');
+		braldop.inject('in_up_vue.js');
 		braldop.inject('in_map.js');
 	} else {
 		console.log('pas de mdpr ou pas de authorisation');

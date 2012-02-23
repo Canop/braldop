@@ -37,6 +37,12 @@ func (fv *FusionneurVue) Reçoit(vue *bra.Vue) {
 	fv.vues[vue.Voyeur] = vue
 }
 
+// renvoie true si la dernière maj de la vue de ce braldun est suffisamment ancienne
+//  pour qu'on en redemande une
+func (fv *FusionneurVue) MajPossible(idBraldun uint) bool {
+
+}
+
 // renvoie les vues
 func (fv *FusionneurVue) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*bra.Vue {
 	fusion := new(FusionVues)

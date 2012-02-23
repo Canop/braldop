@@ -27,4 +27,5 @@ type MessageOut struct {
 	ZConnus   []int          // les profondeurs pour lesquelles on peut proposer des données
 	DV        *bra.DonnéesVue    // des compléments
 	Partages  []*bra.Partage // uniquement envoyé si demandé
+	MajPossibles []uint // les numéros des bralduns pour lesquels on peut demander une maj
 }

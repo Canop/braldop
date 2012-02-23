@@ -66,6 +66,26 @@ func (ms *MapServer) répertoireCartesBraldun(idBraldun uint, mdpr string) strin
 	return fmt.Sprintf("%s/%d-%s", *ms.répertoireCartes, idBraldun, mdpr)
 }
 
+func (ms *MapServer) stockeVue(idVoyeur uint, mdprVoyeur string, bv []byte, couche *bra.Couche) (nouveau bool) {
+	dirBase := ms.répertoireCartesBraldun(idVoyeur, mdprVoyeur)
+	hasher := sha1.New()
+	hasher.Write(bv)
+	sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+	dir := dirBase + "/" + time.Now().Format("2006/01/02")
+	path := dir + "/carte-" + sha + ".json"
+	if _, err := os.Stat(path); err != nil { // nouveau fichier, donc nouvelle vue
+		//> on sauvegarde le fichier json
+		os.MkdirAll(dir, 0777)
+		f, _ := os.Create(path)
+		defer f.Close()
+		f.Write(bv)
+		//> on crée ou enrichit l'image png correspondant à la couche
+		bra.EnrichitCouchePNG(dirBase, couche, 20)		
+		return true
+	}
+	return false
+}
+
 func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	startTime := time.Now().UnixNano()
 	defer func() {
@@ -125,21 +145,8 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 
 	//> stockage des données de vue
 	if couche != nil {
-		hasher := sha1.New()
-		hasher.Write(bin)
-		sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
-		dir := dirBase + "/" + time.Now().Format("2006/01/02")
-		path := dir + "/carte-" + sha + ".json"
-		if _, err = os.Stat(path); err != nil { // le fichier n'existe pas, ce sont des données intéressantes
-			log.Println(" Carte à modifier")
-			//> on sauvegarde le fichier json
-			os.MkdirAll(dir, 0777)
-			f, _ := os.Create(path)
-			defer f.Close()
-			f.Write(bin)
-			//> on crée ou enrichit l'image png correspondant à la couche
-			bra.EnrichitCouchePNG(dirBase, couche, 20)
-			//> et on s'occupe aussi des amis
+		if ms.stockeVue(in.IdBraldun, in.Mdpr, bin, couche) {
+			//> on s'occupe aussi des amis
 			if amis != nil {
 				for _, ami := range amis {
 					log.Println(" enrichissement carte ami ", ami.IdBraldun)
@@ -152,7 +159,39 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	}
 
 	if in.Cmd == "carte" || in.Cmd == "" { // pour la compatibilité ascendante, la commande est provisoirement optionnelle
-		
+	
+		//> récupération et stockage, si demandé, de la vue d'un autre braldun
+		if in.Action == "maj" && in.Cible > 0 {
+			
+			// todo : vérification compte pas maj récemment
+			
+			cc, errstr := con.GetCompteExistant(in.Cible)
+			if errstr!="" {
+				log.Println(" erreur durant la récupération du compte de", in.Cible)
+			} else {
+				dv, err := bra.VueParScriptPublic(in.Cible, cc.Mdpr)
+				if err!=nil {
+					log.Println(" erreur durant la récupération par script public de la vue de", in.Cible)
+				} else {	
+					bdv, err := json.Marshal(dv)
+					if err != nil {
+						log.Println(" erreur durant l'encodage en json de ", in.Cible)
+					} else {
+						if ms.stockeVue(in.Cible, cc.Mdpr, bdv, dv.Couches[0]) {
+							camis, err := con.Amis(in.Cible)
+							if err != nil {
+								log.Println(" erreur durant récupération des amis de", in.Cible)
+							}
+							for _, cami := range camis {
+								log.Println(" enrichissement carte ", cami.IdBraldun)
+								bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], 20)
+							}
+						}
+					}
+				}
+			}
+		}
+	
 		//> renseignements sur les couches disponibles
 		out.ZConnus, err = bra.CouchesPNGDisponibles(dirBase)
 		if err != nil {

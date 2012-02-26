@@ -30,6 +30,14 @@ braldop.sendToBraldopServer = function(message) {
 		console.log('ID braldun introuvable');
 		return;
 	}
+	if (message.Cmd=='carte') {
+		message.Vue = {
+			Couches: braldop.goclone(map.mapData.Couches),
+			Vues: braldop.goclone(map.mapData.Vues),
+			Position: braldop.goclone(map.mapData.Position)
+		};
+		message.ZRequis = map.z;
+	}
 	message.IdBraldun = parseInt(localStorage['braldop/braldun/id'], 10);
 	message.Version = braldop.extVersion;
 	console.log('Message sortant depuis le contexte de la page vers '+braldop.serveur+' : ', message);
@@ -39,7 +47,7 @@ braldop.sendToBraldopServer = function(message) {
 		html += "<br>Si le problème persiste vous devriez désactiver l'extension Braldop afin de jouer normalement.";
 		html += "<br>Avant d'en arriver à de telles extrémités, essayez de recharger la page et d'en causer sur le forum.";
 		braldop.alertUser(html);
-	}, 10000);
+	}, 7000);
 	$.ajax(
 		{
 			url: braldop.serveur + '?in='+JSON.stringify(message),

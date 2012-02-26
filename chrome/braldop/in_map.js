@@ -49,12 +49,7 @@ braldop.waitForMap = function(callback) {
 }
 
 braldop.handleNewMapData = function() {
-	var data = {
-		Couches: braldop.goclone(map.mapData.Couches),
-		Vues: braldop.goclone(map.mapData.Vues),
-		Position: braldop.goclone(map.mapData.Position)
-	};
-	braldop.sendToBraldopServer({Cmd:'carte', ZRequis:map.z, Vue:data});
+	braldop.sendToBraldopServer({Cmd:'carte'});
 }
 
 braldop.waitForMap(function(){

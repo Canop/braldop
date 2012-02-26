@@ -1,7 +1,7 @@
 package bra
 
 import (
-	"fmt"
+	"log"
 )
 
 type MemMap struct {
@@ -71,6 +71,28 @@ func (mm *MemMap) StoreRégion(o *Région) {
 	mm.Régions = append(mm.Régions, o)
 }
 
+func (mm *MemMap) CompleteBralduns(v *Vue) {
+	// on indique le prénom du voyeur
+	if b, ok := mm.Bralduns[v.Voyeur]; ok {
+		v.PrénomVoyeur = b.Prénom
+	}
+	// on remplit les champs manquant des bralduns
+	for _, b := range v.Bralduns {
+		if mmb, ok := mm.Bralduns[b.Id]; ok {
+			b.Prénom = mmb.Prénom
+			b.Nom = mmb.Nom
+			b.Niveau = mmb.Niveau
+			b.Sexe = mmb.Sexe
+			b.IdCommunauté = mmb.IdCommunauté
+			b.PointsGredin = mmb.PointsGredin
+			b.PointsRedresseur = mmb.PointsRedresseur
+			b.PointsDistinction = mmb.PointsDistinction
+		} else {
+			log.Printf("Braldun introuvable : %d\n", b.Id)
+		}
+	}
+}
+
 func (mm *MemMap) Compile() (carte *Carte) {
 	carte = NewCarte()
 	for _, mc := range mm.Couches {
@@ -80,26 +102,7 @@ func (mm *MemMap) Compile() (carte *Carte) {
 	carte.LieuxVilles = mm.LieuxVilles
 	carte.Régions = mm.Régions
 	for _, v := range mm.DernièresVues {
-		carte.Vues = append(carte.Vues, v)
-		// on indique le prénom du voyeur
-		if b, ok := mm.Bralduns[v.Voyeur]; ok {
-			v.PrénomVoyeur = b.Prénom
-		}
-		// on remplit les champs manquant des bralduns
-		for _, b := range v.Bralduns {
-			if mmb, ok := mm.Bralduns[b.Id]; ok {
-				b.Prénom = mmb.Prénom
-				b.Nom = mmb.Nom
-				b.Niveau = mmb.Niveau
-				b.Sexe = mmb.Sexe
-				b.IdCommunauté = mmb.IdCommunauté
-				b.PointsGredin = mmb.PointsGredin
-				b.PointsRedresseur = mmb.PointsRedresseur
-				b.PointsDistinction = mmb.PointsDistinction
-			} else {
-				fmt.Printf("Braldun introuvable : %d\n", b.Id)
-			}
-		}
+		mm.CompleteBralduns(v)
 	}
 	// pour les communautés, j'ai des soucis avec l'export json des maps donc je fais un gros tableau
 	maxId := 0

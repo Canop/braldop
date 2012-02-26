@@ -26,17 +26,30 @@ func main() {
 	cmd := flag.String("cmd", "", "commande (check, palette, png ou vue)")
 	id := flag.Int("id", 0, "id braldun")
 	mdpr := flag.String("mdpr", "", "mot de passe restreint")
+	data := flag.String("data", "", "chemin de base du stockage (contient en principe des répertoires 'private', 'public' et 'cartes'")
 	flag.Parse()
 	var err error
 	if *cmd == "palette" {
 		bra.ExportePalettePng(os.Stdout)
+	} else if *cmd == "stats" {
+		if *data == "" {
+			log.Println("Chemin de stockage non précisé (nécessaire pour lire bralduns.csv et communautes.csv)")
+		} else {
+			memmap, err := bra.ChargeDonnéesStatiquesPubliques(filepath.Join(*data, "public"), true)
+			if err != nil {
+				log.Fatal(err)
+			}
+			log.Println(len(memmap.Bralduns), "bralduns")
+		}
 	} else if *cmd == "vue" {
 		if *id == 0 {
 			log.Println("Id du braldun non précisé")
 		} else if *mdpr == "" {
 			log.Println("Mot de passe restreint non précisé")
+		} else if *data == "" {
+			log.Println("Chemin de stockage non précisé (nécessaire pour lire bralduns.csv et communautes.csv)")
 		} else {
-			dv, err := bra.VueParScriptPublic(uint(*id), *mdpr)
+			dv, err := bra.VueParScriptPublic(uint(*id), *mdpr, filepath.Join(*data, "public"))
 			if err != nil {
 				log.Fatal(err)
 			}

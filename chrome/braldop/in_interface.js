@@ -51,14 +51,29 @@ braldop.updateMapSettings = function() {
 		}
 		braldop.$depthMenu.html(html);
 		braldop.$depthMenu.show();
+		$('a[maj_braldun]').live('click', function(){
+			console.log('click on', $(this));
+			var cible = parseInt($(this).attr('maj_braldun'),10);
+			braldop.sendToBraldopServer({Cmd:"carte", Action:"maj", Cible:cible});
+		});
 	} else {
 		braldop.$depthMenu.hide();
 	}
 	if (map.mapData.Vues && map.mapData.Vues.length>0) {
+		var troisHeuresAvantUnix = ((new Date()).getTime()/1000)-3*60*60; // le timestamp unix en secondes correspondant à il y a 3h
 		var html = '<table cellpadding=4 cellspacing=4>';
 		for (var i=0; i<map.mapData.Vues.length; i++) {
 			var v = map.mapData.Vues[i];
-			html += '<tr><td><a href="javascript:if (map.zoom<32) {map.zoom=32;} map.goto('+(v.XMin+v.XMax)/2+','+(v.YMin+v.YMax)/2+','+v.Z+');">'+v.PrénomVoyeur+'</a></td><td>'+formatDate(1000*v.Time)+'</td></tr>';
+			html += '<tr>';
+			html += '<td><a target=profil href="http://jeu.braldahim.com/voir/braldun/?braldun='+v.Voyeur+'&direct=evenements">'+v.PrénomVoyeur+'</a></td>';
+			html += '<td>';
+			html += '<a class="petit-bouton" href="javascript:if (map.zoom<32) {map.zoom=32;} map.goto('+(v.XMin+v.XMax)/2+','+(v.YMin+v.YMax)/2+','+v.Z+');" >Centrer</a>';
+			html += '</td>';
+			html += '<td>'+formatDate(1000*v.Time)+'</td>';
+			html += '<td>';
+			if (v.Time<troisHeuresAvantUnix) html += '<a class="petit-bouton" maj_braldun='+v.Voyeur+'>Mettre à jour</a>';
+			html += '</td>';
+			html += '</tr>';
 		}
 		html += '</table>';
 		braldop.$globalMenu.html(html);

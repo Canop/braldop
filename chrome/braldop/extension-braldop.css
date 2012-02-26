@@ -67,3 +67,22 @@ img.goto:hover {
 	border-radius: 8px;
     box-shadow: 0px 0px 12px red;
 }
+
+a.petit-bouton {
+	font: 12px/1.75em Helvetica;
+	cursor: pointer;
+	color:#1F2614;
+	text-decoration: none;
+	border:1px solid #1F2614;
+	padding: 2px;
+	background-image:linear-gradient(top,#85946d,#41591c);
+	background-image:-webkit-gradient(linear,left top,left bottom,from(#85946d),to(#41591c));
+	background-image:-webkit-linear-gradient(top,#85946d,#41591c);
+	margin-left:2px;
+	margin-right:2px;
+}
+a.petit-bouton:hover {
+	color:#1F2614;
+	opacity: 0.8;
+	text-decoration: none;
+}

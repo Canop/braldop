@@ -17,15 +17,13 @@ type MessageIn struct {
 	Cible     uint
 }
 
-
-
 type MessageOut struct {
 	Erreur    string
 	PngCouche string
-	Text      string         // message du serveur à l'utilisateur
-	Z         int            // la profondeur correspondant aux données envoyées (en particulier le png)
-	ZConnus   []int          // les profondeurs pour lesquelles on peut proposer des données
-	DV        *bra.DonnéesVue    // des compléments
-	Partages  []*bra.Partage // uniquement envoyé si demandé
-	MajPossibles []uint // les numéros des bralduns pour lesquels on peut demander une maj
+	Text      string          // message du serveur à l'utilisateur
+	Z         int             // la profondeur correspondant aux données envoyées (en particulier le png)
+	ZConnus   []int           // les profondeurs pour lesquelles on peut proposer des données
+	DV        *bra.DonnéesVue // des compléments
+	Partages  []*bra.Partage  // uniquement envoyé si demandé
+	//MajPossibles []uint // les numéros des bralduns pour lesquels on peut demander une maj
 }

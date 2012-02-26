@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"runtime/pprof"
 	"strconv"
 	"time"
@@ -24,13 +25,14 @@ const (
 var versionActuelleExtension Version
 
 func init() {
-	versionActuelleExtension = MakeVersion(3, 1)
+	versionActuelleExtension = MakeVersion(3, 0)
 }
 
 type MapServer struct {
-	répertoireCartes *string // répertoire racine dans lequel on trouve les répertoires des utilisateurs
-	bd               *bra.BaseMysql
-	fv               FusionneurVue
+	répertoireDonnées string // répertoire racine dans lequel on trouve les répertoires des utilisateurs, les fichiers csv publics, etc.
+	répertoireCartes  string // répertoire racine dans lequel on trouve les répertoires des utilisateurs, les fichiers csv publics, etc.
+	bd                *bra.BaseMysql
+	fv                FusionneurVue
 }
 
 func getFormValue(hr *http.Request, name string) string {
@@ -63,9 +65,10 @@ func vérifieVersion(vs string) (html string) {
 }
 
 func (ms *MapServer) répertoireCartesBraldun(idBraldun uint, mdpr string) string {
-	return fmt.Sprintf("%s/%d-%s", *ms.répertoireCartes, idBraldun, mdpr)
+	return fmt.Sprintf("%s/%d-%s", ms.répertoireCartes, idBraldun, mdpr)
 }
 
+// bv est du binaire correspondant à l'encodage json d'un MessageIn
 func (ms *MapServer) stockeVue(idVoyeur uint, mdprVoyeur string, bv []byte, couche *bra.Couche) (nouveau bool) {
 	dirBase := ms.répertoireCartesBraldun(idVoyeur, mdprVoyeur)
 	hasher := sha1.New()
@@ -80,7 +83,7 @@ func (ms *MapServer) stockeVue(idVoyeur uint, mdprVoyeur string, bv []byte, couc
 		defer f.Close()
 		f.Write(bv)
 		//> on crée ou enrichit l'image png correspondant à la couche
-		bra.EnrichitCouchePNG(dirBase, couche, 20)		
+		bra.EnrichitCouchePNG(dirBase, couche, 20)
 		return true
 	}
 	return false
@@ -145,6 +148,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 
 	//> stockage des données de vue
 	if couche != nil {
+		ms.fv.Reçoit(in.Vue.Vues[0])
 		if ms.stockeVue(in.IdBraldun, in.Mdpr, bin, couche) {
 			//> on s'occupe aussi des amis
 			if amis != nil {
@@ -159,39 +163,49 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	}
 
 	if in.Cmd == "carte" || in.Cmd == "" { // pour la compatibilité ascendante, la commande est provisoirement optionnelle
-	
+
 		//> récupération et stockage, si demandé, de la vue d'un autre braldun
 		if in.Action == "maj" && in.Cible > 0 {
-			
-			// todo : vérification compte pas maj récemment
-			
-			cc, errstr := con.GetCompteExistant(in.Cible)
-			if errstr!="" {
-				log.Println(" erreur durant la récupération du compte de", in.Cible)
+			log.Println(" Demande mise à jour de la vue de ", in.Cible)
+			if !ms.fv.MajPossible(in.Cible) {
+				log.Println(" Impossible de mettre à jour la vue de ", in.Cible)
 			} else {
-				dv, err := bra.VueParScriptPublic(in.Cible, cc.Mdpr)
-				if err!=nil {
-					log.Println(" erreur durant la récupération par script public de la vue de", in.Cible)
-				} else {	
-					bdv, err := json.Marshal(dv)
+				cc, errstr := con.GetCompteExistant(in.Cible)
+				if errstr != "" {
+					log.Println(" erreur durant la récupération du compte de", in.Cible)
+				} else {
+					dv, err := bra.VueParScriptPublic(in.Cible, cc.Mdpr, filepath.Join(ms.répertoireDonnées, "public"))
 					if err != nil {
-						log.Println(" erreur durant l'encodage en json de ", in.Cible)
+						log.Println(" erreur durant la récupération par script public de la vue de", in.Cible)
 					} else {
-						if ms.stockeVue(in.Cible, cc.Mdpr, bdv, dv.Couches[0]) {
-							camis, err := con.Amis(in.Cible)
-							if err != nil {
-								log.Println(" erreur durant récupération des amis de", in.Cible)
-							}
-							for _, cami := range camis {
-								log.Println(" enrichissement carte ", cami.IdBraldun)
-								bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], 20)
+						ms.fv.Reçoit(dv.Vues[0])
+						spin := new(MessageIn) // on crée un messageIn car c'est sous ce format que sont stockés les données des bralduns
+						spin.IdBraldun = in.Cible
+						spin.Mdpr = cc.Mdpr
+						spin.Vue = dv
+						spin.Action = in.Action
+						spin.Cmd = "sp_vue"
+						spin.Version = versionActuelleExtension.String()
+						bspin, err := json.Marshal(spin)
+						if err != nil {
+							log.Println(" erreur durant l'encodage en json de ", in.Cible)
+						} else {
+							if ms.stockeVue(in.Cible, cc.Mdpr, bspin, dv.Couches[0]) {
+								camis, err := con.Amis(in.Cible)
+								if err != nil {
+									log.Println(" erreur durant récupération des amis de", in.Cible)
+								}
+								for _, cami := range camis {
+									log.Println(" enrichissement carte ", cami.IdBraldun)
+									bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], 20)
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-	
+
 		//> renseignements sur les couches disponibles
 		out.ZConnus, err = bra.CouchesPNGDisponibles(dirBase)
 		if err != nil {
@@ -199,19 +213,22 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		}
 
 		//> renvoi des données de vues provenant des amis
-		if amis != nil && couche != nil {
-			ms.fv.Reçoit(in.Vue.Vues[0])
+		log.Println(" préparation DV")
+		log.Printf(" Amis : %+v\n", amis)
+		if amis != nil {
 			vues := ms.fv.Complète(in.Vue.Vues[0], amis)
+			log.Printf(" Vues : %+v\n", vues)
 			if len(vues) > 0 {
 				out.DV = new(bra.DonnéesVue)
 				out.DV.Vues = vues
 			}
 		}
+		log.Printf(" out.DV : %+v\n", out.DV)
 
 		//> renvoi de la carte en png
 		log.Println(" ZRequis : ", in.ZRequis)
 		out.Z = in.ZRequis
-		cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", *ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.ZRequis)
+		cheminLocalImage := fmt.Sprintf("%s/%d-%s/couche%d.png", ms.répertoireCartes, in.IdBraldun, in.Mdpr, in.ZRequis)
 		if f, err := os.Open(cheminLocalImage); err == nil {
 			defer f.Close()
 			bytes, _ := ioutil.ReadAll(f)
@@ -239,7 +256,7 @@ func (server *MapServer) Start() {
 
 func main() {
 	ms := new(MapServer)
-	ms.répertoireCartes = flag.String("cartes", "", "répertoire des cartes")
+	datadir := flag.String("datadir", "", "répertoire des données (contient 'cartes', 'public' et éventuellement 'private')")
 	cpuprofile := flag.String("cpuprofile", "", "fichier dans lequel écrire un bilan de profiling cpu")
 	memprofile := flag.String("memprofile", "", "fichier dans lequel écrire un bilan de profiling mémoire (lors de l'ordre d'arrêt)")
 	mysqluser := flag.String("mysqluser", "", "user pour l'accès mysql")
@@ -249,11 +266,12 @@ func main() {
 
 	ms.bd = bra.NewBaseMysql(*mysqluser, *mysqlmdp, *mysqldb)
 
-	if *ms.répertoireCartes == "" {
-		log.Println("Chemin des cartes non fourni")
-	} else {
-		log.Println("Répertoire des cartes : " + *ms.répertoireCartes)
+	if *datadir == "" {
+		log.Fatal("Chemin des cartes non fourni")
 	}
+	ms.répertoireDonnées = *datadir
+	ms.répertoireCartes = filepath.Join(*datadir, "cartes")
+	log.Println("Répertoire des données : " + ms.répertoireDonnées)
 	if *cpuprofile != "" {
 		log.Println("Profiling CPU actif, résultats dans le fichier ", *cpuprofile)
 		fp, err := os.Create(*cpuprofile)
@@ -262,7 +280,7 @@ func main() {
 		}
 		pprof.StartCPUProfile(fp)
 	}
-	ms.fv.Charge(*ms.répertoireCartes)
+	ms.fv.Charge(ms.répertoireCartes)
 	go func() {
 		sigchan := make(chan os.Signal)
 		signal.Notify(sigchan, os.Interrupt, os.Kill)

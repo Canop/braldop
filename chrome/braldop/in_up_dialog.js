@@ -65,7 +65,7 @@ Map.prototype.openCellDialog = function(x, y, fixed) {
 				html[h++] = '<span class="'+key+'"></span>';
 				html[h++] = '</td><td><a target=winprofil href="http://jeu.braldahim.com/voir/braldun/?braldun='+b.Id+'&direct=profil">'+b.Prénom+' '+b.Nom+'</a></td><td>niv. '+b.Niveau;
 				html[h++] = '</td><td>';
-				if (b.IdCommunauté>0) html[h++] =  this.mapData.Communautés[b.IdCommunauté].Nom;
+				if (b.IdCommunauté>0 && this.mapData.Communautés) html[h++] =  this.mapData.Communautés[b.IdCommunauté].Nom;
 				html[h++] = '</td><td>';
 				if (b.PointsGredin) html[h++] = '<span class=pointsGredin>'+b.PointsGredin+'</span>';
 				if (b.PointsRedresseur) html[h++] = '<span class=pointsRedresseur>'+b.PointsRedresseur+'</span>';

@@ -8,8 +8,16 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
+	"time"
 )
+
+type Visible interface {
+	ReadCsv(cells []string) (err error)
+	Store(mm *MemMap)
+}
 
 func readLine(r *bufio.Reader) (cells []string, err error) {
 	var line string
@@ -216,7 +224,7 @@ func ParseLigneFichierDynamique(cells []string, vue *Vue, memmap *MemMap, verbos
 
 // remplit l'objet Vue et optionnellement (si elle est fournie) la MemMap
 //  à partir d'un flux csv.
-func ParseFichierDynamique(r *bufio.Reader, time int64, memmap *MemMap, verbose bool) (vue *Vue, pos *VuePosition) {
+func ParseFichierCsvDynamique(r *bufio.Reader, time int64, memmap *MemMap, verbose bool) (vue *Vue, pos *VuePosition) {
 	vue = NewVue()
 	vue.Time = time
 	for {
@@ -232,8 +240,32 @@ func ParseFichierDynamique(r *bufio.Reader, time int64, memmap *MemMap, verbose 
 	return
 }
 
+func ParseLigneFichierCsvStatique(cells []string, memmap *MemMap, alloue func() Visible) {
+	o := alloue()
+	if err := o.ReadCsv(cells); err != nil {
+		log.Printf(" Erreur lecture : %+v \n cellules : %+v", err, cells)
+	} else {
+		o.Store(memmap)
+	}
+}
+
+func ParseFichierCsvStatique(r *bufio.Reader, memmap *MemMap, alloue func() Visible) {
+	_, _ = readLine(r) // on saute une ligne car la première contient les en-têtes
+	for {
+		line, err := readLine(r)
+		if err != nil {
+			if err != io.EOF {
+				log.Println("Error in parsing (parseFichierDynamique) :", err)
+			}
+			return
+		}
+		ParseLigneFichierCsvStatique(line, memmap, alloue)
+	}
+}
+
 // construit un objet DonnéesVue à partir d'un fichier unique (qui doit être un fichier de vue
 //  pour que ça ait un intérêt)
+/*
 func ParseFichierDynamiqueDonnéesVue(r *bufio.Reader, time int64, verbose bool) *DonnéesVue {
 	memmap := NewMemMap()
 	dv := new(DonnéesVue)
@@ -243,4 +275,50 @@ func ParseFichierDynamiqueDonnéesVue(r *bufio.Reader, time int64, verbose bool)
 	dv.Couches = carte.Couches
 	dv.Vues = []*Vue{vue}
 	return dv
+}*/
+
+// inputs :
+//   - le fichier bralduns.csv obtenu par script public
+//   - le fichier communautes.csv obtenu par script public
+//   - un fichier de vue de script public
+//   
+func ConstruitDonnéesVue(spvue *bufio.Reader, spbralduns *bufio.Reader, spcommunautes *bufio.Reader, verbose bool) *DonnéesVue {
+	time := time.Now().Unix()
+	memmap := NewMemMap()
+	ParseFichierCsvStatique(spbralduns, memmap, func() Visible { return new(Braldun) })
+	ParseFichierCsvStatique(spcommunautes, memmap, func() Visible { return new(Communauté) })
+	dv := new(DonnéesVue)
+	var vue *Vue
+	vue, dv.Position = ParseFichierCsvDynamique(spvue, time, memmap, verbose)
+	carte := memmap.Compile()
+	dv.Couches = carte.Couches
+	memmap.CompleteBralduns(vue)
+	dv.Vues = []*Vue{vue}
+	return dv
+}
+
+func ChargeDonnéesStatiquesPubliques(cheminRépertoireCsvPublic string, verbose bool) (*MemMap, error) {
+	memmap := NewMemMap()
+	f, err := os.Open(filepath.Join(cheminRépertoireCsvPublic, "bralduns.csv"))
+	if err != nil {
+		log.Println(" Erreur à l'ouverture du fichier bralduns.csv :", err)
+		return nil, err
+	}
+	ParseFichierCsvStatique(bufio.NewReader(f), memmap, func() Visible { return new(Braldun) })
+	f.Close()
+	f, err = os.Open(filepath.Join(cheminRépertoireCsvPublic, "communautes.csv"))
+	if err != nil {
+		log.Println(" Erreur à l'ouverture du fichier communautes.csv :", err)
+		return nil, err
+	}
+	ParseFichierCsvStatique(bufio.NewReader(f), memmap, func() Visible { return new(Communauté) })
+	f.Close()
+	f, err = os.Open(filepath.Join(cheminRépertoireCsvPublic, "lieux_villes.csv"))
+	if err != nil {
+		log.Println(" Erreur à l'ouverture du fichier lieux_villes.csv :", err)
+		return nil, err
+	}
+	ParseFichierCsvStatique(bufio.NewReader(f), memmap, func() Visible { return new(LieuVille) })
+	f.Close()
+	return memmap, nil
 }

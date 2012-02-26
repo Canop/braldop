@@ -21,10 +21,7 @@ type LecteurScripts struct {
 	verbose     bool
 }
 
-type Visible interface {
-	ReadCsv(cells []string) (err error)
-	Store(mm *bra.MemMap)
-}
+
 
 func NewLecteurScripts() (ls *LecteurScripts) {
 	ls = new(LecteurScripts)
@@ -90,15 +87,15 @@ func (ls *LecteurScripts) VisitFile(path string, f os.FileInfo) {
 		r := bufio.NewReader(f)
 		switch pathToken[len(pathToken)-1] {
 		case "bralduns.csv":
-			ls.parseFichierStatique(r, func() Visible { return new(bra.Braldun) })
+			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Braldun) })
 		case "communautes.csv":
-			ls.parseFichierStatique(r, func() Visible { return new(bra.Communauté) })
+			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Communauté) })
 		case "lieux_villes.csv":
-			ls.parseFichierStatique(r, func() Visible { return new(bra.LieuVille) })
+			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.LieuVille) })
 		case "regions.csv":
-			ls.parseFichierStatique(r, func() Visible { return new(bra.Région) })
+			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Région) })
 		case "villes.csv":
-			ls.parseFichierStatique(r, func() Visible { return new(bra.Ville) })
+			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Ville) })
 		default:
 			vue := bra.ParseFichierDynamique(r, ls.readTimeFromFilePath(pathToken), ls.MemMap, ls.verbose)
 			ls.NbReadFiles++

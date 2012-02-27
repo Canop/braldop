@@ -34,6 +34,7 @@ type FusionneurVue struct {
 
 func (fv *FusionneurVue) Reçoit(vue *bra.Vue) {
 	vue.Time = time.Now().Unix()
+	log.Println("  Réception vue", vue.Voyeur,  "v.Time :", vue.Time)
 	fv.vues[vue.Voyeur] = vue
 }
 
@@ -41,10 +42,10 @@ func (fv *FusionneurVue) Reçoit(vue *bra.Vue) {
 //  pour qu'on en redemande une
 func (fv *FusionneurVue) MajPossible(idBraldun uint) bool {
 	if v, ok := fv.vues[idBraldun]; ok {
-		log.Println(" time.Now().Unix() :", time.Now().Unix())
-		log.Println(" v.Time :", v.Time)
 		âge := time.Now().Unix() - v.Time
-		log.Println(" Age vue en secondes :", âge)
+		log.Println("  Maintenant :", time.Now().Unix())
+		log.Println("  v.Time :", v.Time)
+		log.Println("  Age vue en secondes :", âge)
 		return âge > 3*60*60
 	}
 	return true
@@ -56,7 +57,6 @@ func (fv *FusionneurVue) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*b
 	fusion.Vues = make([]*bra.Vue, 1, len(amis)+1)
 	fusion.Vues[0] = vue
 	for _, ami := range amis {
-		log.Printf(" fv : fv.vues[ami.IdBraldun] : %+v\n", fv.vues[ami.IdBraldun])
 		if dvb, ok := fv.vues[ami.IdBraldun]; ok {
 			fusion.Vues = append(fusion.Vues, dvb)
 		}
@@ -114,7 +114,7 @@ func (fv *FusionneurVue) Charge(répertoireCartes string) error {
 			log.Println(err)
 			continue
 		}
-		in := new(MessageIn)
+		in := new(bra.MessageIn)
 		bin, err := ioutil.ReadAll(fjson)
 		defer fjson.Close()
 		if err != nil {
@@ -132,7 +132,7 @@ func (fv *FusionneurVue) Charge(répertoireCartes string) error {
 		}
 		in.Vue.Vues[0].Time = plusRécentDate
 		fv.vues[uint(idBraldun)] = in.Vue.Vues[0]
-		log.Println("  Données vue chargées pour", idBraldun)
+		log.Printf("  Données vue chargées pour %d\n", idBraldun)
 	}
 	return nil
 }

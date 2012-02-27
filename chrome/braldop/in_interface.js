@@ -52,9 +52,9 @@ braldop.updateMapSettings = function() {
 		braldop.$depthMenu.html(html);
 		braldop.$depthMenu.show();
 		$('a[maj_braldun]').live('click', function(){
-			console.log('click on', $(this));
 			var cible = parseInt($(this).attr('maj_braldun'),10);
 			braldop.sendToBraldopServer({Cmd:"carte", Action:"maj", Cible:cible});
+			$(this).html('en cours...');
 		});
 	} else {
 		braldop.$depthMenu.hide();
@@ -82,3 +82,13 @@ braldop.updateMapSettings = function() {
 		$('#bra_triangle_vues').hide();		
 	}
 }
+
+/*
+ * préparation de l'interception des apparitions des blocs de l'interface pour récupérer dés
+ * que possible les infos du braldun et les envoyer au serveur
+var originalShowResponse = showResponse;
+showResponse = function(response) {
+	console.log('showResponse called with ', arguments);
+	originalShowResponse(response);
+}
+*/

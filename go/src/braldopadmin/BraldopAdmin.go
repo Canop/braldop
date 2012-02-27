@@ -97,7 +97,7 @@ func main() {
 						log.Fatal(err)
 					}
 					defer filein.Close()
-					messin := new(MessageIn)
+					messin := new(bra.MessageIn)
 					bin, _ := ioutil.ReadAll(filein)
 					err = json.Unmarshal(bin, messin)
 					if err != nil {

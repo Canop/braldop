@@ -43,7 +43,7 @@ func getFormValue(hr *http.Request, name string) string {
 	return ""
 }
 
-func envoieRéponse(w http.ResponseWriter, out *MessageOut) {
+func envoieRéponse(w http.ResponseWriter, out *bra.MessageOut) {
 	bout, err := json.Marshal(out)
 	if err != nil {
 		log.Println("Erreur encodage réponse : ", err)
@@ -99,8 +99,8 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 
 	//> analyse et vérification de la requête
 	hr.ParseForm()
-	in := new(MessageIn)
-	out := new(MessageOut)
+	in := new(bra.MessageIn)
+	out := new(bra.MessageOut)
 	defer envoieRéponse(w, out)
 	bin := ([]byte)(getFormValue(hr, "in"))
 	err := json.Unmarshal(bin, in)
@@ -128,6 +128,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	var cb *bra.CompteBraldop
 	var amis []*bra.CompteBraldop
 	con, err := ms.bd.DB()
+	defer con.Close()
 	if err != nil {
 		log.Println("Erreur à la connexion bd", err)
 		out.Text = "Erreur Braldop : connexion BD"
@@ -147,18 +148,22 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	log.Println(" commande :", in.Cmd)
 
 	//> stockage des données de vue
-	if couche != nil {
-		ms.fv.Reçoit(in.Vue.Vues[0])
-		if ms.stockeVue(in.IdBraldun, in.Mdpr, bin, couche) {
-			//> on s'occupe aussi des amis
-			if amis != nil {
-				for _, ami := range amis {
-					log.Println(" enrichissement carte ami ", ami.IdBraldun)
-					bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(ami.IdBraldun, ami.Mdpr), couche, 20)
-				}
-			}
+	if couche != nil && len(in.Vue.Vues)==1{
+		if (in.Vue.Vues[0].Voyeur!=in.IdBraldun) {
+			log.Println(" Erreur : Reçu vue de", in.Vue.Vues[0].Voyeur, " dans un message de", in.IdBraldun)
 		} else {
-			log.Println(" Carte inchangée")
+			ms.fv.Reçoit(in.Vue.Vues[0])
+			if ms.stockeVue(in.IdBraldun, in.Mdpr, bin, couche) {
+				//> on s'occupe aussi des amis
+				if amis != nil {
+					for _, ami := range amis {
+						log.Println(" enrichissement carte ami ", ami.IdBraldun)
+						bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(ami.IdBraldun, ami.Mdpr), couche, 20)
+					}
+				}
+			} else {
+				log.Println(" Carte inchangée")
+			}
 		}
 	}
 
@@ -168,18 +173,26 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		if in.Action == "maj" && in.Cible > 0 {
 			log.Println(" Demande mise à jour de la vue de ", in.Cible)
 			if !ms.fv.MajPossible(in.Cible) {
-				log.Println(" Impossible de mettre à jour la vue de ", in.Cible)
+				log.Println("  Impossible de mettre à jour la vue de ", in.Cible)
 			} else {
 				cc, errstr := con.GetCompteExistant(in.Cible)
 				if errstr != "" {
-					log.Println(" erreur durant la récupération du compte de", in.Cible)
+					log.Println("  erreur durant la récupération du compte de", in.Cible)
 				} else {
+					log.Println("  Demande de la vue par script public")
 					dv, err := bra.VueParScriptPublic(in.Cible, cc.Mdpr, filepath.Join(ms.répertoireDonnées, "public"))
 					if err != nil {
-						log.Println(" erreur durant la récupération par script public de la vue de", in.Cible)
+						log.Println("  erreur durant la récupération par script public de la vue de", in.Cible)
+					} else if len(dv.Vues)<1 {
+						log.Println("  échec : pas de vue")
 					} else {
+						log.Println("  Vue reçue")
 						ms.fv.Reçoit(dv.Vues[0])
-						spin := new(MessageIn) // on crée un messageIn car c'est sous ce format que sont stockés les données des bralduns
+						if dv.Vues[0].Voyeur!=in.Cible {
+							log.Println("  mauvais voyeur dans vue reçue : %d", dv.Vues[0].Voyeur)
+							dv.Vues[0].Voyeur = in.Cible
+						}
+						spin := new(bra.MessageIn) // on crée un messageIn car c'est sous ce format que sont stockés les données des bralduns
 						spin.IdBraldun = in.Cible
 						spin.Mdpr = cc.Mdpr
 						spin.Vue = dv
@@ -188,16 +201,21 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 						spin.Version = versionActuelleExtension.String()
 						bspin, err := json.Marshal(spin)
 						if err != nil {
-							log.Println(" erreur durant l'encodage en json de ", in.Cible)
+							log.Println("  erreur durant l'encodage en json de ", in.Cible)
 						} else {
 							if ms.stockeVue(in.Cible, cc.Mdpr, bspin, dv.Couches[0]) {
 								camis, err := con.Amis(in.Cible)
 								if err != nil {
-									log.Println(" erreur durant récupération des amis de", in.Cible)
-								}
-								for _, cami := range camis {
-									log.Println(" enrichissement carte ", cami.IdBraldun)
-									bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], 20)
+									log.Println("  erreur durant récupération des amis de", in.Cible)
+								} else {
+									log.Printf(" Amis de %d : \n", in.Cible)
+									for  _,a := range(camis) {
+										log.Println(" ", a.IdBraldun)
+									}									
+									for _, cami := range camis {
+										log.Println("  enrichissement carte ", cami.IdBraldun)
+										bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], 20)
+									}
 								}
 							}
 						}
@@ -213,17 +231,19 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		}
 
 		//> renvoi des données de vues provenant des amis
-		log.Println(" préparation DV")
-		log.Printf(" Amis : %+v\n", amis)
+		log.Println(" Préparation Données vue pour le retour")
+		log.Printf(" Amis de %d : \n", in.IdBraldun)
+		for  _,a := range(amis) {
+			log.Println(" ", a.IdBraldun)
+		}
 		if amis != nil {
 			vues := ms.fv.Complète(in.Vue.Vues[0], amis)
-			log.Printf(" Vues : %+v\n", vues)
+			log.Printf(" %d vues en retour\n", len(vues))			
 			if len(vues) > 0 {
 				out.DV = new(bra.DonnéesVue)
 				out.DV.Vues = vues
 			}
 		}
-		log.Printf(" out.DV : %+v\n", out.DV)
 
 		//> renvoi de la carte en png
 		log.Println(" ZRequis : ", in.ZRequis)

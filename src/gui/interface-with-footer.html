@@ -1,0 +1,472 @@
+<html>
+<head>
+	<title>Maquette pour une nouvelle interface de Braldahim</title>
+	<meta http-equiv=content-type content="text/html; charset=UTF8"> 
+	<link rel="stylesheet" type="text/css" href="sprites-vuetypes.css"/>
+	<link rel="stylesheet" type="text/css" href="sprites-environnements.css"/>
+	<script src="jquery-1.6.3.min.js"></script>
+	<script src="util.js"></script>
+	<script src="graphic_utils.js?v=3"></script>
+	<script src="Point.js"></script>
+	<script src="SpriteSet.js"></script>
+	<script src="Rect.js?v=2"></script>
+	<script src="Map.js?v=11"></script>
+	<script src="Map_dialog.js?v=4"></script>
+	<script src="Map_action.js?v=2"></script>
+	<script src="Map_env.js?v=13"></script>
+	<script src="Map_palissades.js?v=1"></script>
+	<script src="Map_vue.js?v=15"></script>
+
+	<style type="text/css">
+	body, td {
+		font-size: 12px;
+		font-family: Verdana, Geneva, sans-serif;
+		color: white;
+	}
+	body {
+		background: #4c712c url(http://static.braldahim.com/images/layout/fond.jpg) repeat-x;
+		padding:0;
+		margin:0;
+	}
+	#poignée_blabla {
+		position: fixed;
+		right: 350px;
+		bottom:0;
+		width: 100px;
+		height: 16px;
+		background-color: #900;
+		border-radius: 10px 10px 0 0;
+		z-index: 10;
+		padding: 4px;
+		text-align: center;
+		cursor: pointer;
+		font-weight: bold;
+	}
+	#poignée_fermeture_blabla {
+		font-weight: bold;
+		cursor: pointer;
+	}
+	#tiroir_blabla {
+		display: none;
+		position: fixed;
+		right: 350px;
+		bottom:0;
+		width: 600px;
+		height: 400px;
+		background-color: #900;
+		border-radius: 10px 10px 0 0;
+		z-index: 100;
+		padding: 8px;
+	}
+	#bandeau_bralda {
+		width: 100%;
+		height: 145px;
+	}
+
+	#menu_actions {
+		position: absolute;
+		top: 150px;
+		right:0;
+		bottom:0;
+		width: 300px;
+		z-index:4;
+	}
+	div.titre_liste, #titre_résultats_recherche {
+		padding: 3px;
+		background-color: #050;
+		margin-top: 6px;
+		margin-left:2px;
+		margin-right:2px;
+		border-width:thin;
+		border-top-style:solid;
+		border-color: #252;
+		border-left-style:solid;
+		border-right-style:solid;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	div.liste, #résultats_recherche {
+		margin-left:2px;
+		margin-right:2px;
+		background-color: #161;
+		border-color: #252;
+		border-bottom-style:solid;
+		border-left-style:solid;
+		border-right-style:solid;
+		border-width:thin;
+	}
+	div.liste a, #résultats_recherche a {
+		display: block;
+		color: white;
+		border-top-style:dotted;
+		border-color: #252;
+		border-width:thin;
+		padding: 3px;
+		text-decoration: none;
+	}
+	#onglets {
+		display: inline-block;
+		left: 10px;
+		top: 117px;
+		z-index: 3;
+		padding: 0;
+	}
+	#onglets .onglet {
+		border-radius: 10px 10px 0 0;
+		background-color: #161;
+		margin-left:2px;
+		padding: 6px;
+		cursor: pointer;
+	}
+	#onglets .onglet img {
+		vertical-align:middle;
+		margin-right:4px;
+	}
+	#onglets .onglet[actif=true], div#onglets .onglet:hover {
+		background-color: #383;
+	}
+	#liens {
+		position: fixed;
+		top: 0;
+		right: 0;
+		padding: 3px;
+	}
+	#liens a {
+		color: white
+	}
+	#nom_braldun {
+		position: absolute;
+		top: 91px;
+		left: 440px;
+		z-index: 10;
+	}
+	#map_settings {
+		position: absolute;
+		left: 15px;
+		top: 200px;
+		border-radius: 15px;
+		z-index: 40;
+		background: #4c712c url(http://static.braldahim.com/images/layout/fond.jpg) repeat-x;
+		padding: 5px;
+	}
+	#map_settings img {
+		margin-left: 3px;
+		margin-top: 4px;
+		margin-bottom: 4px;
+		cursor: pointer;
+	}
+
+	#map {
+		position: absolute;
+		padding: 0;
+		left: 0;
+		height: 800px;
+		right: 300px;
+		-moz-user-select: none;
+		user-select: none;
+		-webkit-user-select: none;
+		border-color: #252;
+		border-top-style:solid;
+		border-right-style:solid;
+		border-width:thin;
+	}
+	#map_dialog {
+		position: fixed;
+		background-color : rgba(0, 50, 0, 0.8);
+		border-radius: 5px;
+		padding: 5px;
+		display: none;
+		color: white;
+		z-index: 10;
+	}
+	#map_dialog_title {
+		font-weight: bold;
+	}
+	#map_dialog td, #map_dialog a {
+		color: white;
+	}
+	#map_dialog a:hover {
+		color: yellow;
+	}
+	#map_dialog .pointsGredin {
+		background-color: #CC2121;
+		color: white;
+		border-radius: 3px;
+		margin-left: 2px;
+		padding-left: 2px;
+		padding-right: 2px;		
+	}
+	#map_dialog .pointsRedresseur {
+		background-color: #21CC21;
+		color: white;
+		border-radius: 3px;
+		margin-left: 2px;
+		padding-left: 2px;
+		padding-right: 2px;		
+	}
+	#map_canvas {
+		width:100%;
+		height:100%;
+		cursor:move;
+	}
+	#posmark {
+		position:absolute;
+		padding: 3px;
+		background-color: rgba(250, 250, 250, 0.6);
+		z-index:10;
+		top:770px;
+		left:100px;
+		color: black;
+	}
+	#actionneur {
+		background-color: #9D9;
+		width: 120px;
+		font-size:90%;
+		margin-left:5px;
+		margin-top:-1px;
+		margin-bottom:-1px;
+		color: white;
+	}
+	#clear_action {
+		max-height: 23px;
+		vertical-align:middle;
+		margin-top:-4px;
+		margin-bottom:-2px;
+		display: none;
+		cursor: pointer;
+	}
+	#footer {
+		position: absolute;
+		width: 100%;
+		top: 800px;
+		height: 400px;
+		color: white;
+		background: black;
+	}
+
+	</style>
+</head>
+<body>
+
+<div id=bandeau_bralda>
+	<table>
+		<tr>
+			<td>
+				<img hspace=10 vspace=10 src=http://static.braldahim.com/images/logo/braldahim4.png>
+			</td>
+			<td>
+				<img hspace=10 vspace=2 src=img/maquette_elem1.png>
+			</td>
+		</tr>
+	</table>
+</div>
+<div id=nom_braldun>Canopée du Haut-Rac</div>
+<div id=menu_actions>les actions</div>
+<div id=poignée_blabla>&#x25b2; Blabla !</div>
+<div id=tiroir_blabla>
+	<div id=poignée_fermeture_blabla>&#x25bc; Blabla !</div>
+	<br><br>Là dedans on trouverait à la fois les blabla récents et le bouton pour blablater.
+	<br><br>La poignée serait plus ou moins flashy suivant qu'il y a du nouveau blabla ou non.
+</div>
+<div id=onglets>
+	<span class=onglet id_onglet=carte actif=true><img src=img/icone_carte.png height=24>Carte</span>
+	<span class=onglet id_onglet=champs><img src=http://static.braldahim.com/images/vue/champ.png height=24>Champs</span>
+	<span class=onglet id_onglet=événements><img src=img/icone_danger.png height=24>Evénements</span>
+	<span class=onglet id_onglet=communauté><img src=http://static.braldahim.com/images/vue/famille.png height=24>Communauté</span>
+	<span class=onglet id_onglet=soule><img src=http://static.braldahim.com/images/divers/ballon.png height=24>Soule</span>
+	<span class=onglet id_onglet=quêtes><img src=img/icone-contrat.png height=22>Quêtes / Contrats</span>
+	<span class=onglet id_onglet=laban><img src=http://static.braldahim.com/images/cockpit/laban.png height=24>Laban</span>
+	<span class=onglet id_onglet=charrette><img src=http://static.braldahim.com/images/cockpit/charrette.png>Charrette</span>
+	<span class=onglet id_onglet=coffre><img src=http://static.braldahim.com/images/cockpit/coffre.png height=24>Coffre</span>
+</div>
+<div id=liens>
+	<a href=trux><b>Accueil</b></a>
+	<a href=trux><b>Jouer</b></a>
+	<a href=trux><b>Le Bourg</b></a>
+	<a href=trux><b>Forum</b></a>
+	<a href=trux><b>Règles</b></a>
+	&nbsp; | &nbsp;
+	<a href=trux>Interface</a>
+	<a href=trux>Paramètres</a>
+	<a href=trux>Charte</a>
+	<a href=trux>Déconnexion</a>
+</div>
+<div id=map_settings>
+	<img id=goto src=img/player_target.png>
+	<br><img id=icon_grid src=img/icon_grid.png>
+</div>
+
+
+<div id=map><canvas id=map_canvas></canvas></div>
+<div id=posmark>-</div>
+<div id=footer>Ici le bas de page</div>
+
+<script type="text/javascript">
+//> google analytics
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-15064357-4']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<script type="text/javascript">
+var actions = [
+	{Nom:'Attaquer', PA:4, Active:true, Favorite: true, Tag:'Basiques'},
+	{Nom:'Attaquer une palissade', PA:4, Active:false, Tag:'Basiques'},
+	{Nom:'Boire et manger', PA:1, Active:true, Tag:'Basiques'},
+	{Nom:'Connaissance des monstres à 45%', PA:1, Active:true, Tag:'Communes'},
+	{Nom:'Courir', PA:6, Active:true, Tag:'Basiques'},
+	{Nom:"Demander l'identification d'une rune", PA:0, Active:true, Tag:'Basiques'},
+	{Nom:"Débusquer à 50%", PA:4, Active:true, Favorite: true, Tag:'Métier : Chasseuse'},
+	{Nom:"Dépiauter à 51%", PA:2, Active:true, Favorite: true, Tag:'Métier : Chasseuse'},
+	{Nom:"Décaler sa DLA", PA:0, Active:true, Tag:'Basiques'},
+	{Nom:"Distribuer des castars", PA:0, Active:true, Tag:'Basiques'},
+	{Nom:"Distribuer des px", PA:0, Active:true, Tag:'Basiques'},
+	{Nom:'Défricher une route', PA:1, Active:false, Tag:'Basiques'},
+	{Nom:'Franchir un portail', PA:4, Active:false, Tag:'Basiques'},
+	{Nom:"Fumer la pipe", PA:1, Active:true, Tag:'Basiques'},
+	{Nom:'Gardiennage', PA:0, Active:true, Tag:'Basiques'},
+	{Nom:"s'équiper", PA:2, Active:true, Tag:'Basiques'},
+	{Nom:'Identification des Runes à 12%', PA:1, Active:true, Tag:'Communes'},
+	{Nom:'Relater un fait', PA:1, Active:true, Tag:'Basiques'},
+	{Nom:'Transbahuter', PA:1, Active:true, Tag:'Basiques'}
+];
+var map = null;
+
+function fetchMap(callback) {
+	var httpRequest = new XMLHttpRequest();
+	httpRequest.onreadystatechange = function() {
+		if (httpRequest.readyState === 4) {
+			if (httpRequest.status === 200) {
+				var msg = eval('('+httpRequest.responseText+')');
+				console.log("carte : ", msg);
+				if (callback) callback(msg);
+			}
+		}
+	};
+	httpRequest.open('GET', 'carte.json?time='+(new Date().getTime()));
+	httpRequest.send();	
+}
+function construitMenuActions() {
+	var listesActions = {};
+	var tags = [];
+	listesActions["Favorites"]=[];
+	tags.push("Favorites");
+	for (var ia=0; ia<actions.length; ia++) {
+		var action = actions[ia];
+		action.id = ia;
+		if (!action.Active) continue;
+		if (action.Favorite) listesActions["Favorites"].push(action);
+		if (!listesActions[action.Tag]) {
+			listesActions[action.Tag] = [];
+			tags.push(action.Tag);
+		}
+		listesActions[action.Tag].push(action);
+	}
+	var html = '<center><b>Actions </b></center>';
+	html += '<div id=titre_résultats_recherche>Recherche <input id=actionneur> <img id=clear_action src=img/clear-left-icone.png></div><div id=résultats_recherche></div>';
+	for (var it in tags) {
+		var tag = tags[it];
+		var liste = listesActions[tag];
+		html += '<div class=titre_liste>'+tag+'</div>';
+		html += '<div class=liste tag="'+tag+'">';
+		for (var ia=0; ia<liste.length; ia++) {
+			var action = liste[ia];
+			html += '<a><img class="étoile" id_action='+action.id+' src="http://static.braldahim.com/images/layout/etoile_'+(action.Favorite?'pleine':'vide')+'.png" height=14/> '+action.PA+' PA - '+action.Nom+'</a>';
+		}
+		html += '</div>';
+	}
+	$('#menu_actions').html(html);
+	$('.liste').hide();
+	$('.liste[tag="Favorites"]').show();
+}
+$(document).ready(function() {
+	construitMenuActions();
+	$('#poignée_blabla').click(function(){
+		$(this).hide();
+		$('#tiroir_blabla').show('fast');
+	});
+	$('#poignée_fermeture_blabla').click(function(){
+		$('#tiroir_blabla').hide('fast');
+		$('#poignée_blabla').show('fast');
+	});
+	
+	
+	$('#menu_actions').delegate('img.étoile', 'click', function() {
+		var id = parseInt($(this).attr('id_action'));
+		actions[id].Favorite = !actions[id].Favorite;
+		construitMenuActions();
+	}).delegate('.titre_liste', 'click', function() {
+		var tag = $(this).text();
+		var isVisible = $('.liste[tag="'+tag+'"]').is(':visible');
+		$('.liste').hide('fast');
+		if (!isVisible) $('.liste[tag="'+tag+'"]').show('fast');
+	});
+	map = new Map("map_canvas", "posmark");
+	fetchMap(function(msg){
+		map.setData(msg);
+		//> on batit le menu de choix de la profondeur
+		if (msg.Vues) {
+			var v = msg.Vues[0];
+			v.active = true;
+			$('#goto').attr('x', (v.XMin+v.XMax)/2).attr('y', (v.YMin+v.YMax)/2).attr('z', v.Z);
+		}
+		map.compileLesVues(); // en raison de leur activation
+		map.redraw();
+		setTimeout(function(){
+			if (msg.Vues && msg.Vues.length==1) {
+				var v = msg.Vues[0];
+				map.goto((v.XMin+v.XMax)/2, (v.YMin+v.YMax)/2, v.Z);
+			}
+			map.redraw();
+		}, 1000); // laisser ce redraw (bug pas maitrisé)
+	});
+	$('#goto').click(function() {
+		if (map.zoom<32) map.zoom=32;
+		map.goto(parseInt($(this).attr('x')), parseInt($(this).attr('y')), parseInt($(this).attr('z')));
+	});
+	$('#icon_grid').click(function() {
+		map.displayGrid=!map.displayGrid;
+		localStorage['grid']=''+map.displayGrid;
+		map.redraw();
+	});
+	$('#clear_action').click(function(){
+		$('#actionneur').val('');
+		$('#résultats_recherche').html('');
+	});
+	$('#actionneur').keyup(function(){
+		var résultats = [];
+		var pat = $(this).val().trim().toLowerCase();
+		if (pat.length>0) {
+			$('#clear_action').show();
+			console.log(pat-0==pat);
+			if (pat.length==1 && pat-0==pat) { // test : est-ce un chiffre ?
+				var pamax = pat-0;
+				for (var i=0; i<actions.length; i++) {
+					if (actions[i].PA<=pamax) résultats.push(actions[i]);
+				}
+			} else {
+				for (var i=0; i<actions.length; i++) {
+					if (actions[i].Nom.toLowerCase().indexOf(pat)==0) résultats.push(actions[i]);
+				}
+			}
+		} else {
+			$('#clear_action').hide();
+		}
+		var html = '';
+		for (var i=0; i<résultats.length; i++) {
+			var action = résultats[i];
+			html += '<a><img class="étoile" id_action='+action.id+' src="http://static.braldahim.com/images/layout/etoile_'+(action.Favorite?'pleine':'vide')+'.png" height=14/> '+action.PA+' PA - '+action.Nom+'</a>';			
+		}
+		$('#résultats_recherche').html(html);
+	});
+	
+});
+</script>
+
+</body>
+</html>

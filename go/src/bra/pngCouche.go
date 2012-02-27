@@ -338,7 +338,8 @@ func EnrichitCouchePNG(cheminRépertoire string, couche *Couche, cacheSize int) 
 				delete(cachePng, oldestImagePath)
 				log.Println(" Image supprimée du cache : " + oldestImagePath)
 			}
-			log.Println(" Ajout au cache : " + cheminFichierImage)
+			//log.Println(" Ajout au cache : " + cheminFichierImage)
+			log.Println(" Ajout au cache")
 			cachePng[cheminFichierImage] = élémentCachePng{img, now}
 		}
 	} else {

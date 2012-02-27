@@ -16,7 +16,7 @@ type BaseMysql struct {
 	user     string
 	password string
 	database string
-	con      ConnexionMysql
+	//con      ConnexionMysql
 }
 
 func NewBaseMysql(user string, password string, database string) *BaseMysql {
@@ -29,11 +29,15 @@ func NewBaseMysql(user string, password string, database string) *BaseMysql {
 
 // renvoie une instance de DB connectée.
 func (store *BaseMysql) DB() (ConnexionMysql, error) {
-	if store.con.DB == nil {
-		db, err := sql.Open("mymysql", store.database+"/"+store.user+"/"+store.password)
-		if err == nil {
-			store.con.DB = db
+	db, err := sql.Open("mymysql", store.database+"/"+store.user+"/"+store.password)
+	return ConnexionMysql{db}, err
+	/*
+		if store.con.DB == nil {
+			db, err := sql.Open("mymysql", store.database+"/"+store.user+"/"+store.password)
+			if err == nil {
+				store.con.DB = db
+			}
 		}
-	}
-	return store.con, nil
+		return store.con, nil
+	*/
 }

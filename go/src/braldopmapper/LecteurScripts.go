@@ -87,17 +87,17 @@ func (ls *LecteurScripts) VisitFile(path string, f os.FileInfo) {
 		r := bufio.NewReader(f)
 		switch pathToken[len(pathToken)-1] {
 		case "bralduns.csv":
-			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Braldun) })
+			bra.ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Braldun) })
 		case "communautes.csv":
-			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Communauté) })
+			bra.ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Communauté) })
 		case "lieux_villes.csv":
-			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.LieuVille) })
+			bra.ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.LieuVille) })
 		case "regions.csv":
-			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Région) })
+			bra.ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Région) })
 		case "villes.csv":
-			ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Ville) })
+			bra.ParseFichierCsvStatique(r, ls.MemMap, func() bra.Visible { return new(bra.Ville) })
 		default:
-			vue := bra.ParseFichierDynamique(r, ls.readTimeFromFilePath(pathToken), ls.MemMap, ls.verbose)
+			vue, _ := bra.ParseFichierCsvDynamique(r, ls.readTimeFromFilePath(pathToken), ls.MemMap, ls.verbose)
 			ls.NbReadFiles++
 			if vue != nil {
 				//~ fmt.Printf("    -> vue : %+v\n", vue)

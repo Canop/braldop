@@ -1,7 +1,6 @@
 package bra
 
 // accès à la BD
-// Pour l'instant je ne fais pas de déconnexion, on reste connecté en permanence
 
 import (
 	"database/sql"

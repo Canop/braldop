@@ -46,7 +46,7 @@ braldop.sendToBraldopServer = function(message) {
 			Vues: [braldop.goclone(vue)],
 			Position: braldop.goclone(map.mapData.Position)
 		};
-		message.ZRequis = map.z;
+		if (typeof message.ZRequis == 'undefined') message.ZRequis = map.z;
 	}
 	console.log('Message sortant depuis le contexte de la page vers '+braldop.serveur+' : ', message);
 	braldop.messageTimeout = setTimeout(function(){
@@ -55,7 +55,7 @@ braldop.sendToBraldopServer = function(message) {
 		html += "<br>Si le problème persiste vous devriez désactiver l'extension Braldop afin de jouer normalement.";
 		html += "<br>Avant d'en arriver à de telles extrémités, essayez de recharger la page et d'en causer sur le forum.";
 		braldop.alertUser(html);
-	}, 15000);
+	}, 25000);
 	$.ajax(
 		{
 			url: braldop.serveur + '?in='+JSON.stringify(message),
@@ -104,7 +104,6 @@ receiveFromMapServer = function(message) {
 		map.compileLesVues();
 	}
 	if (message.PngCouche && message.PngCouche.length>5 && map && map.mapData) {
-		if (!message.Z) message.Z = 0; // juste le temps de la transition, avant mise à jour du serveur
 		var couche = null;
 		for (var ic=0; ic<map.mapData.Couches.length; ic++) {
 			var c = map.mapData.Couches[ic];

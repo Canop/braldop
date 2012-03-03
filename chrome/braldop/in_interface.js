@@ -86,9 +86,22 @@ braldop.updateMapSettings = function() {
 /*
  * préparation de l'interception des apparitions des blocs de l'interface pour récupérer dés
  * que possible les infos du braldun et les envoyer au serveur
+ */ 
 var originalShowResponse = showResponse;
 showResponse = function(response) {
 	console.log('showResponse called with ', arguments);
 	originalShowResponse(response);
+	var $alarmHolder = $('div.img_tour_activite span.braltexte');
+	var ok = ($alarmHolder.length>0);
+	if (ok) {
+		braldop.litDonnéesBraldun();
+		console.log('braldun:', braldop.braldun);
+		console.log('on a les données du braldun, on peut débrancher le hook');
+		showResponse = originalShowResponse; // pas forcément immédiat
+		braldop.sendToBraldopServer({Etat:braldop.braldun});
+	} else {
+		console.log("on n'a toujours pas les données du braldun");
+	}
 }
-*/
+
+

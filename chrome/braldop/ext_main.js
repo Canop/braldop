@@ -17,6 +17,7 @@ case '/interface':
 case '/interface/':
 	braldop.initInterface();
 	if (braldop.getMdprPourServeurBraldop()) { // on ne traite la carte que si l'utilisateur l'a autorisé
+		braldop.inject('in_braldun.js');
 		braldop.inject('in_up_map.js');
 		braldop.inject('in_up_env.js');
 		braldop.inject('in_up_dialog.js');

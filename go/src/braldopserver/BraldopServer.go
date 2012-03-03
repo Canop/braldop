@@ -14,23 +14,23 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime/pprof"
-	"strconv"
 	"time"
 )
 
 const (
-	port = 8001
+	HTTP_PORT = "8001"
+	PNG_CACHE_SIZE = 100 // en nombre d'images
 )
 
 var versionActuelleExtension Version
 
 func init() {
-	versionActuelleExtension = MakeVersion(3, 0)
+	versionActuelleExtension = MakeVersion(3, 2)
 }
 
 type MapServer struct {
 	répertoireDonnées string // répertoire racine dans lequel on trouve les répertoires des utilisateurs, les fichiers csv publics, etc.
-	répertoireCartes  string // répertoire racine dans lequel on trouve les répertoires des utilisateurs, les fichiers csv publics, etc.
+	répertoireCartes  string // répertoire des cartes
 	bd                *bra.BaseMysql
 	fv                FusionneurVue
 }
@@ -83,7 +83,7 @@ func (ms *MapServer) stockeVue(idVoyeur uint, mdprVoyeur string, bv []byte, couc
 		defer f.Close()
 		f.Write(bv)
 		//> on crée ou enrichit l'image png correspondant à la couche
-		bra.EnrichitCouchePNG(dirBase, couche, 20)
+		bra.EnrichitCouchePNG(dirBase, couche, PNG_CACHE_SIZE)
 		return true
 	}
 	return false
@@ -158,7 +158,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 				if amis != nil {
 					for _, ami := range amis {
 						log.Println(" enrichissement carte ami ", ami.IdBraldun)
-						bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(ami.IdBraldun, ami.Mdpr), couche, 20)
+						bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(ami.IdBraldun, ami.Mdpr), couche, PNG_CACHE_SIZE)
 					}
 				}
 			} else {
@@ -214,7 +214,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 									}									
 									for _, cami := range camis {
 										log.Println("  enrichissement carte ", cami.IdBraldun)
-										bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], 20)
+										bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], PNG_CACHE_SIZE)
 									}
 								}
 							}
@@ -236,7 +236,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		for  _,a := range(amis) {
 			log.Println(" ", a.IdBraldun)
 		}
-		if amis != nil {
+		if amis != nil && in.Vue!=nil && len(in.Vue.Vues)>0 {
 			vues := ms.fv.Complète(in.Vue.Vues[0], amis)
 			log.Printf(" %d vues en retour\n", len(vues))			
 			if len(vues) > 0 {
@@ -267,8 +267,8 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 
 func (server *MapServer) Start() {
 	http.Handle("/", server)
-	log.Printf("mapserver démarre sur le port %d\n", port)
-	err := http.ListenAndServe(":"+strconv.Itoa(port), nil)
+	log.Println("mapserver démarre sur le port %", HTTP_PORT)
+	err := http.ListenAndServe(":"+HTTP_PORT, nil)
 	if err != nil {
 		log.Println("Erreur au lancement : ", err)
 	}

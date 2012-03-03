@@ -1,4 +1,7 @@
 
+// la mise en place des alarmes, qui accède à l'extension pour que les alarmes ne disparaissent pas quand on ferme la page
+//  doit être faite en "ext".
+
 braldop.durationMsToStr = function(delay) {
 	delay /= 1000; // on passe en secondes 
 	var delayHours = Math.floor(delay/3600);
@@ -31,7 +34,6 @@ braldop.setAlarms = function() {
 	var $alarmHolder = $('div.img_tour_activite span.braltexte');
 	if ($alarmHolder.length==0) return;
 	var lines = $alarmHolder.html().split('<br>');
-	var turnDurationSeconds = 0; // en millisecondes 
 	var alarms = {};
 	for (var i=0; i<lines.length; i++) {
 		var lineParts = lines[i].split(' : ');
@@ -39,7 +41,7 @@ braldop.setAlarms = function() {
 			var key = lineParts[0].trim();
 			if (key=="Durée du tour") {
 				var hourTokens = lineParts[1].trim().split(':');
-				turnDurationSeconds = parseInt(hourTokens[0])*3600+parseInt(hourTokens[1])*60+parseInt(hourTokens[2]);
+				braldop.braldun.DuréeTour = parseInt(hourTokens[0])*3600+parseInt(hourTokens[1])*60+parseInt(hourTokens[2]);
 			} else {
 				var dateParts = lineParts[1].split(' le ');
 				if (dateParts.length==2) { // date
@@ -62,7 +64,8 @@ braldop.setAlarms = function() {
 	for (var key in alarms) {
 		braldop.setAlarm(key, alarms[key]);
 		if (key!='Début tour') {
-			braldop.setAlarm(key+" tour suivant", new Date(alarms[key].getTime()+turnDurationSeconds*1000));
+			braldop.setAlarm(key+" tour suivant", new Date(alarms[key].getTime()+braldop.braldun.DuréeTour*1000));
 		}
 	}
 }
+

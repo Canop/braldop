@@ -4,12 +4,11 @@ Map.prototype.setData = function(mapData) {
 	this.mapData = mapData;
 	this.matricesVuesParZ = {};
 	this.matricesVuesParZ[0]={};
-	this.z = 0; // on va basculer forcément sur la couche zéro
 	this.couche = null;
 	var _this = this;
 	for (var ic=0; ic<this.mapData.Couches.length; ic++) {
 		var couche = this.mapData.Couches[ic];
-		this.couche = couche;
+		this.couche = couche; // en principe on n'a qu'une couche de la part du serveur Braldahim
 		couche.matrix = {};
 		couche.fond = new Image();
 		if (couche.Cases) {
@@ -44,6 +43,11 @@ Map.prototype.setData = function(mapData) {
 				this.getCellCreate(couche, o.X, o.Y).palissade=o; 
 			}
 		}
+	}
+	if (this.couche) {
+		this.z = this.couche.Z;
+	} else {
+		console.log('Pas de couche dans les données recues de Braldahim ?');
 	}
 	if (!this.mapData.Vues) this.mapData.Vues=[];
 	this.mapData.Vues.sort(function(a, b) {

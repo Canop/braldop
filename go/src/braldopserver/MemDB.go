@@ -28,20 +28,20 @@ func (fusion FusionVues) Swap(i, j int) {
 	fusion.Vues[i], fusion.Vues[j] = fusion.Vues[j], fusion.Vues[i]
 }
 
-type FusionneurVue struct {
+type MemDB struct {
 	vues map[uint]*bra.Vue // clef : id braldun
 }
 
-func (fv *FusionneurVue) Reçoit(vue *bra.Vue) {
+func (mdb *MemDB) Reçoit(vue *bra.Vue) {
 	vue.Time = time.Now().Unix()
 	log.Println("  Réception vue", vue.Voyeur,  "v.Time :", vue.Time)
-	fv.vues[vue.Voyeur] = vue
+	mdb.vues[vue.Voyeur] = vue
 }
 
 // renvoie true si la dernière maj de la vue de ce braldun est suffisamment ancienne
 //  pour qu'on en redemande une
-func (fv *FusionneurVue) MajPossible(idBraldun uint) bool {
-	if v, ok := fv.vues[idBraldun]; ok {
+func (mdb *MemDB) MajPossible(idBraldun uint) bool {
+	if v, ok := mdb.vues[idBraldun]; ok {
 		âge := time.Now().Unix() - v.Time
 		log.Println("  Maintenant :", time.Now().Unix())
 		log.Println("  v.Time :", v.Time)
@@ -52,12 +52,12 @@ func (fv *FusionneurVue) MajPossible(idBraldun uint) bool {
 }
 
 // renvoie les vues
-func (fv *FusionneurVue) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*bra.Vue {
+func (mdb *MemDB) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*bra.Vue {
 	fusion := new(FusionVues)
 	fusion.Vues = make([]*bra.Vue, 1, len(amis)+1)
 	fusion.Vues[0] = vue
 	for _, ami := range amis {
-		if dvb, ok := fv.vues[ami.IdBraldun]; ok {
+		if dvb, ok := mdb.vues[ami.IdBraldun]; ok {
 			fusion.Vues = append(fusion.Vues, dvb)
 		}
 	}
@@ -78,8 +78,8 @@ func (fv *FusionneurVue) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*b
 // appelée au lancement cette fonction charge les donnéesVueBraldun
 //  à partir des fichiers json (le dernier de chaque utilisateur).
 // Notons qu'on ne vérifie pas ici les mdpr
-func (fv *FusionneurVue) Charge(répertoireCartes string) error {
-	fv.vues = make(map[uint]*bra.Vue)
+func (mdb *MemDB) Charge(répertoireCartes string) error {
+	mdb.vues = make(map[uint]*bra.Vue)
 	rep, err := os.Open(répertoireCartes)
 	if err != nil {
 		return err
@@ -131,7 +131,7 @@ func (fv *FusionneurVue) Charge(répertoireCartes string) error {
 			continue
 		}
 		in.Vue.Vues[0].Time = plusRécentDate
-		fv.vues[uint(idBraldun)] = in.Vue.Vues[0]
+		mdb.vues[uint(idBraldun)] = in.Vue.Vues[0]
 		log.Printf("  Données vue chargées pour %d\n", idBraldun)
 	}
 	return nil

@@ -32,7 +32,7 @@ type MapServer struct {
 	répertoireDonnées string // répertoire racine dans lequel on trouve les répertoires des utilisateurs, les fichiers csv publics, etc.
 	répertoireCartes  string // répertoire des cartes
 	bd                *bra.BaseMysql
-	fv                FusionneurVue
+	mdb                MemDB
 }
 
 func getFormValue(hr *http.Request, name string) string {
@@ -152,7 +152,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		if (in.Vue.Vues[0].Voyeur!=in.IdBraldun) {
 			log.Println(" Erreur : Reçu vue de", in.Vue.Vues[0].Voyeur, " dans un message de", in.IdBraldun)
 		} else {
-			ms.fv.Reçoit(in.Vue.Vues[0])
+			ms.mdb.Reçoit(in.Vue.Vues[0])
 			if ms.stockeVue(in.IdBraldun, in.Mdpr, bin, couche) {
 				//> on s'occupe aussi des amis
 				if amis != nil {
@@ -172,7 +172,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		//> récupération et stockage, si demandé, de la vue d'un autre braldun
 		if in.Action == "maj" && in.Cible > 0 {
 			log.Println(" Demande mise à jour de la vue de ", in.Cible)
-			if !ms.fv.MajPossible(in.Cible) {
+			if !ms.mdb.MajPossible(in.Cible) {
 				log.Println("  Impossible de mettre à jour la vue de ", in.Cible)
 			} else {
 				cc, errstr := con.GetCompteExistant(in.Cible)
@@ -187,7 +187,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 						log.Println("  échec : pas de vue")
 					} else {
 						log.Println("  Vue reçue")
-						ms.fv.Reçoit(dv.Vues[0])
+						ms.mdb.Reçoit(dv.Vues[0])
 						if dv.Vues[0].Voyeur!=in.Cible {
 							log.Println("  mauvais voyeur dans vue reçue : %d", dv.Vues[0].Voyeur)
 							dv.Vues[0].Voyeur = in.Cible
@@ -237,7 +237,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 			log.Println(" ", a.IdBraldun)
 		}
 		if amis != nil && in.Vue!=nil && len(in.Vue.Vues)>0 {
-			vues := ms.fv.Complète(in.Vue.Vues[0], amis)
+			vues := ms.mdb.Complète(in.Vue.Vues[0], amis)
 			log.Printf(" %d vues en retour\n", len(vues))			
 			if len(vues) > 0 {
 				out.DV = new(bra.DonnéesVue)
@@ -300,7 +300,7 @@ func main() {
 		}
 		pprof.StartCPUProfile(fp)
 	}
-	ms.fv.Charge(ms.répertoireCartes)
+	ms.mdb.Charge(ms.répertoireCartes)
 	go func() {
 		sigchan := make(chan os.Signal)
 		signal.Notify(sigchan, os.Interrupt, os.Kill)

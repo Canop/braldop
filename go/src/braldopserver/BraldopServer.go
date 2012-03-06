@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	HTTP_PORT = "8001"
+	HTTP_PORT      = "8001"
 	PNG_CACHE_SIZE = 100 // en nombre d'images
 )
 
@@ -32,7 +32,7 @@ type MapServer struct {
 	répertoireDonnées string // répertoire racine dans lequel on trouve les répertoires des utilisateurs, les fichiers csv publics, etc.
 	répertoireCartes  string // répertoire des cartes
 	bd                *bra.BaseMysql
-	mdb                MemDB
+	mdb               MemDB
 }
 
 func getFormValue(hr *http.Request, name string) string {
@@ -68,7 +68,7 @@ func (ms *MapServer) répertoireCartesBraldun(idBraldun uint, mdpr string) strin
 	return fmt.Sprintf("%s/%d-%s", ms.répertoireCartes, idBraldun, mdpr)
 }
 
-// bv est du binaire correspondant à l'encodage json d'un MessageIn
+// bv : binaire correspondant à l'encodage json d'un MessageIn
 func (ms *MapServer) stockeVue(idVoyeur uint, mdprVoyeur string, bv []byte, couche *bra.Couche) (nouveau bool) {
 	dirBase := ms.répertoireCartesBraldun(idVoyeur, mdprVoyeur)
 	hasher := sha1.New()
@@ -147,9 +147,19 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 
 	log.Println(" commande :", in.Cmd)
 
-	//> stockage des données de vue
-	if couche != nil && len(in.Vue.Vues)==1{
-		if (in.Vue.Vues[0].Voyeur!=in.IdBraldun) {
+	//> stockage éventuel de l'état du braldun
+	if in.Etat != nil && in.Etat.PVMax > 0 {
+		log.Println(" Reçu état braldun")
+		in.Etat.IdBraldun = in.IdBraldun
+		err = con.StockeEtatBraldun(in.Etat)
+		if err != nil {
+			log.Println(" Erreur stokage état braldun :", err)
+		}
+	}
+
+	//> stockage éventuel des données de vue
+	if couche != nil && len(in.Vue.Vues) == 1 {
+		if in.Vue.Vues[0].Voyeur != in.IdBraldun {
 			log.Println(" Erreur : Reçu vue de", in.Vue.Vues[0].Voyeur, " dans un message de", in.IdBraldun)
 		} else {
 			ms.mdb.Reçoit(in.Vue.Vues[0])
@@ -183,12 +193,12 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 					dv, err := bra.VueParScriptPublic(in.Cible, cc.Mdpr, filepath.Join(ms.répertoireDonnées, "public"))
 					if err != nil {
 						log.Println("  erreur durant la récupération par script public de la vue de", in.Cible)
-					} else if len(dv.Vues)<1 {
+					} else if len(dv.Vues) < 1 {
 						log.Println("  échec : pas de vue")
 					} else {
 						log.Println("  Vue reçue")
 						ms.mdb.Reçoit(dv.Vues[0])
-						if dv.Vues[0].Voyeur!=in.Cible {
+						if dv.Vues[0].Voyeur != in.Cible {
 							log.Println("  mauvais voyeur dans vue reçue : %d", dv.Vues[0].Voyeur)
 							dv.Vues[0].Voyeur = in.Cible
 						}
@@ -209,9 +219,9 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 									log.Println("  erreur durant récupération des amis de", in.Cible)
 								} else {
 									log.Printf(" Amis de %d : \n", in.Cible)
-									for  _,a := range(camis) {
+									for _, a := range camis {
 										log.Println(" ", a.IdBraldun)
-									}									
+									}
 									for _, cami := range camis {
 										log.Println("  enrichissement carte ", cami.IdBraldun)
 										bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], PNG_CACHE_SIZE)
@@ -233,12 +243,12 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		//> renvoi des données de vues provenant des amis
 		log.Println(" Préparation Données vue pour le retour")
 		log.Printf(" Amis de %d : \n", in.IdBraldun)
-		for  _,a := range(amis) {
+		for _, a := range amis {
 			log.Println(" ", a.IdBraldun)
 		}
-		if amis != nil && in.Vue!=nil && len(in.Vue.Vues)>0 {
+		if amis != nil && in.Vue != nil && len(in.Vue.Vues) > 0 {
 			vues := ms.mdb.Complète(in.Vue.Vues[0], amis)
-			log.Printf(" %d vues en retour\n", len(vues))			
+			log.Printf(" %d vues en retour\n", len(vues))
 			if len(vues) > 0 {
 				out.DV = new(bra.DonnéesVue)
 				out.DV.Vues = vues
@@ -267,7 +277,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 
 func (server *MapServer) Start() {
 	http.Handle("/", server)
-	log.Println("mapserver démarre sur le port %", HTTP_PORT)
+	log.Println("mapserver démarre sur le port", HTTP_PORT)
 	err := http.ListenAndServe(":"+HTTP_PORT, nil)
 	if err != nil {
 		log.Println("Erreur au lancement : ", err)

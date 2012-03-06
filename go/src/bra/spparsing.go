@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -26,6 +27,16 @@ func readLine(r *bufio.Reader) (cells []string, err error) {
 		cells = strings.Split(line, ";")
 	}
 	return
+}
+
+func skipLines(r *bufio.Reader, nblines int) error {
+	for i:=0; i<nblines; i++ {
+		_, err := readLine(r)
+		if err!=nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // remplit l'objet Vue et optionnellement (si elle est fournie) la MemMap
@@ -263,19 +274,6 @@ func ParseFichierCsvStatique(r *bufio.Reader, memmap *MemMap, alloue func() Visi
 	}
 }
 
-// construit un objet DonnéesVue à partir d'un fichier unique (qui doit être un fichier de vue
-//  pour que ça ait un intérêt)
-/*
-func ParseFichierDynamiqueDonnéesVue(r *bufio.Reader, time int64, verbose bool) *DonnéesVue {
-	memmap := NewMemMap()
-	dv := new(DonnéesVue)
-	var vue *Vue
-	vue, dv.Position = ParseFichierDynamique(r, time, memmap, verbose)
-	carte := memmap.Compile()
-	dv.Couches = carte.Couches
-	dv.Vues = []*Vue{vue}
-	return dv
-}*/
 
 // inputs :
 //   - le fichier bralduns.csv obtenu par script public
@@ -321,4 +319,35 @@ func ChargeDonnéesStatiquesPubliques(cheminRépertoireCsvPublic string, verbose
 	ParseFichierCsvStatique(bufio.NewReader(f), memmap, func() Visible { return new(LieuVille) })
 	f.Close()
 	return memmap, nil
+}
+
+// le reader doit correspondre à un fichier csv de type profil
+func LitEtatBraldunDansCsvProfil(r *bufio.Reader) (*EtatBraldun, error) {
+	err := skipLines(r, 2) // on saute les deux lignes d'en-têtes
+	if err!=nil {
+		return nil, err
+	}
+	line, err := readLine(r)
+	if err!=nil {
+		return nil, err
+	}
+	eb := new(EtatBraldun)
+	eb.IdBraldun = AtoId(line[0])
+	eb.PA, _ = strconv.Atoi(line[6])
+	cd := strings.Split(line[8], ":")
+	duréeTour, err := time.ParseDuration(cd[0]+"h"+cd[1]+"m"+cd[2]+"s")
+	if err!=nil {
+		return nil, err
+	}
+	eb.DuréeTour = int(duréeTour.Seconds())
+	dla, err := time.Parse("2006-1-2 15:04:05 MST", line[9] + " CEST")
+	if err!=nil {
+		return nil, err
+	}
+	eb.DLA = int(dla.Unix())
+	eb.PV, _ = strconv.Atoi(line[15])
+	bmPVmax, _  := strconv.Atoi(line[16])
+	niveauVigueur, _ := strconv.Atoi(line[20])
+	eb.PVMax = niveauVigueur*10 + 40 + bmPVmax
+	return eb, nil
 }

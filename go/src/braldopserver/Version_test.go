@@ -1,7 +1,7 @@
 package main
 
 // test de Version. C'est pas que ce soit bien compliqué mais je voulais voir comment fonctionne
-//  le framework de test...
+//  le framework de test. Pour voir le résultat, exécutez "go test braldopserver"
 
 import (
 	"testing"

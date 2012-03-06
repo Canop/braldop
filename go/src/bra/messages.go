@@ -22,7 +22,7 @@ type MessageOut struct {
 	ZConnus   []int       // les profondeurs pour lesquelles on peut proposer des données
 	DV        *DonnéesVue // des compléments
 	Partages  []*Partage  // uniquement envoyé si demandé
-	Etats []*EtatBraldun
+	Etats     []*EtatBraldun
 }
 
 type EtatBraldun struct {
@@ -30,7 +30,7 @@ type EtatBraldun struct {
 	PV        int // les pv actuels
 	PVMax     int // les pv max
 	PA        int // pa disponibles
-	DLA       int // timestamp unix
+	DLA       int // timestamp unix, en secondes
 	DuréeTour int // en secondes
-	Faim int // entre 0 et 100 je pense
+	Faim      int // entre 0 et 100 je pense
 }

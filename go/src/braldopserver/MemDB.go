@@ -34,7 +34,7 @@ type MemDB struct {
 
 func (mdb *MemDB) Reçoit(vue *bra.Vue) {
 	vue.Time = time.Now().Unix()
-	log.Println("  Réception vue", vue.Voyeur,  "v.Time :", vue.Time)
+	log.Println("  Réception vue", vue.Voyeur, "v.Time :", vue.Time)
 	mdb.vues[vue.Voyeur] = vue
 }
 

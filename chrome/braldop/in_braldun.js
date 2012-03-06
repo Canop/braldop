@@ -2,8 +2,9 @@
 
 
 // cette fonction ne doit être appelée que lorsque les données ont été chargées dans l'interface
-// (elles le sont de façon asynchrone)
+// (elles le sont de façon asynchrone).
 braldop.litDonnéesBraldun = function() {
+	//> récupération pv, pvmax et faim
 	var $boutonBraldun = $('button.butPersonnage');
 	var $tableEtatBraldun = $boutonBraldun.find('span.ui-button-text table');
 	if ($tableEtatBraldun.length==0) {
@@ -27,6 +28,7 @@ braldop.litDonnéesBraldun = function() {
 			}
 		});
 	}
+	//> récupération durée du tour
 	var $alarmHolder = $('div.img_tour_activite span.braltexte');
 	if ($alarmHolder.length==0) return;
 	var lines = $alarmHolder.html().split('<br>');
@@ -39,6 +41,34 @@ braldop.litDonnéesBraldun = function() {
 				var hourTokens = lineParts[1].trim().split(':');
 				braldop.braldun.DuréeTour = parseInt(hourTokens[0])*3600+parseInt(hourTokens[1])*60+parseInt(hourTokens[2]);
 			}
+		}
+	}
+	//> récupération PA et DLA
+	var $cockpit = $('#tourCockpit');
+	var str = $cockpit.text();
+	var i = str.indexOf('Point');
+	if (i>0) {
+		braldop.braldun.PA = parseInt(str.substring(0, i-1).trim(), 10);
+	}
+	i = str.indexOf('DLA');
+	if (i>0) {
+		str = str.substring(i+4).trim();
+		var heureJour = str.split('le');
+		var heureMinuteSeconde = heureJour[0].trim().split(':');
+		var jourMoisAnnée = heureJour[1].split('/');
+		console.log('DLA :', heureMinuteSeconde, jourMoisAnnée);
+		var nhms = heureMinuteSeconde.length;
+		if (nhms>=3 && jourMoisAnnée.length>=3) {
+			var dateDLA = new Date(
+				parseInt(jourMoisAnnée[2], 10)+2000,
+				parseInt(jourMoisAnnée[1], 10)-1,
+				parseInt(jourMoisAnnée[0], 10),
+				parseInt(heureMinuteSeconde[nhms-3], 10),
+				parseInt(heureMinuteSeconde[nhms-2], 10),
+				parseInt(heureMinuteSeconde[nhms-1], 10)
+			);
+			console.log('dateDLA:', dateDLA);
+			braldop.braldun.DLA = dateDLA.getTime()/1000
 		}
 	}
 }

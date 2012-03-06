@@ -32,7 +32,7 @@ func (v Version) String() string {
 }
 
 // construit la version correspondant à la chaine passée.
-// En cas de composante incomprise, renvoie la version comprise jusqu'à cette composante ainsi qu'une erreur
+// En cas de composante incomprise, renvoie la version comprise jusqu'à cette composante ainsi qu'une erreur.
 // Si l'on ignore les erreurs (elles en provoquent toutes), les versions suivantes sont équivalentes :
 //    "1.2.3."    " 1.2.3.4a "   "1.2.3.b"   "1.2.3..5"
 func ParseVersion(s string) (Version, error) {

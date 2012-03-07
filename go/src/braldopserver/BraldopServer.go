@@ -96,6 +96,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 	}()
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Request-Method", "GET")
+	w.Header().Set("content-type", "application/x-javascript")
 
 	//> analyse et vérification de la requête
 	hr.ParseForm()
@@ -109,7 +110,6 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		log.Println("Erreur décodage : ", err.Error())
 		return
 	}
-	//fmt.Printf("Message reçu : %+v\n", in)
 	out.Text = vérifieVersion(in.Version)
 	if in.IdBraldun == 0 || len(in.Mdpr) != 64 {
 		log.Println("IdBraldun ou Mot de passe restreint invalide")
@@ -165,11 +165,9 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 			ms.mdb.Reçoit(in.Vue.Vues[0])
 			if ms.stockeVue(in.IdBraldun, in.Mdpr, bin, couche) {
 				//> on s'occupe aussi des amis
-				if amis != nil {
-					for _, ami := range amis {
-						log.Println(" enrichissement carte ami ", ami.IdBraldun)
-						bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(ami.IdBraldun, ami.Mdpr), couche, PNG_CACHE_SIZE)
-					}
+				for _, ami := range amis {
+					log.Println(" enrichissement carte ami ", ami.IdBraldun, " lancé en goroutine")
+					go bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(ami.IdBraldun, ami.Mdpr), couche, PNG_CACHE_SIZE)
 				}
 			} else {
 				log.Println(" Carte inchangée")
@@ -179,16 +177,32 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 
 	if in.Cmd == "carte" || in.Cmd == "" { // pour la compatibilité ascendante, la commande est provisoirement optionnelle
 
-		//> récupération et stockage, si demandé, de la vue d'un autre braldun
+		//> récupération et stockage, si demandé, de la vue et de l'état d'un autre braldun
 		if in.Action == "maj" && in.Cible > 0 {
-			log.Println(" Demande mise à jour de la vue de ", in.Cible)
+			log.Println(" Demande mise à jour de", in.Cible)
 			if !ms.mdb.MajPossible(in.Cible) {
-				log.Println("  Impossible de mettre à jour la vue de ", in.Cible)
+				log.Println("  Impossible de mettre à jour la vue de", in.Cible)
 			} else {
 				cc, errstr := con.GetCompteExistant(in.Cible)
 				if errstr != "" {
 					log.Println("  erreur durant la récupération du compte de", in.Cible)
 				} else {
+					// TODO utiliser des goroutines pour paralléliser les deux requêtes (vue et profil) ?
+					//> récupération de l'état
+					log.Println("  Demande de l'état par script public")
+					eb, err := bra.EtatBraldunParScriptPublic(in.Cible, cc.Mdpr)
+					if err != nil {
+						log.Println("  erreur durant la récupération par script public de l'état de", in.Cible)
+					} else if eb == nil || eb.PVMax == 0 {
+						log.Println("  état invalide")
+					} else {
+						err = con.StockeEtatBraldun(eb)
+						if err != nil {
+							log.Println("  erreur durant le stockage de l'état de", in.Cible)
+						}
+					}
+
+					//> récupération de la vue
 					log.Println("  Demande de la vue par script public")
 					dv, err := bra.VueParScriptPublic(in.Cible, cc.Mdpr, filepath.Join(ms.répertoireDonnées, "public"))
 					if err != nil {
@@ -254,6 +268,19 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 				out.DV.Vues = vues
 			}
 		}
+		
+		//> renvoi de l'état des amis
+		if len(amis)>0 {
+			out.Etats = make([]*bra.EtatBraldun, 0, len(amis))
+			for _, ami := range(amis) {
+				eb, err := con.EtatBraldun(ami.IdBraldun)
+				if err!=nil {
+					log.Println(" Erreur à la récupération de l'état de", ami.IdBraldun, ":", err)
+				} else if eb!=nil {
+					out.Etats = append(out.Etats, eb)
+				}
+			}
+		}
 
 		//> renvoi de la carte en png
 		log.Println(" ZRequis : ", in.ZRequis)
@@ -312,26 +339,23 @@ func main() {
 	}
 	ms.mdb.Charge(ms.répertoireCartes)
 	go func() {
-		sigchan := make(chan os.Signal)
-		signal.Notify(sigchan, os.Interrupt, os.Kill)
-		for {
-			sig := <-sigchan
-			log.Println("Signal : %+v", sig)
-			log.Println("Mapserver tué ! (", sig, ")")
-			if *memprofile != "" {
-				log.Println("Ecriture heap dans le fichier ", *memprofile)
-				fp, err := os.Create(*memprofile)
-				if err != nil {
-					log.Fatal(err)
-				}
-				pprof.WriteHeapProfile(fp)
+		sigchan := make(chan os.Signal, 10)
+		signal.Notify(sigchan, os.Interrupt)
+		<-sigchan
+		log.Println("Mapserver tué !")
+		if *memprofile != "" {
+			log.Println("Ecriture heap dans le fichier ", *memprofile)
+			fp, err := os.Create(*memprofile)
+			if err != nil {
+				log.Fatal(err)
 			}
-			bra.BloqueEcrituresPNG()
-			if *cpuprofile != "" {
-				pprof.StopCPUProfile()
-			}
-			os.Exit(0)
+			pprof.WriteHeapProfile(fp)
 		}
+		bra.BloqueEcrituresPNG()
+		if *cpuprofile != "" {
+			pprof.StopCPUProfile()
+		}
+		os.Exit(0)
 	}()
 	ms.Start()
 }

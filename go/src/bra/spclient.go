@@ -63,3 +63,20 @@ func VueParScriptPublic(idBraldun uint, mdpr string, cheminRépertoireCsvPublic 
 	}
 	return ConstruitDonnéesVue(r, bufio.NewReader(spbralduns), bufio.NewReader(spcommunautes), true), nil
 }
+
+func EtatBraldunParScriptPublic(idBraldun uint, mdpr string) (*EtatBraldun, error) {
+	httpClient := new(http.Client)
+	request := fmt.Sprintf("http://sp.braldahim.com/scripts/profil/?idBraldun=%d&mdpRestreint=%s&version=2", idBraldun, mdpr)
+	resp, err := httpClient.Get(request)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	r := bufio.NewReader(resp.Body)
+	bline, _, _ := r.ReadLine()
+	line := string(bline)
+	if strings.Contains(line, "ERREUR") {
+		return nil, errors.New("Erreur script public : " + line)
+	}
+	return LitEtatBraldunDansCsvProfil(r)
+}

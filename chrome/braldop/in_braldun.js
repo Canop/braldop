@@ -7,10 +7,7 @@ braldop.litDonnéesBraldun = function() {
 	//> récupération pv, pvmax et faim
 	var $boutonBraldun = $('button.butPersonnage');
 	var $tableEtatBraldun = $boutonBraldun.find('span.ui-button-text table');
-	if ($tableEtatBraldun.length==0) {
-		console.log('table état braldun introuvable');
-	} else {
-		console.log('table état braldun trouvée');
+	if ($tableEtatBraldun.length>0) {
 		$tableEtatBraldun.find('tr').each(function(){
 			$td = $(this).find('td');			
 			if ($td.length>=2) {
@@ -56,7 +53,6 @@ braldop.litDonnéesBraldun = function() {
 		var heureJour = str.split('le');
 		var heureMinuteSeconde = heureJour[0].trim().split(':');
 		var jourMoisAnnée = heureJour[1].split('/');
-		console.log('DLA :', heureMinuteSeconde, jourMoisAnnée);
 		var nhms = heureMinuteSeconde.length;
 		if (nhms>=3 && jourMoisAnnée.length>=3) {
 			var dateDLA = new Date(
@@ -67,7 +63,6 @@ braldop.litDonnéesBraldun = function() {
 				parseInt(heureMinuteSeconde[nhms-2], 10),
 				parseInt(heureMinuteSeconde[nhms-1], 10)
 			);
-			console.log('dateDLA:', dateDLA);
 			braldop.braldun.DLA = dateDLA.getTime()/1000
 		}
 	}

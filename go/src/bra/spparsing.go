@@ -5,6 +5,7 @@ package bra
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -29,14 +30,15 @@ func readLine(r *bufio.Reader) (cells []string, err error) {
 	return
 }
 
-func skipLines(r *bufio.Reader, nblines int) error {
-	for i:=0; i<nblines; i++ {
+// skip nblines et renvoie la suivante
+func skipLines(r *bufio.Reader, nblines int) ([]string, error) {
+	for i := 0; i < nblines; i++ {
 		_, err := readLine(r)
-		if err!=nil {
-			return err
+		if err != nil {
+			return nil, err
 		}
 	}
-	return nil
+	return readLine(r)
 }
 
 // remplit l'objet Vue et optionnellement (si elle est fournie) la MemMap
@@ -274,7 +276,6 @@ func ParseFichierCsvStatique(r *bufio.Reader, memmap *MemMap, alloue func() Visi
 	}
 }
 
-
 // inputs :
 //   - le fichier bralduns.csv obtenu par script public
 //   - le fichier communautes.csv obtenu par script public
@@ -323,31 +324,33 @@ func ChargeDonnéesStatiquesPubliques(cheminRépertoireCsvPublic string, verbose
 
 // le reader doit correspondre à un fichier csv de type profil
 func LitEtatBraldunDansCsvProfil(r *bufio.Reader) (*EtatBraldun, error) {
-	err := skipLines(r, 2) // on saute les deux lignes d'en-têtes
-	if err!=nil {
+	line, err := skipLines(r, 1) // on saute une ligne car la première contient les en-têtes
+	if err != nil {
 		return nil, err
 	}
-	line, err := readLine(r)
-	if err!=nil {
-		return nil, err
+	if len(line) < 18 {
+		return nil, errors.New("contenu trop court")
 	}
 	eb := new(EtatBraldun)
 	eb.IdBraldun = AtoId(line[0])
 	eb.PA, _ = strconv.Atoi(line[6])
 	cd := strings.Split(line[8], ":")
-	duréeTour, err := time.ParseDuration(cd[0]+"h"+cd[1]+"m"+cd[2]+"s")
-	if err!=nil {
+	if len(cd) != 3 {
+		return nil, errors.New("champ durée tour invalide : " + line[8])
+	}
+	duréeTour, err := time.ParseDuration(cd[0] + "h" + cd[1] + "m" + cd[2] + "s")
+	if err != nil {
 		return nil, err
 	}
 	eb.DuréeTour = int(duréeTour.Seconds())
-	dla, err := time.Parse("2006-1-2 15:04:05 MST", line[9] + " CEST")
-	if err!=nil {
+	dla, err := time.Parse("2006-1-2 15:04:05 MST", line[9]+" CEST")
+	if err != nil {
 		return nil, err
 	}
 	eb.DLA = int(dla.Unix())
 	eb.PV, _ = strconv.Atoi(line[15])
-	bmPVmax, _  := strconv.Atoi(line[16])
 	niveauVigueur, _ := strconv.Atoi(line[20])
-	eb.PVMax = niveauVigueur*10 + 40 + bmPVmax
+	eb.PVMax = niveauVigueur*10 + 40
+	eb.Faim, _ = strconv.Atoi(line[17]) // champ nommé "bbdf"
 	return eb, nil
 }

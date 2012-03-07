@@ -1,9 +1,13 @@
+// braldopadmin est utilisé pour effectuer certaines manipulations occasionnelles ou de test.
+// Pour avoir la documentation, tapez simplement braldopadmin à la ligne de commande.
+
 package main
 
 import (
 	"bra"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -11,27 +15,20 @@ import (
 	"strings"
 )
 
-// Exemples de commandes :
-//  > bradmin -cmd palette
-//    exporte sur stdout la palette des couleurs des fonds à utiliser dans le javascript pour décoder les png
-//  > bradmin -cmd png -in tata/toto.json 
-//    construit un png (tata/couchexx.png) dont le contenu correspond à la Couche encodée dans le fichier tata/toto.json
-//  > bradmin -cmd png -in toto;tutu -out titi
-//    enrichit (ou crée) les fichiers titi/couchexx.png à partir des données couchexx.png des répertoires toto et tutu
-//  > bradmin -cmd check -id 754 -mdpr XXXX
-//    vérifie que le braldun 754 est connu de Braldahim et a bien le mot de passe restreint mdpr
 func main() {
-	in := flag.String("in", "", "source des données")
-	out := flag.String("out", "", "répertoire de sortie (pour la commande png)")
-	cmd := flag.String("cmd", "", "commande (check, palette, png ou vue)")
-	id := flag.Int("id", 0, "id braldun")
-	mdpr := flag.String("mdpr", "", "mot de passe restreint")
-	data := flag.String("data", "", "chemin de base du stockage (contient en principe des répertoires 'private', 'public' et 'cartes'")
-	flag.Parse()
+	cmd := os.Args[1]
+	flags := flag.NewFlagSet(cmd, flag.ExitOnError)
+	in := flags.String("in", "", "source des données")
+	out := flags.String("out", "", "répertoire de sortie (pour la commande png)")
+	id := flags.Int("id", 0, "id braldun")
+	mdpr := flags.String("mdpr", "", "mot de passe restreint")
+	data := flags.String("data", "", "chemin de base du stockage (contient en principe des répertoires 'private', 'public' et 'cartes')")
+	flags.Parse(os.Args[2:])
 	var err error
-	if *cmd == "palette" {
+	switch cmd {
+	case "palette":
 		bra.ExportePalettePng(os.Stdout)
-	} else if *cmd == "stats" {
+	case "stats":
 		if *data == "" {
 			log.Println("Chemin de stockage non précisé (nécessaire pour lire bralduns.csv et communautes.csv)")
 		} else {
@@ -41,7 +38,7 @@ func main() {
 			}
 			log.Println(len(memmap.Bralduns), "bralduns")
 		}
-	} else if *cmd == "vue" {
+	case "vue":
 		if *id == 0 {
 			log.Println("Id du braldun non précisé")
 		} else if *mdpr == "" {
@@ -59,7 +56,23 @@ func main() {
 			}
 			os.Stdout.Write(bout)
 		}
-	} else if *cmd == "check" {
+	case "etat":
+		if *id == 0 {
+			log.Println("Id du braldun non précisé")
+		} else if *mdpr == "" {
+			log.Println("Mot de passe restreint non précisé")
+		} else {
+			état, err := bra.EtatBraldunParScriptPublic(uint(*id), *mdpr)
+			if err != nil {
+				log.Fatal(err)
+			}
+			bout, err := json.Marshal(état)
+			if err != nil {
+				log.Fatal(err)
+			}
+			os.Stdout.Write(bout)
+		}
+	case "check":
 		if *id == 0 {
 			log.Println("Id du braldun non précisé")
 		} else if *mdpr == "" {
@@ -72,7 +85,7 @@ func main() {
 				log.Println("Autentication : ", auth)
 			}
 		}
-	} else if *cmd == "png" {
+	case "png":
 		if *in == "" {
 			log.Println("Source de données non précisée (in devrait être le chemin d'un fichier json)")
 		} else {
@@ -116,8 +129,25 @@ func main() {
 				}
 			}
 		}
-	} else {
-		log.Println("Usage :")
-		flag.PrintDefaults()
+	default:
+		fmt.Println("Syntaxe :")
+		fmt.Println(" > braldopadmin [{check|palette|png|etat|vue}] [paramètres]")
+		fmt.Println("Paramètres :")
+		flags.PrintDefaults()
+		fmt.Println("Exemples :")
+		fmt.Println(" > braldopadmin palette")
+		fmt.Println("   exporte sur stdout la palette des couleurs des fonds à utiliser dans le javascript pour décoder les png")
+		fmt.Println(" > braldopadmin png -in tata/toto.json")
+		fmt.Println("   construit un png (tata/couchexx.png) dont le contenu correspond à la Couche encodée dans le fichier tata/toto.json")
+		fmt.Println(" > braldopadmin png -in toto;tutu -out titi")
+		fmt.Println("   enrichit (ou crée) les fichiers titi/couchexx.png à partir des données couchexx.png des répertoires toto et tutu")
+		fmt.Println(" > braldopadmin check -id 754 -mdpr XXXX")
+		fmt.Println("   vérifie que le braldun 754 est connu de Braldahim et a bien le mot de passe restreint XXXX")
+		fmt.Println(" > braldopadmin vue -id 754 -mdpr XXXX")
+		fmt.Println("   renvoie en json la vue du braldun obtenue par script public braldahim")
+		fmt.Println(" > braldopadmin etat -id 754 -mdpr XXXX")
+		fmt.Println("   renvoie en json l'état du braldun obtenu par script public braldahim")
+		fmt.Println("Attention : certaines de ces commandes font des requêtes au serveur sp.braldahim.com et décrémentent le nombre de requêtes possibles pour la journée pour le braldun en question.")
 	}
+	fmt.Println()
 }

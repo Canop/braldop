@@ -48,7 +48,8 @@ braldop.sendToBraldopServer = function(message) {
 		};
 		if (typeof message.ZRequis == 'undefined') message.ZRequis = map.z;
 	}
-	console.log('Message sortant depuis le contexte de la page vers '+braldop.serveur+' : ', message);
+	console.log('Message sortant vers '+braldop.serveur+' : ', message);
+	/* je désactive les messages de timeout : ils sont trop sensibles (en particulier à l'abandon de requète)
 	braldop.messageTimeout = setTimeout(function(){
 		var html = 'Problèmes de connexion au serveur Braldop.';
 		html += '<br>Ce peut être lié à des problèmes réseau, à un verrouillage de votre accès au port 8001, à un problème sur le serveur lui-même.';
@@ -56,6 +57,7 @@ braldop.sendToBraldopServer = function(message) {
 		html += "<br>Avant d'en arriver à de telles extrémités, essayez de recharger la page et d'en causer sur le forum.";
 		braldop.alertUser(html);
 	}, 25000);
+	* */
 	$.ajax(
 		{
 			url: braldop.serveur + '?in='+JSON.stringify(message),
@@ -103,6 +105,13 @@ receiveFromMapServer = function(message) {
 		map.mapData.Vues = message.DV.Vues;
 		map.compileLesVues();
 	}
+	if (message.Etats) {
+		braldop.etatsBralduns = {}; // on les range en map id->eb
+		for (var i=0; i<message.Etats.length; i++) {
+			var eb = message.Etats[i];
+			braldop.etatsBralduns[eb.IdBraldun] = eb;
+		}
+	}
 	if (message.PngCouche && message.PngCouche.length>5 && map && map.mapData) {
 		var couche = null;
 		for (var ic=0; ic<map.mapData.Couches.length; ic++) {
@@ -126,6 +135,7 @@ receiveFromMapServer = function(message) {
 			map.displayFog = true;
 			map.changeProfondeur(couche.Z);
 			braldop.depths = message.ZConnus;
+			braldop.depths.sort(function(a,b){return b-a});
 			braldop.updateMapSettings();
 			map.redraw();
 		};

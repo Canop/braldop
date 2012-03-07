@@ -40,7 +40,7 @@ braldop.ensureMapSettings = function() {
 
 
 braldop.updateMapSettings = function() {
-	console.log("Profondeurs disponibles :", braldop.depths);
+	var idBraldun = braldop.getIdBraldun();
 	braldop.ensureMapSettings();
 	if (braldop.depths) {
 		var html = '';
@@ -62,12 +62,22 @@ braldop.updateMapSettings = function() {
 	if (map.mapData.Vues && map.mapData.Vues.length>0) {
 		var troisHeuresAvantUnix = ((new Date()).getTime()/1000)-3*60*60; // le timestamp unix en secondes correspondant à il y a 3h
 		var html = '<table cellpadding=4 cellspacing=4>';
+		html += '<tr><th></th><th align=center>PV</th><th align=center>Faim</th><th align=center>DLA</th><th>PA</th><th></th><th align=center>Mise à jour</th><th></th></tr>';
 		for (var i=0; i<map.mapData.Vues.length; i++) {
 			var v = map.mapData.Vues[i];
+			var eb = (v.Voyeur==idBraldun) ? braldop.braldun : braldop.etatsBralduns[v.Voyeur];
 			html += '<tr>';
 			html += '<td><a target=profil href="http://jeu.braldahim.com/voir/braldun/?braldun='+v.Voyeur+'&direct=evenements">'+v.PrénomVoyeur+'</a></td>';
+			if (eb) {
+				html += '<td>'+eb.PV+'/'+eb.PVMax+'</td>';			
+				html += '<td>'+eb.Faim+'%</td>';	
+				html += '<td>'+formatDate(1000*eb.DLA)+'</td>';
+				html += '<td>'+eb.PA+'</td>';
+			} else {
+				html += '<td align=center colspan=4>?</td>';
+			}
 			html += '<td>';
-			html += '<a class="petit-bouton" href="javascript:if (map.zoom<32) {map.zoom=32;} map.goto('+(v.XMin+v.XMax)/2+','+(v.YMin+v.YMax)/2+','+v.Z+');" >Centrer</a>';
+			html += '<a class="petit-bouton" href="javascript:if (map.zoom<32) {map.zoom=32;};braldop.sendToBraldopServer({Cmd:\'carte\', ZRequis:'+v.Z+'});$(\'#bra_depth\').val('+v.Z+'); map.goto('+(v.XMin+v.XMax)/2+','+(v.YMin+v.YMax)/2+','+v.Z+');" >Centrer</a>';
 			html += '</td>';
 			html += '<td>'+formatDate(1000*v.Time)+'</td>';
 			html += '<td>';
@@ -89,18 +99,18 @@ braldop.updateMapSettings = function() {
  */ 
 var originalShowResponse = showResponse;
 showResponse = function(response) {
-	console.log('showResponse called with ', arguments);
+	//console.log('showResponse called with ', arguments);
 	originalShowResponse(response);
 	var $alarmHolder = $('div.img_tour_activite span.braltexte');
 	var ok = ($alarmHolder.length>0);
 	if (ok) {
 		braldop.litDonnéesBraldun();
-		console.log('braldun:', braldop.braldun);
-		console.log('on a les données du braldun, on peut débrancher le hook');
+		//~ console.log('braldun:', braldop.braldun);
+		//~ console.log('on a les données du braldun, on peut débrancher le hook');
 		showResponse = originalShowResponse; // pas forcément immédiat
 		braldop.sendToBraldopServer({Etat:braldop.braldun});
 	} else {
-		console.log("on n'a toujours pas les données du braldun");
+		//~ console.log("on n'a toujours pas les données du braldun");
 	}
 }
 

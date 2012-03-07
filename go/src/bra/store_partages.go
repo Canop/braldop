@@ -20,13 +20,13 @@ func (con ConnexionMysql) Amis(idBraldun uint) ([]*CompteBraldop, error) {
 	sql := "select id, mdpr, x, y, z from compte, partage where ((a_id=? and id=b_id) or (b_id=? and id=a_id)) and a_ok=1 and b_ok=1 and mdpr_ok=1"
 	rows, err := con.Query(sql, idBraldun, idBraldun)
 	if err != nil {
-		return nil, err
+		return amis, err
 	}
 	for rows.Next() {
 		cb := new(CompteBraldop)
 		err = rows.Scan(&cb.IdBraldun, &cb.Mdpr, &cb.X, &cb.Y, &cb.Z)
 		if err != nil {
-			return nil, err
+			return amis, err
 		}
 		amis = append(amis, cb)
 	}

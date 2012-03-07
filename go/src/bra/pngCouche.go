@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
-	"image/png"
+	"image/png" // en mettant ici bra/png plutot que image/png on gagne environ 30% sur le temps de la compression
 	"io"
 	"log"
 	"os"
@@ -301,7 +301,7 @@ func EnrichitCouchesPNG(cheminRépertoireEcriture string, cheminRépertoireSourc
 // On backupe l'ancien fichier avant l'écriture pour qu'en
 //  cas de crash durant l'écriture on puisse disposer de l'ancien fichier.
 func EnrichitCouchePNG(cheminRépertoire string, couche *Couche, cacheSize int) {
-	startTime := time.Now().Unix()
+	startTime := time.Now().UnixNano()
 	cheminFichierImage := filepath.Join(cheminRépertoire, fmt.Sprintf("couche%d.png", couche.Z))
 	var img *image.Paletted
 	cheminFichierBackup := ""
@@ -362,7 +362,7 @@ func EnrichitCouchePNG(cheminRépertoire string, couche *Couche, cacheSize int) 
 		os.Remove(cheminFichierBackup)
 	}
 
-	log.Printf(" Enrichissement carte PNG en %d ms\n", time.Now().Unix()-startTime)
+	log.Printf(" Enrichissement carte PNG en %d ms\n", (time.Now().UnixNano()-startTime)/1e6)
 }
 
 // construit l'image PNG d'une couche
@@ -377,14 +377,12 @@ func ConstruitNouveauPNG(cheminRépertoire string, couche *Couche) {
 		return
 	}
 	defer f.Close()
-	png.Encode(f, img)
+	png.Encode(f, img) // c'est là que passe l'essentiel de la CPU de braldopserver
 	log.Printf(" Construction carte PNG en %d ms\n", time.Now().Unix()-startTime)
 }
 
 // décrit la palette pour une inclusion plus aisée dans le javascript
-// 
 func ExportePalettePng(w io.Writer) {
-	fmt.Fprintln(w, "Palette des environnements")
 	for nom, c := range couleurs {
 		v := (uint32(c.R) << 16) + (uint32(c.G) << 8) + uint32(c.B)
 		vp := (uint32(c.R-1) << 16) + (uint32(c.G-1) << 8) + uint32(c.B-1) // couleur visible dans getImageData pour un alpha de 254

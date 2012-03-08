@@ -18,7 +18,6 @@ braldop.ensureMapSettings = function() {
 		braldop.$depthMenu = $('#bra_depth');
 		braldop.$depthMenu.change(function(){
 			var z = parseInt(braldop.$depthMenu.val(), 10);
-			console.log("nouveau z:", z);
 			braldop.sendToBraldopServer({Cmd:'carte', ZRequis:z});
 		});
 		braldop.$globalMenu = $('#bra_menu');
@@ -82,7 +81,6 @@ braldop.updateMapSettings = function() {
 		$('#bra_triangle_vues').show();
 		$('a[maj_braldun]').click(function(){
 			var cible = parseInt($(this).attr('maj_braldun'),10);
-			console.log('clic on maj ' + cible);
 			braldop.sendToBraldopServer({Cmd:"carte", Action:"maj", Cible:cible});
 			$(this).html('en cours...');
 		});

@@ -29,7 +29,6 @@ braldop.goclone = function(source) {
 
 
 braldop.handleNewMapData = function() {
-	console.log('***braldop.handleNewMapData***');
 	localStorage['braldop/braldun/id']=map.mapData.Vues[0].Voyeur;
 	var message = {Cmd:'carte'};
 	message.Vue = {

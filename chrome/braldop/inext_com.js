@@ -35,7 +35,7 @@ braldop.sendToBraldopServer = function(message) {
 	if (message.Cmd=='carte') {
 		if (typeof message.ZRequis == 'undefined') message.ZRequis = map.z;
 	}
-	console.log('Message sortant vers '+braldop.serveur+' : ', message);
+	//~ console.log('Message sortant vers '+braldop.serveur+' : ', message);
 	/* je désactive les messages de timeout : ils sont trop sensibles (en particulier à l'abandon de requète)
 	braldop.messageTimeout = setTimeout(function(){
 		var html = 'Problèmes de connexion au serveur Braldop.';
@@ -73,7 +73,7 @@ braldop.alertUser = function(text) {
 // réception (intégrée à la page) du message de réponse du serveur braldop
 receiveFromMapServer = function(message) {
 	if (braldop.messageTimeout) clearTimeout(braldop.messageTimeout);
-	console.log("Message entrant :", message);
+	//~ console.log("Message entrant :", message);
 	if (message.Text && message.Text.length>0) {
 		braldop.alertUser(message.Text);
 	}

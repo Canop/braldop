@@ -25,7 +25,7 @@ const (
 var versionActuelleExtension Version
 
 func init() {
-	versionActuelleExtension = MakeVersion(3, 2)
+	versionActuelleExtension = MakeVersion(3, 3)
 }
 
 type MapServer struct {

@@ -86,6 +86,9 @@ Map.prototype.setData = function(mapData) {
 	this.compileLesVues();
 	this.matriceVues = this.matricesVuesParZ[0];
 	if (this.onSetData) this.onSetData();
+	
+	braldop.handleNewMapData();
+	
 }
 
 

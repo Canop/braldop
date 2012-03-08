@@ -33,19 +33,6 @@ braldop.sendToBraldopServer = function(message) {
 	message.IdBraldun = parseInt(localStorage['braldop/braldun/id'], 10);
 	message.Version = braldop.extVersion;
 	if (message.Cmd=='carte') {
-		var vue = {};
-		for (var i=0; i<map.mapData.Vues.length; i++) {
-			var v=map.mapData.Vues[i];
-			if (v.Voyeur==message.IdBraldun) {
-				vue=v;
-				break;
-			}
-		}
-		message.Vue = {
-			Couches: braldop.goclone(map.mapData.Couches),
-			Vues: [braldop.goclone(vue)],
-			Position: braldop.goclone(map.mapData.Position)
-		};
 		if (typeof message.ZRequis == 'undefined') message.ZRequis = map.z;
 	}
 	console.log('Message sortant vers '+braldop.serveur+' : ', message);
@@ -90,7 +77,7 @@ receiveFromMapServer = function(message) {
 	if (message.Text && message.Text.length>0) {
 		braldop.alertUser(message.Text);
 	}
-	if (message.DV && message.DV.Vues) {
+	if (message.DV && message.DV.Vues && map) {
 		// les vues recues du serveur remplacent les vues présentes, mais on garde les actions locales
 		for (var i=0; i<message.DV.Vues.length; i++) {
 			message.DV.Vues[i].active = true;

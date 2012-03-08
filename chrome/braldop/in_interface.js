@@ -1,10 +1,8 @@
 
-
 braldop.$mapSettings = null;
 braldop.$depthMenu = null;
 braldop.$globalMenu = null;
 braldop.globalMenuOpen = false;
-
 
 braldop.ensureMapSettings = function() {
 	if (!braldop.$mapSettings) {
@@ -36,8 +34,7 @@ braldop.ensureMapSettings = function() {
 			}
 		});
 	}
-}
-
+};
 
 braldop.updateMapSettings = function() {
 	var idBraldun = braldop.getIdBraldun();
@@ -51,11 +48,6 @@ braldop.updateMapSettings = function() {
 		}
 		braldop.$depthMenu.html(html);
 		braldop.$depthMenu.show();
-		$('a[maj_braldun]').live('click', function(){
-			var cible = parseInt($(this).attr('maj_braldun'),10);
-			braldop.sendToBraldopServer({Cmd:"carte", Action:"maj", Cible:cible});
-			$(this).html('en cours...');
-		});
 	} else {
 		braldop.$depthMenu.hide();
 	}
@@ -88,15 +80,19 @@ braldop.updateMapSettings = function() {
 		html += '</table>';
 		braldop.$globalMenu.html(html);
 		$('#bra_triangle_vues').show();
+		$('a[maj_braldun]').click(function(){
+			var cible = parseInt($(this).attr('maj_braldun'),10);
+			console.log('clic on maj ' + cible);
+			braldop.sendToBraldopServer({Cmd:"carte", Action:"maj", Cible:cible});
+			$(this).html('en cours...');
+		});
 	} else {
 		$('#bra_triangle_vues').hide();		
 	}
 }
 
-/*
- * préparation de l'interception des apparitions des blocs de l'interface pour récupérer dés
- * que possible les infos du braldun et les envoyer au serveur
- */ 
+// préparation de l'interception des apparitions des blocs de l'interface pour récupérer dés
+//  que possible les infos du braldun et les envoyer au serveur
 var originalShowResponse = showResponse;
 showResponse = function(response) {
 	//console.log('showResponse called with ', arguments);

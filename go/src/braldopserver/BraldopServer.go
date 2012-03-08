@@ -18,8 +18,8 @@ import (
 )
 
 const (
-	HTTP_PORT      = "8001"
-	PNG_CACHE_SIZE = 100 // en nombre d'images
+	HTTP_PORT        = "8001"
+	TAILLE_CACHE_PNG = 100 // en nombre d'images
 )
 
 var versionActuelleExtension Version
@@ -69,21 +69,24 @@ func (ms *MapServer) répertoireCartesBraldun(idBraldun uint, mdpr string) strin
 }
 
 // bv : binaire correspondant à l'encodage json d'un MessageIn
+// TODO baser le hash sur la couche, et ne stocker que la couche réencodée en json
 func (ms *MapServer) stockeVue(idVoyeur uint, mdprVoyeur string, bv []byte, couche *bra.Couche) (nouveau bool) {
 	dirBase := ms.répertoireCartesBraldun(idVoyeur, mdprVoyeur)
 	hasher := sha1.New()
 	hasher.Write(bv)
 	sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+	//log.Println("  hash:",sha)
 	dir := dirBase + "/" + time.Now().Format("2006/01/02")
 	path := dir + "/carte-" + sha + ".json"
 	if _, err := os.Stat(path); err != nil { // nouveau fichier, donc nouvelle vue
+		//log.Println("  nouveau hash")
 		//> on sauvegarde le fichier json
 		os.MkdirAll(dir, 0777)
 		f, _ := os.Create(path)
 		defer f.Close()
 		f.Write(bv)
 		//> on crée ou enrichit l'image png correspondant à la couche
-		bra.EnrichitCouchePNG(dirBase, couche, PNG_CACHE_SIZE)
+		bra.EnrichitCouchePNG(dirBase, couche, TAILLE_CACHE_PNG)
 		return true
 	}
 	return false
@@ -167,7 +170,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 				//> on s'occupe aussi des amis
 				for _, ami := range amis {
 					log.Println(" enrichissement carte ami ", ami.IdBraldun, " lancé en goroutine")
-					go bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(ami.IdBraldun, ami.Mdpr), couche, PNG_CACHE_SIZE)
+					go bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(ami.IdBraldun, ami.Mdpr), couche, TAILLE_CACHE_PNG)
 				}
 			} else {
 				log.Println(" Carte inchangée")
@@ -238,7 +241,7 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 									}
 									for _, cami := range camis {
 										log.Println("  enrichissement carte ", cami.IdBraldun)
-										bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], PNG_CACHE_SIZE)
+										bra.EnrichitCouchePNG(ms.répertoireCartesBraldun(cami.IdBraldun, cami.Mdpr), dv.Couches[0], TAILLE_CACHE_PNG)
 									}
 								}
 							}
@@ -260,23 +263,23 @@ func (ms *MapServer) ServeHTTP(w http.ResponseWriter, hr *http.Request) {
 		for _, a := range amis {
 			log.Println(" ", a.IdBraldun)
 		}
-		if amis != nil && in.Vue != nil && len(in.Vue.Vues) > 0 {
-			vues := ms.mdb.Complète(in.Vue.Vues[0], amis)
+		if amis != nil {
+			vues := ms.mdb.Fusionne(in.IdBraldun, amis)
 			log.Printf(" %d vues en retour\n", len(vues))
 			if len(vues) > 0 {
 				out.DV = new(bra.DonnéesVue)
 				out.DV.Vues = vues
 			}
 		}
-		
+
 		//> renvoi de l'état des amis
-		if len(amis)>0 {
+		if len(amis) > 0 {
 			out.Etats = make([]*bra.EtatBraldun, 0, len(amis))
-			for _, ami := range(amis) {
+			for _, ami := range amis {
 				eb, err := con.EtatBraldun(ami.IdBraldun)
-				if err!=nil {
+				if err != nil {
 					log.Println(" Erreur à la récupération de l'état de", ami.IdBraldun, ":", err)
-				} else if eb!=nil {
+				} else if eb != nil {
 					out.Etats = append(out.Etats, eb)
 				}
 			}

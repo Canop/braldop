@@ -6,22 +6,18 @@ Ce document est propriété Canop et toute modification externe sera refusée. I
 Fait :
 ======
 
-* ordonner les profondeurs dans le menu de sélection
-* optimisation : les enrichissements des cartes des amis sont effectués en parallèle
-* affichage PV/PVMax, faim, durée du tour et DLA des amis
+* 
 
 En cours :
 ==========
 
 * BUG : script serveur bloquant
-* BUG : le centrage sur un braldun ne modifie pas la profondeur
-* BUG : trop d'enrichissements. On ne semble plus détecter que la carte n'a pas changé
+
 
 P1 :
 ====
 
 * stockage JSON / détection changement carte : ne hasher et stocker que la vue, pas l'ensemble du message
-* optimisation
 * BUG : pas d'affichage pour certaines cases boisées et balisées
 * stocker (mysql ?) les échoppes et autres lieux (ruines, buissons, ?) et leur connaissance par les braldûns
 * faire de jolis dessins pour les routes

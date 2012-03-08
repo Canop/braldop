@@ -51,6 +51,31 @@ func (mdb *MemDB) MajPossible(idBraldun uint) bool {
 	return true
 }
 
+func (mdb *MemDB) Fusionne(idBraldun uint, amis []*bra.CompteBraldop) []*bra.Vue {
+	fusion := new(FusionVues)
+	fusion.Vues = make([]*bra.Vue, 1, len(amis)+1)
+	var ok bool
+	if fusion.Vues[0], ok = mdb.vues[idBraldun]; !ok {
+		return nil // il faut au moins la vue du braldun principal
+	}
+	for _, ami := range amis {
+		if dvb, ok := mdb.vues[ami.IdBraldun]; ok {
+			fusion.Vues = append(fusion.Vues, dvb)
+		}
+	}
+	sort.Sort(fusion) // index faible : plus ancien
+	//> on ajoute le prénom du Braldun voyeur à chaque vue (faudrait faire ça ailleurs)
+	for _, vi := range fusion.Vues {
+		for _, b := range vi.Bralduns { // pas super joli...
+			if b.Id == vi.Voyeur {
+				vi.PrénomVoyeur = b.Prénom
+				break
+			}
+		}
+	}
+	return fusion.Vues
+}
+
 // renvoie les vues
 func (mdb *MemDB) Complète(vue *bra.Vue, amis []*bra.CompteBraldop) []*bra.Vue {
 	fusion := new(FusionVues)

@@ -17,23 +17,23 @@ Map.prototype.compileLesVues = function() {
 		return true;
 	}
 	var vuesPlusRécentes = [];
+	var vue;
 	celeste = function(x, y) {  // une fonction(x,y) qui renvoie true si la case n'est pas dans le rectangle d'une vue plus récente
 		for (var jv=vuesPlusRécentes.length; jv-->0;) {
 			var vr = vuesPlusRécentes[jv];
-			if (!vr.active) continue;
+			if (!vr.active || vue.Z!=vr.Z) continue;
 			if (x>=vr.XMin && x<=vr.XMax && y>=vr.YMin && y<=vr.YMax) return false;
 		}
 		return true;
 	};
 	for (var iv=this.mapData.Vues.length; iv-->0;) { // les plus récentes en premier			
-		var vue = this.mapData.Vues[iv];
+		vue = this.mapData.Vues[iv];
 		if (!vue.active) continue;
 		this.matriceVues = this.matricesVuesParZ[vue.Z];
 		if (!this.matriceVues) {
 			this.matriceVues = {};
 			this.matricesVuesParZ[vue.Z] = this.matriceVues;
 		}
-		
 		for (ib in vue.Bralduns) {
 			var b = vue.Bralduns[ib];
 			if (celeste(b.X, b.Y) && nouveau(b.Id)) this.getCellVueCreate(b.X, b.Y).bralduns.push(b);

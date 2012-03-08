@@ -28,42 +28,17 @@ braldop.goclone = function(source) {
 }
 
 
-braldop.timer = null;
-braldop.waitForMap = function(callback) {
-	if (map!='undefined' && map && map.mapData) {
-		//~ console.log('map déjà là');
-		callback();
-	} else {
-		//~ console.log('attente nécessaire pour la carte');
-		braldop.timer = window.setInterval(
-			function(){
-				if (map!='undefined' && map && map.mapData) {
-					window.clearInterval(braldop.timer);
-					callback();
-				} else {
-					//console.log('...');
-				}
-			}, 500
-		);
-	}
-}
-
 braldop.handleNewMapData = function() {
-	braldop.sendToBraldopServer({Cmd:'carte'});
-}
-
-braldop.waitForMap(function(){
-	//~ console.log('Vue fournie par Braldahim : ', map.mapData);
-	
-	//> récupération et stockage de l'ID du braldun
+	console.log('***braldop.handleNewMapData***');
 	localStorage['braldop/braldun/id']=map.mapData.Vues[0].Voyeur;
-	
-	//> traitement des données
-	braldop.handleNewMapData();
-	
-	//> on met un hook pour les prochaines modifs
-	map.onSetData = braldop.handleNewMapData;
-});
+	var message = {Cmd:'carte'};
+	message.Vue = {
+		Couches: braldop.goclone(map.mapData.Couches),
+		Vues: [braldop.goclone(map.mapData.Vues[0])],
+		Position: braldop.goclone(map.mapData.Position)
+	};
+	braldop.sendToBraldopServer(message);
+}
 
 
 

@@ -13,7 +13,7 @@ func (con ConnexionMysql) EtatBraldun(idBraldun uint) (*EtatBraldun, error) {
 	état := new(EtatBraldun)
 	err := row.Scan(&état.PV, &état.PVMax, &état.PA, &état.DuréeTour, &état.DLA, &état.Faim)
 	état.IdBraldun = idBraldun
-	if état.PVMax==0 {
+	if état.PVMax == 0 {
 		return nil, nil
 	}
 	if err == nil {

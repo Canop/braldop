@@ -1,9 +1,22 @@
 {
 	"name": "Braldop",
-	"version": "3.3",
+	"version": "3.4",
+	"manifest_version": 2,
 	"description": "Une extension Chrome open-source pour Braldahim",
 	"homepage_url": "http://canop.org/braldop",
-	"background_page": "extension-braldop.html",
+	"background": {"page": "extension-braldop.html"},
+	"web_accessible_resources": [
+				"inext_const.js",
+				"inext_com.js",
+				"in_braldun.js",
+				"in_up_map.js",
+				"in_up_env.js",
+				"in_up_dialog.js",
+				"in_interface.js",
+				"in_up_vue.js",
+				"in_options.js",
+				"in_map.js"
+	],
 	"content_scripts": [
 		{
 			"matches": ["*://jeu.braldahim.com/*", "*://work.braldahim.com/*"],
@@ -17,6 +30,7 @@
 				"jquery-1.6.3.min.js",
 				"inext_const.js",
 				"inext_com.js",
+				"extension-braldop.js",
 				"ext_general.js",
 				"ext_tabs.js",
 				"ext_login.js",
@@ -31,6 +45,7 @@
 			"js": [
 				"jquery-1.6.3.min.js",
 				"inext_const.js",
+				"extension-braldop.js",
 				"ext_general.js",
 				"ext_detect.js"
 			]

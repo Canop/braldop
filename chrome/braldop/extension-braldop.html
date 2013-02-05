@@ -2,53 +2,13 @@
 <head>
 	<title>Braldop</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<script src="extension-braldop.js"></script>
 </head>
 <body>
 <!--
 This extension is mainly made by cano.petrole@gmail.org
 More info : http://canop.org/braldop
 -->
-
-
-<!--
-Le script suivant me permet de mesurer l'utilisation de Chrall via Google Analytics.
--->
-<script type="text/javascript">
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-15064357-4']);
-_gaq.push(['_trackPageview']);
-
-(function() {
-var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-ga.src = 'https://ssl.google-analytics.com/ga.js';
-var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-</script>
-
-
-
-<script type="text/javascript">
-
-var alarmTimeouts = {};
-
-
-// on répond aux requêtes de mise en place d'alarmes
-chrome.extension.onRequest.addListener(
-	function(request, sender, sendResponse) {
-		for (var key in request) {
-			if (alarmTimeouts[key]) {
-				clearTimeout(alarmTimeouts[key]);
-			}
-			var delay = request[key];
-			alarmTimeouts[key] = setTimeout(function() {	
-				document.getElementById('alarm').play();
-			}, delay);
-			
-		}
-	}
-);
-</script>
-
 
 <audio id=alarm>
 	<source src=sound/zbluejay.wav>

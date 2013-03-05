@@ -4,7 +4,7 @@
 var braldop = {};
 
 // version de l'extension
-braldop.extVersion = "3.3";
+braldop.extVersion = "3.4";
 
 braldop.serveur = 'http://canop.org:8001/';
 //~ braldop.serveur = 'http://localhost:8001/';
